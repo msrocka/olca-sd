@@ -2,11 +2,12 @@ package org.openlca.xmile;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import org.openlca.xmile.model.Aux;
 import org.openlca.xmile.model.Equation;
 import org.openlca.xmile.model.Flow;
+import org.openlca.xmile.model.Stock;
 import org.openlca.xmile.model.Variable;
 import org.openlca.xmile.model.Xmile;
 
@@ -38,15 +39,30 @@ public class PrintEquationsExample {
 
 		private void collect(Variable variable) {
 			if (variable instanceof Flow flow) {
-				collect(flow.getEquations());
+				collect(flow.getEquation());
+				for (var elem : flow.getElements()) {
+					collect(elem.getEquation());
+				}
+			}
+			if (variable instanceof Stock stock) {
+				collect(stock.getEquation());
+				for (var elem : stock.getElements()) {
+					collect(elem.getEquation());
+				}
+			}
+			if (variable instanceof Aux aux) {
+				collect(aux.getEquation());
+				for (var elem : aux.getElements()) {
+					collect(elem.getEquation());
+				}
 			}
 		}
 
-		private void collect(List<Equation> equations) {
-			for (var eq : equations) {
-				if (eq.getValue() != null) {
-					set.add(eq.getValue().strip());
-				}
+		private void collect(Equation eqn) {
+			if (eqn != null
+				&& eqn.getValue() != null
+				&& !eqn.getValue().isBlank()) {
+				set.add(eqn.getValue().strip());
 			}
 		}
 	}

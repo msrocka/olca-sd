@@ -4,7 +4,10 @@ package org.openlca.xmile.model;
 
 import javax.xml.namespace.QName;
 
+import org.openlca.xmile.model.Aux.AuxElement;
+import org.openlca.xmile.model.Flow.FlowElement;
 import org.openlca.xmile.model.Module.Connector;
+import org.openlca.xmile.model.Stock.StockElement;
 
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.annotation.XmlElementDecl;
@@ -602,27 +605,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Stock.Element }
+     * Create an instance of {@link StockElement }
      *
      */
-    public Stock.Element createStockElement() {
-        return new Stock.Element();
+    public StockElement createStockElement() {
+        return new StockElement();
     }
 
     /**
-     * Create an instance of {@link Flow.Element }
+     * Create an instance of {@link FlowElement }
      *
      */
-    public Flow.Element createFlowElement() {
-        return new Flow.Element();
+    public FlowElement createFlowElement() {
+        return new FlowElement();
     }
 
     /**
-     * Create an instance of {@link Aux.Element }
+     * Create an instance of {@link AuxElement }
      *
      */
-    public Aux.Element createAuxElement() {
-        return new Aux.Element();
+    public AuxElement createAuxElement() {
+        return new AuxElement();
     }
 
     /**
@@ -1083,16 +1086,16 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Stock.Element }{@code >}
+     * Create an instance of {@link JAXBElement }{@code <}{@link StockElement }{@code >}
      *
      * @param value
      *     Java instance representing xml element's value.
      * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link Stock.Element }{@code >}
+     *     the new instance of {@link JAXBElement }{@code <}{@link StockElement }{@code >}
      */
     @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "element", scope = Stock.class)
-    public JAXBElement<Stock.Element> createStockElement(Stock.Element value) {
-        return new JAXBElement<Stock.Element>(_StockElement_QNAME, Stock.Element.class, Stock.class, value);
+    public JAXBElement<StockElement> createStockElement(StockElement value) {
+        return new JAXBElement<StockElement>(_StockElement_QNAME, StockElement.class, Stock.class, value);
     }
 
     /**
@@ -1213,16 +1216,16 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Flow.Element }{@code >}
+     * Create an instance of {@link JAXBElement }{@code <}{@link FlowElement }{@code >}
      *
      * @param value
      *     Java instance representing xml element's value.
      * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link Flow.Element }{@code >}
+     *     the new instance of {@link JAXBElement }{@code <}{@link FlowElement }{@code >}
      */
     @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "element", scope = Flow.class)
-    public JAXBElement<Flow.Element> createFlowElement(Flow.Element value) {
-        return new JAXBElement<Flow.Element>(_StockElement_QNAME, Flow.Element.class, Flow.class, value);
+    public JAXBElement<FlowElement> createFlowElement(FlowElement value) {
+        return new JAXBElement<FlowElement>(_StockElement_QNAME, FlowElement.class, Flow.class, value);
     }
 
     /**
@@ -1278,16 +1281,16 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Aux.Element }{@code >}
+     * Create an instance of {@link JAXBElement }{@code <}{@link AuxElement }{@code >}
      *
      * @param value
      *     Java instance representing xml element's value.
      * @return
-     *     the new instance of {@link JAXBElement }{@code <}{@link Aux.Element }{@code >}
+     *     the new instance of {@link JAXBElement }{@code <}{@link AuxElement }{@code >}
      */
     @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "element", scope = Aux.class)
-    public JAXBElement<Aux.Element> createAuxElement(Aux.Element value) {
-        return new JAXBElement<Aux.Element>(_StockElement_QNAME, Aux.Element.class, Aux.class, value);
+    public JAXBElement<AuxElement> createAuxElement(AuxElement value) {
+        return new JAXBElement<AuxElement>(_StockElement_QNAME, AuxElement.class, Aux.class, value);
     }
 
     /**
@@ -1363,9 +1366,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "eqn", scope = Aux.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "eqn", scope = AuxElement.class)
     public JAXBElement<String> createAuxElementEqn(String value) {
-        return new JAXBElement<String>(_StockEqn_QNAME, String.class, Aux.Element.class, value);
+        return new JAXBElement<String>(_StockEqn_QNAME, String.class, AuxElement.class, value);
     }
 
     /**
@@ -1376,9 +1379,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "mathml", scope = Aux.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "mathml", scope = AuxElement.class)
     public JAXBElement<String> createAuxElementMathml(String value) {
-        return new JAXBElement<String>(_StockMathml_QNAME, String.class, Aux.Element.class, value);
+        return new JAXBElement<String>(_StockMathml_QNAME, String.class, AuxElement.class, value);
     }
 
     /**
@@ -1389,9 +1392,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "eqn", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "eqn", scope = FlowElement.class)
     public JAXBElement<String> createFlowElementEqn(String value) {
-        return new JAXBElement<String>(_StockEqn_QNAME, String.class, Flow.Element.class, value);
+        return new JAXBElement<String>(_StockEqn_QNAME, String.class, FlowElement.class, value);
     }
 
     /**
@@ -1402,9 +1405,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "mathml", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "mathml", scope = FlowElement.class)
     public JAXBElement<String> createFlowElementMathml(String value) {
-        return new JAXBElement<String>(_StockMathml_QNAME, String.class, Flow.Element.class, value);
+        return new JAXBElement<String>(_StockMathml_QNAME, String.class, FlowElement.class, value);
     }
 
     /**
@@ -1415,9 +1418,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "multiplier", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "multiplier", scope = FlowElement.class)
     public JAXBElement<String> createFlowElementMultiplier(String value) {
-        return new JAXBElement<String>(_FlowMultiplier_QNAME, String.class, Flow.Element.class, value);
+        return new JAXBElement<String>(_FlowMultiplier_QNAME, String.class, FlowElement.class, value);
     }
 
     /**
@@ -1428,9 +1431,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "non_negative", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "non_negative", scope = FlowElement.class)
     public JAXBElement<BooleanOrEmptyType> createFlowElementNonNegative(BooleanOrEmptyType value) {
-        return new JAXBElement<BooleanOrEmptyType>(_StockNonNegative_QNAME, BooleanOrEmptyType.class, Flow.Element.class, value);
+        return new JAXBElement<BooleanOrEmptyType>(_StockNonNegative_QNAME, BooleanOrEmptyType.class, FlowElement.class, value);
     }
 
     /**
@@ -1441,9 +1444,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "overflow", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "overflow", scope = FlowElement.class)
     public JAXBElement<EmptyType> createFlowElementOverflow(EmptyType value) {
-        return new JAXBElement<EmptyType>(_FlowOverflow_QNAME, EmptyType.class, Flow.Element.class, value);
+        return new JAXBElement<EmptyType>(_FlowOverflow_QNAME, EmptyType.class, FlowElement.class, value);
     }
 
     /**
@@ -1454,9 +1457,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "leak", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "leak", scope = FlowElement.class)
     public JAXBElement<EmptyType> createFlowElementLeak(EmptyType value) {
-        return new JAXBElement<EmptyType>(_FlowLeak_QNAME, EmptyType.class, Flow.Element.class, value);
+        return new JAXBElement<EmptyType>(_FlowLeak_QNAME, EmptyType.class, FlowElement.class, value);
     }
 
     /**
@@ -1467,9 +1470,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "leak_integers", scope = Flow.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "leak_integers", scope = FlowElement.class)
     public JAXBElement<EmptyType> createFlowElementLeakIntegers(EmptyType value) {
-        return new JAXBElement<EmptyType>(_FlowLeakIntegers_QNAME, EmptyType.class, Flow.Element.class, value);
+        return new JAXBElement<EmptyType>(_FlowLeakIntegers_QNAME, EmptyType.class, FlowElement.class, value);
     }
 
     /**
@@ -1480,9 +1483,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "eqn", scope = Stock.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "eqn", scope = StockElement.class)
     public JAXBElement<String> createStockElementEqn(String value) {
-        return new JAXBElement<String>(_StockEqn_QNAME, String.class, Stock.Element.class, value);
+        return new JAXBElement<String>(_StockEqn_QNAME, String.class, StockElement.class, value);
     }
 
     /**
@@ -1493,9 +1496,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "mathml", scope = Stock.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "mathml", scope = StockElement.class)
     public JAXBElement<String> createStockElementMathml(String value) {
-        return new JAXBElement<String>(_StockMathml_QNAME, String.class, Stock.Element.class, value);
+        return new JAXBElement<String>(_StockMathml_QNAME, String.class, StockElement.class, value);
     }
 
     /**
@@ -1506,9 +1509,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "inflow", scope = Stock.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "inflow", scope = StockElement.class)
     public JAXBElement<String> createStockElementInflow(String value) {
-        return new JAXBElement<String>(_StockInflow_QNAME, String.class, Stock.Element.class, value);
+        return new JAXBElement<String>(_StockInflow_QNAME, String.class, StockElement.class, value);
     }
 
     /**
@@ -1519,9 +1522,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link String }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "outflow", scope = Stock.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "outflow", scope = StockElement.class)
     public JAXBElement<String> createStockElementOutflow(String value) {
-        return new JAXBElement<String>(_StockOutflow_QNAME, String.class, Stock.Element.class, value);
+        return new JAXBElement<String>(_StockOutflow_QNAME, String.class, StockElement.class, value);
     }
 
     /**
@@ -1532,9 +1535,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "queue", scope = Stock.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "queue", scope = StockElement.class)
     public JAXBElement<EmptyType> createStockElementQueue(EmptyType value) {
-        return new JAXBElement<EmptyType>(_StockQueue_QNAME, EmptyType.class, Stock.Element.class, value);
+        return new JAXBElement<EmptyType>(_StockQueue_QNAME, EmptyType.class, StockElement.class, value);
     }
 
     /**
@@ -1545,9 +1548,9 @@ public class ObjectFactory {
      * @return
      *     the new instance of {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
      */
-    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "non_negative", scope = Stock.Element.class)
+    @XmlElementDecl(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", name = "non_negative", scope = StockElement.class)
     public JAXBElement<BooleanOrEmptyType> createStockElementNonNegative(BooleanOrEmptyType value) {
-        return new JAXBElement<BooleanOrEmptyType>(_StockNonNegative_QNAME, BooleanOrEmptyType.class, Stock.Element.class, value);
+        return new JAXBElement<BooleanOrEmptyType>(_StockNonNegative_QNAME, BooleanOrEmptyType.class, StockElement.class, value);
     }
 
 }
