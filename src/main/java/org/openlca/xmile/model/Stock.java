@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "stock", namespace = Xmile.NS)
-public class Stock implements Variable {
+public final class Stock implements Variable {
 
 	@XmlElementRefs({
 		@XmlElementRef(name = "eqn", namespace = Xmile.NS, type = Equation.class),
@@ -36,16 +36,16 @@ public class Stock implements Variable {
 		@XmlElementRef(name = "conveyor", namespace = Xmile.NS, type = Conveyor.class),
 		@XmlElementRef(name = "element", namespace = Xmile.NS, type = JAXBElement.class)
 	})
-	protected List<Object> content;
+	private List<Object> content;
 
 	@XmlAttribute(name = "name")
-	protected String name;
+	private String name;
 	@XmlAttribute(name = "access")
-	protected AccessType access;
+	private AccessType access;
 	@XmlAttribute(name = "autoexport")
-	protected Boolean autoexport;
+	private Boolean autoexport;
 	@XmlAttribute(name = "subscript")
-	protected String subscript;
+	private String subscript;
 
 	public List<Object> getContent() {
 		if (content == null) {

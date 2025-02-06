@@ -15,7 +15,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "aux", namespace = Xmile.NS)
-public class Aux implements Variable {
+public final class Aux implements Variable {
 
 	@XmlElementRefs({
 		@XmlElementRef(name = "eqn", namespace = Xmile.NS, type = Equation.class),

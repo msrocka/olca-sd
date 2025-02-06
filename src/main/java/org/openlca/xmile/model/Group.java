@@ -18,15 +18,15 @@ import jakarta.xml.bind.annotation.XmlType;
 	"docOrEntity"
 })
 @XmlRootElement(name = "group", namespace = Xmile.NS)
-public class Group implements Variable {
+public final class Group implements Variable {
 
 	@XmlElements({
 		@XmlElement(name = "doc", namespace = Xmile.NS, type = String.class),
 		@XmlElement(name = "entity", namespace = Xmile.NS, type = Entity.class)
 	})
-	protected List<Object> docOrEntity;
+	private List<Object> docOrEntity;
 	@XmlAttribute(name = "name", required = true)
-	protected String name;
+	private String name;
 
 	/**
 	 * Gets the value of the docOrEntity property.

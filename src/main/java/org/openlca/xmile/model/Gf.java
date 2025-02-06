@@ -9,20 +9,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "gf", namespace = Xmile.NS)
-public class Gf implements Variable {
+public final class Gf implements Variable {
 
 	@XmlElement(namespace = Xmile.NS)
-	protected MinMaxType xscale;
+	private MinMaxType xscale;
 	@XmlElement(namespace = Xmile.NS)
-	protected MinMaxType yscale;
+	private MinMaxType yscale;
 	@XmlElement(namespace = Xmile.NS)
-	protected PointsType xpts;
+	private PointsType xpts;
 	@XmlElement(namespace = Xmile.NS, required = true)
-	protected PointsType ypts;
+	private PointsType ypts;
 	@XmlAttribute(name = "name")
-	protected String name;
+	private String name;
 	@XmlAttribute(name = "type")
-	protected String type;
+	private String type;
 
 	/**
 	 * Gets the value of the xscale property.

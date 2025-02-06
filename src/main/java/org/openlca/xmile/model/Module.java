@@ -14,16 +14,16 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "module", namespace = Xmile.NS)
-public class Module implements Variable {
+public final class Module implements Variable {
 
 	@XmlElement(name = "connect", namespace = Xmile.NS)
-	protected List<Connector> connectors;
+	private List<Connector> connectors;
 
 	@XmlAttribute(name = "name", required = true)
-	protected String name;
+	private String name;
 
 	@XmlAttribute(name = "resource")
-	protected String resource;
+	private String resource;
 
 	public List<Connector> getConnectors() {
 		if (connectors == null) {

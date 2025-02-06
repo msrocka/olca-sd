@@ -538,23 +538,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Variables }
-     *
-     */
-    public Variables createVariables() {
-        return new Variables();
-    }
-
-    /**
      * Create an instance of {@link Gf }
      *
      */
     public Gf createGf() {
         return new Gf();
-    }
-
-    public Equation createEquation() {
-        return new Equation();
     }
 
     /**
