@@ -21,9 +21,9 @@ public final class Stock implements Variable {
 
 	@XmlElements({
 		@XmlElement(name = "eqn", namespace = Xmile.NS, type = Equation.class),
-		@XmlElement(name = "mathml", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "mathml", namespace = Xmile.NS, type = MathML.class),
 		@XmlElement(name = "units", namespace = Xmile.NS, type = String.class),
-		@XmlElement(name = "doc", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "doc", namespace = Xmile.NS, type = Doc.class),
 		@XmlElement(name = "gf", namespace = Xmile.NS, type = Gf.class),
 		@XmlElement(name = "dimensions", namespace = Xmile.NS, type = Dimensions.class),
 		@XmlElement(name = "event_poster", namespace = Xmile.NS, type = EventPoster.class),

@@ -21,20 +21,20 @@ public final class Flow implements Variable {
 
 	@XmlElements({
 		@XmlElement(name = "eqn", namespace = Xmile.NS, type = Equation.class),
-		@XmlElement(name = "mathml", namespace = Xmile.NS, type = JAXBElement.class),
-		@XmlElement(name = "units", namespace = Xmile.NS, type = JAXBElement.class),
-		@XmlElement(name = "doc", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElement(name = "mathml", namespace = Xmile.NS, type = MathML.class),
+		@XmlElement(name = "units", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "doc", namespace = Xmile.NS, type = Doc.class),
 		@XmlElement(name = "gf", namespace = Xmile.NS, type = Gf.class),
 		@XmlElement(name = "dimensions", namespace = Xmile.NS, type = Dimensions.class),
 		@XmlElement(name = "event_poster", namespace = Xmile.NS, type = EventPoster.class),
 		@XmlElement(name = "scale", namespace = Xmile.NS, type = Scale.class),
 		@XmlElement(name = "range", namespace = Xmile.NS, type = Range.class),
 		@XmlElement(name = "format", namespace = Xmile.NS, type = Format.class),
-		@XmlElement(name = "multiplier", namespace = Xmile.NS, type = JAXBElement.class),
-		@XmlElement(name = "non_negative", namespace = Xmile.NS, type = JAXBElement.class),
-		@XmlElement(name = "overflow", namespace = Xmile.NS, type = JAXBElement.class),
-		@XmlElement(name = "leak", namespace = Xmile.NS, type = JAXBElement.class),
-		@XmlElement(name = "leak_integers", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElement(name = "multiplier", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "non_negative", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "overflow", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "leak", namespace = Xmile.NS, type = String.class),
+		@XmlElement(name = "leak_integers", namespace = Xmile.NS, type = String.class),
 		@XmlElement(name = "element", namespace = Xmile.NS, type = FlowElement.class)
 	})
 	private List<Object> content;
