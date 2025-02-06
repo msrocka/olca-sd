@@ -4,6 +4,8 @@ package org.openlca.xmile.model;
 
 import javax.xml.namespace.QName;
 
+import org.openlca.xmile.model.Module.Connector;
+
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.annotation.XmlElementDecl;
 import jakarta.xml.bind.annotation.XmlRegistry;
@@ -551,6 +553,10 @@ public class ObjectFactory {
         return new Gf();
     }
 
+    public Equation createEquation() {
+        return new Equation();
+    }
+
     /**
      * Create an instance of {@link MinMaxType }
      *
@@ -640,11 +646,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Module.Connect }
+     * Create an instance of {@link Connector }
      *
      */
-    public Module.Connect createModuleConnect() {
-        return new Module.Connect();
+    public Connector createModuleConnect() {
+        return new Connector();
     }
 
     /**

@@ -16,23 +16,30 @@ import jakarta.xml.bind.annotation.XmlType;
     "variables",
     "views"
 })
-@XmlRootElement(name = "model", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
+@XmlRootElement(name = "model", namespace = Xmile.NS)
 public class Model {
 
-    @XmlElement(name = "sim_specs", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
+    @XmlElement(name = "sim_specs", namespace = Xmile.NS)
     protected SimSpecs simSpecs;
-    @XmlElement(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
+
+    @XmlElement(namespace = Xmile.NS)
     protected Behavior behavior;
-    @XmlElement(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", required = true)
+
+    @XmlElement(namespace = Xmile.NS, required = true)
     protected Variables variables;
-    @XmlElement(namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
+
+    @XmlElement(namespace = Xmile.NS)
     protected Views views;
+
     @XmlAttribute(name = "name")
     protected String name;
+
     @XmlAttribute(name = "resource")
     protected String resource;
+
     @XmlAttribute(name = "run")
     protected Boolean run;
+
     @XmlAttribute(name = "password")
     protected String password;
 

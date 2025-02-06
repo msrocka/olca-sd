@@ -15,355 +15,195 @@ import jakarta.xml.bind.annotation.XmlType;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "eqnOrMathmlOrUnits"
-})
-@XmlRootElement(name = "flow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
-public class Flow {
+@XmlRootElement(name = "flow", namespace = Xmile.NS)
+public class Flow implements Variable {
 
-    @XmlElementRefs({
-        @XmlElementRef(name = "eqn", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "mathml", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "units", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "doc", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "gf", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Gf.class, required = false),
-        @XmlElementRef(name = "dimensions", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Dimensions.class, required = false),
-        @XmlElementRef(name = "event_poster", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = EventPoster.class, required = false),
-        @XmlElementRef(name = "scale", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Scale.class, required = false),
-        @XmlElementRef(name = "range", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Range.class, required = false),
-        @XmlElementRef(name = "format", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Format.class, required = false),
-        @XmlElementRef(name = "multiplier", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "non_negative", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "overflow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "leak", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "leak_integers", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "element", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false)
-    })
-    protected List<Object> eqnOrMathmlOrUnits;
-    @XmlAttribute(name = "name")
-    protected String name;
-    @XmlAttribute(name = "access")
-    protected AccessType access;
-    @XmlAttribute(name = "autoexport")
-    protected Boolean autoexport;
-    @XmlAttribute(name = "subscript")
-    protected String subscript;
-    @XmlAttribute(name = "leak_start")
-    protected Double leakStart;
-    @XmlAttribute(name = "leak_end")
-    protected Double leakEnd;
+	@XmlElementRefs({
+		@XmlElementRef(name = "eqn", namespace = Xmile.NS, type = Equation.class),
+		@XmlElementRef(name = "mathml", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "units", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "doc", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "gf", namespace = Xmile.NS, type = Gf.class),
+		@XmlElementRef(name = "dimensions", namespace = Xmile.NS, type = Dimensions.class),
+		@XmlElementRef(name = "event_poster", namespace = Xmile.NS, type = EventPoster.class),
+		@XmlElementRef(name = "scale", namespace = Xmile.NS, type = Scale.class),
+		@XmlElementRef(name = "range", namespace = Xmile.NS, type = Range.class),
+		@XmlElementRef(name = "format", namespace = Xmile.NS, type = Format.class),
+		@XmlElementRef(name = "multiplier", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "non_negative", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "overflow", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "leak", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "leak_integers", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "element", namespace = Xmile.NS, type = JAXBElement.class)
+	})
+	protected List<Object> content;
 
-    /**
-     * Gets the value of the eqnOrMathmlOrUnits property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the eqnOrMathmlOrUnits property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getEqnOrMathmlOrUnits().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link Gf }
-     * {@link Dimensions }
-     * {@link EventPoster }
-     * {@link Scale }
-     * {@link Range }
-     * {@link Format }
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
-     * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-     * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-     * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-     * {@link JAXBElement }{@code <}{@link Element }{@code >}
-     *
-     *
-     */
-    public List<Object> getEqnOrMathmlOrUnits() {
-        if (eqnOrMathmlOrUnits == null) {
-            eqnOrMathmlOrUnits = new ArrayList<Object>();
-        }
-        return this.eqnOrMathmlOrUnits;
-    }
+	@XmlAttribute(name = "name")
+	protected String name;
+	@XmlAttribute(name = "access")
+	protected AccessType access;
+	@XmlAttribute(name = "autoexport")
+	protected Boolean autoexport;
+	@XmlAttribute(name = "subscript")
+	protected String subscript;
+	@XmlAttribute(name = "leak_start")
+	protected Double leakStart;
+	@XmlAttribute(name = "leak_end")
+	protected Double leakEnd;
 
-    /**
-     * Gets the value of the name property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getName() {
-        return name;
-    }
+	public List<Object> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
-    /**
-     * Sets the value of the name property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+	public List<Equation> getEquations() {
+		var equations = new ArrayList<Equation>();
+		for (var obj : getContent()) {
+			if (obj instanceof Equation eqn) {
+				equations.add(eqn);
+			}
+		}
+		return equations;
+	}
 
-    /**
-     * Gets the value of the access property.
-     *
-     * @return
-     *     possible object is
-     *     {@link AccessType }
-     *
-     */
-    public AccessType getAccess() {
-        return access;
-    }
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Sets the value of the access property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link AccessType }
-     *
-     */
-    public void setAccess(AccessType value) {
-        this.access = value;
-    }
+	public void setName(String value) {
+		this.name = value;
+	}
 
-    /**
-     * Gets the value of the autoexport property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *
-     */
-    public boolean isAutoexport() {
-        if (autoexport == null) {
-            return false;
-        } else {
-            return autoexport;
-        }
-    }
+	public AccessType getAccess() {
+		return access;
+	}
 
-    /**
-     * Sets the value of the autoexport property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *
-     */
-    public void setAutoexport(Boolean value) {
-        this.autoexport = value;
-    }
+	public void setAccess(AccessType value) {
+		this.access = value;
+	}
 
-    /**
-     * Gets the value of the subscript property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getSubscript() {
-        return subscript;
-    }
+	public boolean isAutoexport() {
+		if (autoexport == null) {
+			return false;
+		} else {
+			return autoexport;
+		}
+	}
 
-    /**
-     * Sets the value of the subscript property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setSubscript(String value) {
-        this.subscript = value;
-    }
+	public void setAutoexport(Boolean value) {
+		this.autoexport = value;
+	}
 
-    /**
-     * Gets the value of the leakStart property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Double }
-     *
-     */
-    public double getLeakStart() {
-        if (leakStart == null) {
-            return  0.0D;
-        } else {
-            return leakStart;
-        }
-    }
+	public String getSubscript() {
+		return subscript;
+	}
 
-    /**
-     * Sets the value of the leakStart property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Double }
-     *
-     */
-    public void setLeakStart(Double value) {
-        this.leakStart = value;
-    }
+	public void setSubscript(String value) {
+		this.subscript = value;
+	}
 
-    /**
-     * Gets the value of the leakEnd property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Double }
-     *
-     */
-    public double getLeakEnd() {
-        if (leakEnd == null) {
-            return  1.0D;
-        } else {
-            return leakEnd;
-        }
-    }
+	public double getLeakStart() {
+		if (leakStart == null) {
+			return 0.0D;
+		} else {
+			return leakStart;
+		}
+	}
 
-    /**
-     * Sets the value of the leakEnd property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Double }
-     *
-     */
-    public void setLeakEnd(Double value) {
-        this.leakEnd = value;
-    }
+	public void setLeakStart(Double value) {
+		this.leakStart = value;
+	}
 
+	public double getLeakEnd() {
+		if (leakEnd == null) {
+			return 1.0D;
+		} else {
+			return leakEnd;
+		}
+	}
 
-    /**
-     * <p>Java class for anonymous complex type.
-     *
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     *
-     * <pre>
-     * &lt;complexType&gt;
-     *   &lt;complexContent&gt;
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
-     *       &lt;choice maxOccurs="unbounded"&gt;
-     *         &lt;element name="eqn" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
-     *         &lt;element name="mathml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
-     *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}gf" minOccurs="0"/&gt;
-     *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}event_poster" minOccurs="0"/&gt;
-     *         &lt;element name="multiplier" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
-     *         &lt;element name="non_negative" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}boolean_or_empty_type" minOccurs="0"/&gt;
-     *         &lt;element name="overflow" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}empty_type"/&gt;
-     *         &lt;element name="leak" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}empty_type"/&gt;
-     *         &lt;element name="leak_integers" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}empty_type"/&gt;
-     *       &lt;/choice&gt;
-     *       &lt;attribute name="subscript" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
-     *     &lt;/restriction&gt;
-     *   &lt;/complexContent&gt;
-     * &lt;/complexType&gt;
-     * </pre>
-     *
-     *
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "eqnOrMathmlOrGf"
-    })
-    public static class Element {
+	public void setLeakEnd(Double value) {
+		this.leakEnd = value;
+	}
 
-        @XmlElementRefs({
-            @XmlElementRef(name = "eqn", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "mathml", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "gf", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Gf.class, required = false),
-            @XmlElementRef(name = "event_poster", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = EventPoster.class, required = false),
-            @XmlElementRef(name = "multiplier", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "non_negative", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "overflow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "leak", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "leak_integers", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false)
-        })
-        protected List<Object> eqnOrMathmlOrGf;
-        @XmlAttribute(name = "subscript", required = true)
-        protected String subscript;
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = {
+		"eqnOrMathmlOrGf"
+	})
+	public static class Element {
 
-        /**
-         * Gets the value of the eqnOrMathmlOrGf property.
-         *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the eqnOrMathmlOrGf property.
-         *
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getEqnOrMathmlOrGf().add(newItem);
-         * </pre>
-         *
-         *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link Gf }
-         * {@link EventPoster }
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
-         * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-         * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-         * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-         *
-         *
-         */
-        public List<Object> getEqnOrMathmlOrGf() {
-            if (eqnOrMathmlOrGf == null) {
-                eqnOrMathmlOrGf = new ArrayList<Object>();
-            }
-            return this.eqnOrMathmlOrGf;
-        }
+		@XmlElementRefs({
+			@XmlElementRef(name = "eqn", namespace = Xmile.NS, type = JAXBElement.class),
+			@XmlElementRef(name = "mathml", namespace = Xmile.NS, type = JAXBElement.class),
+			@XmlElementRef(name = "gf", namespace = Xmile.NS, type = Gf.class),
+			@XmlElementRef(name = "event_poster", namespace = Xmile.NS, type = EventPoster.class),
+			@XmlElementRef(name = "multiplier", namespace = Xmile.NS, type = JAXBElement.class),
+			@XmlElementRef(name = "non_negative", namespace = Xmile.NS, type = JAXBElement.class),
+			@XmlElementRef(name = "overflow", namespace = Xmile.NS, type = JAXBElement.class),
+			@XmlElementRef(name = "leak", namespace = Xmile.NS, type = JAXBElement.class),
+			@XmlElementRef(name = "leak_integers", namespace = Xmile.NS, type = JAXBElement.class)
+		})
+		protected List<Object> eqnOrMathmlOrGf;
+		@XmlAttribute(name = "subscript", required = true)
+		protected String subscript;
 
-        /**
-         * Gets the value of the subscript property.
-         *
-         * @return
-         *     possible object is
-         *     {@link String }
-         *
-         */
-        public String getSubscript() {
-            return subscript;
-        }
+		/**
+		 * Gets the value of the eqnOrMathmlOrGf property.
+		 *
+		 * <p>
+		 * This accessor method returns a reference to the live list,
+		 * not a snapshot. Therefore any modification you make to the
+		 * returned list will be present inside the JAXB object.
+		 * This is why there is not a <CODE>set</CODE> method for the eqnOrMathmlOrGf property.
+		 *
+		 * <p>
+		 * For example, to add a new item, do as follows:
+		 * <pre>
+		 *    getEqnOrMathmlOrGf().add(newItem);
+		 * </pre>
+		 *
+		 *
+		 * <p>
+		 * Objects of the following type(s) are allowed in the list
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link Gf }
+		 * {@link EventPoster }
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
+		 * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
+		 * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
+		 * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
+		 */
+		public List<Object> getEqnOrMathmlOrGf() {
+			if (eqnOrMathmlOrGf == null) {
+				eqnOrMathmlOrGf = new ArrayList<Object>();
+			}
+			return this.eqnOrMathmlOrGf;
+		}
 
-        /**
-         * Sets the value of the subscript property.
-         *
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *
-         */
-        public void setSubscript(String value) {
-            this.subscript = value;
-        }
+		/**
+		 * Gets the value of the subscript property.
+		 *
+		 * @return possible object is
+		 * {@link String }
+		 */
+		public String getSubscript() {
+			return subscript;
+		}
 
-    }
+		/**
+		 * Sets the value of the subscript property.
+		 *
+		 * @param value allowed object is
+		 *              {@link String }
+		 */
+		public void setSubscript(String value) {
+			this.subscript = value;
+		}
+
+	}
 
 }

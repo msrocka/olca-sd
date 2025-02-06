@@ -31,6 +31,7 @@ public class Macro {
         @XmlElementRef(name = "views", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Views.class, required = false)
     })
     protected List<Object> parmOrEqnOrFormat;
+
     @XmlAttribute(name = "name", required = true)
     protected String name;
     @XmlAttribute(name = "namespace")

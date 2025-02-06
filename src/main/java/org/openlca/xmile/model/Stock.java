@@ -15,295 +15,168 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "eqnOrMathmlOrUnits"
-})
-@XmlRootElement(name = "stock", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
-public class Stock {
+@XmlRootElement(name = "stock", namespace = Xmile.NS)
+public class Stock implements Variable {
 
-    @XmlElementRefs({
-        @XmlElementRef(name = "eqn", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "mathml", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "units", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "doc", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "gf", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Gf.class, required = false),
-        @XmlElementRef(name = "dimensions", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Dimensions.class, required = false),
-        @XmlElementRef(name = "event_poster", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = EventPoster.class, required = false),
-        @XmlElementRef(name = "scale", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Scale.class, required = false),
-        @XmlElementRef(name = "range", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Range.class, required = false),
-        @XmlElementRef(name = "format", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Format.class, required = false),
-        @XmlElementRef(name = "inflow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "outflow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "queue", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "non_negative", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "conveyor", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Conveyor.class, required = false),
-        @XmlElementRef(name = "element", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false)
-    })
-    protected List<Object> eqnOrMathmlOrUnits;
-    @XmlAttribute(name = "name")
-    protected String name;
-    @XmlAttribute(name = "access")
-    protected AccessType access;
-    @XmlAttribute(name = "autoexport")
-    protected Boolean autoexport;
-    @XmlAttribute(name = "subscript")
-    protected String subscript;
+	@XmlElementRefs({
+		@XmlElementRef(name = "eqn", namespace = Xmile.NS, type = Equation.class),
+		@XmlElementRef(name = "mathml", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "units", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "doc", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "gf", namespace = Xmile.NS, type = Gf.class),
+		@XmlElementRef(name = "dimensions", namespace = Xmile.NS, type = Dimensions.class),
+		@XmlElementRef(name = "event_poster", namespace = Xmile.NS, type = EventPoster.class),
+		@XmlElementRef(name = "scale", namespace = Xmile.NS, type = Scale.class),
+		@XmlElementRef(name = "range", namespace = Xmile.NS, type = Range.class),
+		@XmlElementRef(name = "format", namespace = Xmile.NS, type = Format.class),
+		@XmlElementRef(name = "inflow", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "outflow", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "queue", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "non_negative", namespace = Xmile.NS, type = JAXBElement.class),
+		@XmlElementRef(name = "conveyor", namespace = Xmile.NS, type = Conveyor.class),
+		@XmlElementRef(name = "element", namespace = Xmile.NS, type = JAXBElement.class)
+	})
+	protected List<Object> content;
 
-    /**
-     * Gets the value of the eqnOrMathmlOrUnits property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the eqnOrMathmlOrUnits property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getEqnOrMathmlOrUnits().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link Gf }
-     * {@link Dimensions }
-     * {@link EventPoster }
-     * {@link Scale }
-     * {@link Range }
-     * {@link Format }
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-     * {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
-     * {@link Conveyor }
-     * {@link JAXBElement }{@code <}{@link Element }{@code >}
-     *
-     *
-     */
-    public List<Object> getEqnOrMathmlOrUnits() {
-        if (eqnOrMathmlOrUnits == null) {
-            eqnOrMathmlOrUnits = new ArrayList<Object>();
-        }
-        return this.eqnOrMathmlOrUnits;
-    }
+	@XmlAttribute(name = "name")
+	protected String name;
+	@XmlAttribute(name = "access")
+	protected AccessType access;
+	@XmlAttribute(name = "autoexport")
+	protected Boolean autoexport;
+	@XmlAttribute(name = "subscript")
+	protected String subscript;
 
-    /**
-     * Gets the value of the name property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getName() {
-        return name;
-    }
+	public List<Object> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
-    /**
-     * Sets the value of the name property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
-
-    /**
-     * Gets the value of the access property.
-     *
-     * @return
-     *     possible object is
-     *     {@link AccessType }
-     *
-     */
-    public AccessType getAccess() {
-        return access;
-    }
-
-    /**
-     * Sets the value of the access property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link AccessType }
-     *
-     */
-    public void setAccess(AccessType value) {
-        this.access = value;
-    }
-
-    /**
-     * Gets the value of the autoexport property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *
-     */
-    public boolean isAutoexport() {
-        if (autoexport == null) {
-            return false;
-        } else {
-            return autoexport;
-        }
-    }
-
-    /**
-     * Sets the value of the autoexport property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *
-     */
-    public void setAutoexport(Boolean value) {
-        this.autoexport = value;
-    }
-
-    /**
-     * Gets the value of the subscript property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getSubscript() {
-        return subscript;
-    }
-
-    /**
-     * Sets the value of the subscript property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
-     */
-    public void setSubscript(String value) {
-        this.subscript = value;
-    }
+	public List<Equation> getEquations() {
+		var equations = new ArrayList<Equation>();
+		for (var obj : getContent()) {
+			if (obj instanceof Equation eqn) {
+				equations.add(eqn);
+			}
+		}
+		return equations;
+	}
 
 
-    /**
-     * <p>Java class for anonymous complex type.
-     *
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     *
-     * <pre>
-     * &lt;complexType&gt;
-     *   &lt;complexContent&gt;
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
-     *       &lt;choice maxOccurs="unbounded"&gt;
-     *         &lt;element name="eqn" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
-     *         &lt;element name="mathml" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
-     *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}gf" minOccurs="0"/&gt;
-     *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}event_poster" minOccurs="0"/&gt;
-     *         &lt;element name="inflow" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
-     *         &lt;element name="outflow" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
-     *         &lt;element name="queue" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}empty_type" minOccurs="0"/&gt;
-     *         &lt;element name="non_negative" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}boolean_or_empty_type" minOccurs="0"/&gt;
-     *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}conveyor" minOccurs="0"/&gt;
-     *       &lt;/choice&gt;
-     *       &lt;attribute name="subscript" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
-     *     &lt;/restriction&gt;
-     *   &lt;/complexContent&gt;
-     * &lt;/complexType&gt;
-     * </pre>
-     *
-     *
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "eqnOrMathmlOrGf"
-    })
-    public static class Element {
+	public String getName() {
+		return name;
+	}
 
-        @XmlElementRefs({
-            @XmlElementRef(name = "eqn", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "mathml", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "gf", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Gf.class, required = false),
-            @XmlElementRef(name = "event_poster", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = EventPoster.class, required = false),
-            @XmlElementRef(name = "inflow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "outflow", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "queue", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "non_negative", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "conveyor", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0", type = Conveyor.class, required = false)
-        })
-        protected List<Object> eqnOrMathmlOrGf;
-        @XmlAttribute(name = "subscript", required = true)
-        protected String subscript;
+	public void setName(String value) {
+		this.name = value;
+	}
 
-        /**
-         * Gets the value of the eqnOrMathmlOrGf property.
-         *
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the eqnOrMathmlOrGf property.
-         *
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getEqnOrMathmlOrGf().add(newItem);
-         * </pre>
-         *
-         *
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link Gf }
-         * {@link EventPoster }
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
-         * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
-         * {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
-         * {@link Conveyor }
-         *
-         *
-         */
-        public List<Object> getEqnOrMathmlOrGf() {
-            if (eqnOrMathmlOrGf == null) {
-                eqnOrMathmlOrGf = new ArrayList<Object>();
-            }
-            return this.eqnOrMathmlOrGf;
-        }
+	public AccessType getAccess() {
+		return access;
+	}
 
-        /**
-         * Gets the value of the subscript property.
-         *
-         * @return
-         *     possible object is
-         *     {@link String }
-         *
-         */
-        public String getSubscript() {
-            return subscript;
-        }
+	public void setAccess(AccessType value) {
+		this.access = value;
+	}
 
-        /**
-         * Sets the value of the subscript property.
-         *
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *
-         */
-        public void setSubscript(String value) {
-            this.subscript = value;
-        }
+	public boolean isAutoexport() {
+		if (autoexport == null) {
+			return false;
+		} else {
+			return autoexport;
+		}
+	}
 
-    }
+	public void setAutoexport(Boolean value) {
+		this.autoexport = value;
+	}
+
+	public String getSubscript() {
+		return subscript;
+	}
+
+	public void setSubscript(String value) {
+		this.subscript = value;
+	}
+
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = {
+		"eqnOrMathmlOrGf"
+	})
+	public static class Element {
+
+		@XmlElementRefs({
+			@XmlElementRef(name = "eqn", namespace = Xmile.NS, type = JAXBElement.class, required = false),
+			@XmlElementRef(name = "mathml", namespace = Xmile.NS, type = JAXBElement.class, required = false),
+			@XmlElementRef(name = "gf", namespace = Xmile.NS, type = Gf.class, required = false),
+			@XmlElementRef(name = "event_poster", namespace = Xmile.NS, type = EventPoster.class, required = false),
+			@XmlElementRef(name = "inflow", namespace = Xmile.NS, type = JAXBElement.class, required = false),
+			@XmlElementRef(name = "outflow", namespace = Xmile.NS, type = JAXBElement.class, required = false),
+			@XmlElementRef(name = "queue", namespace = Xmile.NS, type = JAXBElement.class, required = false),
+			@XmlElementRef(name = "non_negative", namespace = Xmile.NS, type = JAXBElement.class, required = false),
+			@XmlElementRef(name = "conveyor", namespace = Xmile.NS, type = Conveyor.class, required = false)
+		})
+		protected List<Object> eqnOrMathmlOrGf;
+		@XmlAttribute(name = "subscript", required = true)
+		protected String subscript;
+
+		/**
+		 * Gets the value of the eqnOrMathmlOrGf property.
+		 *
+		 * <p>
+		 * This accessor method returns a reference to the live list,
+		 * not a snapshot. Therefore any modification you make to the
+		 * returned list will be present inside the JAXB object.
+		 * This is why there is not a <CODE>set</CODE> method for the eqnOrMathmlOrGf property.
+		 *
+		 * <p>
+		 * For example, to add a new item, do as follows:
+		 * <pre>
+		 *    getEqnOrMathmlOrGf().add(newItem);
+		 * </pre>
+		 *
+		 *
+		 * <p>
+		 * Objects of the following type(s) are allowed in the list
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link Gf }
+		 * {@link EventPoster }
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link JAXBElement }{@code <}{@link String }{@code >}
+		 * {@link JAXBElement }{@code <}{@link EmptyType }{@code >}
+		 * {@link JAXBElement }{@code <}{@link BooleanOrEmptyType }{@code >}
+		 * {@link Conveyor }
+		 */
+		public List<Object> getEqnOrMathmlOrGf() {
+			if (eqnOrMathmlOrGf == null) {
+				eqnOrMathmlOrGf = new ArrayList<Object>();
+			}
+			return this.eqnOrMathmlOrGf;
+		}
+
+		/**
+		 * Gets the value of the subscript property.
+		 *
+		 * @return possible object is
+		 * {@link String }
+		 */
+		public String getSubscript() {
+			return subscript;
+		}
+
+		/**
+		 * Sets the value of the subscript property.
+		 *
+		 * @param value allowed object is
+		 *              {@link String }
+		 */
+		public void setSubscript(String value) {
+			this.subscript = value;
+		}
+
+	}
 
 }
