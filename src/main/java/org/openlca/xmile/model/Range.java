@@ -1,31 +1,13 @@
 
 package org.openlca.xmile.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-/**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attribute name="min" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *       &lt;attribute name="max" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "range", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
@@ -38,11 +20,11 @@ public class Range {
 
     /**
      * Gets the value of the min property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Double }
-     *     
+     *
      */
     public Double getMin() {
         return min;
@@ -50,11 +32,11 @@ public class Range {
 
     /**
      * Sets the value of the min property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Double }
-     *     
+     *
      */
     public void setMin(Double value) {
         this.min = value;
@@ -62,11 +44,11 @@ public class Range {
 
     /**
      * Gets the value of the max property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Double }
-     *     
+     *
      */
     public Double getMax() {
         return max;
@@ -74,11 +56,11 @@ public class Range {
 
     /**
      * Sets the value of the max property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Double }
-     *     
+     *
      */
     public void setMax(Double value) {
         this.max = value;

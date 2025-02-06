@@ -1,40 +1,14 @@
 
 package org.openlca.xmile.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-/**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}sim_specs" minOccurs="0"/&gt;
- *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}behavior" minOccurs="0"/&gt;
- *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}variables"/&gt;
- *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}views" minOccurs="0"/&gt;
- *       &lt;/sequence&gt;
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="resource" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="run" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" /&gt;
- *       &lt;attribute name="password" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "simSpecs",
@@ -64,11 +38,11 @@ public class Model {
 
     /**
      * Gets the value of the simSpecs property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link SimSpecs }
-     *     
+     *
      */
     public SimSpecs getSimSpecs() {
         return simSpecs;
@@ -76,11 +50,11 @@ public class Model {
 
     /**
      * Sets the value of the simSpecs property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link SimSpecs }
-     *     
+     *
      */
     public void setSimSpecs(SimSpecs value) {
         this.simSpecs = value;
@@ -88,11 +62,11 @@ public class Model {
 
     /**
      * Gets the value of the behavior property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Behavior }
-     *     
+     *
      */
     public Behavior getBehavior() {
         return behavior;
@@ -100,11 +74,11 @@ public class Model {
 
     /**
      * Sets the value of the behavior property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Behavior }
-     *     
+     *
      */
     public void setBehavior(Behavior value) {
         this.behavior = value;
@@ -112,11 +86,11 @@ public class Model {
 
     /**
      * Gets the value of the variables property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Variables }
-     *     
+     *
      */
     public Variables getVariables() {
         return variables;
@@ -124,11 +98,11 @@ public class Model {
 
     /**
      * Sets the value of the variables property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Variables }
-     *     
+     *
      */
     public void setVariables(Variables value) {
         this.variables = value;
@@ -136,11 +110,11 @@ public class Model {
 
     /**
      * Gets the value of the views property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Views }
-     *     
+     *
      */
     public Views getViews() {
         return views;
@@ -148,11 +122,11 @@ public class Model {
 
     /**
      * Sets the value of the views property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Views }
-     *     
+     *
      */
     public void setViews(Views value) {
         this.views = value;
@@ -160,11 +134,11 @@ public class Model {
 
     /**
      * Gets the value of the name property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getName() {
         return name;
@@ -172,11 +146,11 @@ public class Model {
 
     /**
      * Sets the value of the name property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setName(String value) {
         this.name = value;
@@ -184,11 +158,11 @@ public class Model {
 
     /**
      * Gets the value of the resource property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getResource() {
         return resource;
@@ -196,11 +170,11 @@ public class Model {
 
     /**
      * Sets the value of the resource property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setResource(String value) {
         this.resource = value;
@@ -208,11 +182,11 @@ public class Model {
 
     /**
      * Gets the value of the run property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Boolean }
-     *     
+     *
      */
     public boolean isRun() {
         if (run == null) {
@@ -224,11 +198,11 @@ public class Model {
 
     /**
      * Sets the value of the run property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Boolean }
-     *     
+     *
      */
     public void setRun(Boolean value) {
         this.run = value;
@@ -236,11 +210,11 @@ public class Model {
 
     /**
      * Gets the value of the password property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getPassword() {
         return password;
@@ -248,11 +222,11 @@ public class Model {
 
     /**
      * Sets the value of the password property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setPassword(String value) {
         this.password = value;

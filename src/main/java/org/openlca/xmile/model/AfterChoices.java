@@ -1,27 +1,9 @@
 
 package org.openlca.xmile.model;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnumValue;
 
-
-/**
- * <p>Java class for after_choices.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <pre>
- * &lt;simpleType name="after_choices"&gt;
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="one_time"/&gt;
- *     &lt;enumeration value="one_dt"/&gt;
- *   &lt;/restriction&gt;
- * &lt;/simpleType&gt;
- * </pre>
- * 
- */
-@XmlType(name = "after_choices", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
 @XmlEnum
 public enum AfterChoices {
 

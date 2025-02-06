@@ -1,54 +1,10 @@
 
 package org.openlca.xmile.model;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnumValue;
+import jakarta.xml.bind.annotation.XmlType;
 
-
-/**
- * <p>Java class for menu_action_choices.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <pre>
- * &lt;simpleType name="menu_action_choices"&gt;
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="open"/&gt;
- *     &lt;enumeration value="close"/&gt;
- *     &lt;enumeration value="save"/&gt;
- *     &lt;enumeration value="save_as"/&gt;
- *     &lt;enumeration value="save_as_image"/&gt;
- *     &lt;enumeration value="revert"/&gt;
- *     &lt;enumeration value="print_setup"/&gt;
- *     &lt;enumeration value="print"/&gt;
- *     &lt;enumeration value="print_screen"/&gt;
- *     &lt;enumeration value="run"/&gt;
- *     &lt;enumeration value="pause"/&gt;
- *     &lt;enumeration value="resume"/&gt;
- *     &lt;enumeration value="stop"/&gt;
- *     &lt;enumeration value="run_restore"/&gt;
- *     &lt;enumeration value="restore_all"/&gt;
- *     &lt;enumeration value="restore_sliders"/&gt;
- *     &lt;enumeration value="restore_knobs"/&gt;
- *     &lt;enumeration value="restore_list_inputs"/&gt;
- *     &lt;enumeration value="restore_graphical_inputs"/&gt;
- *     &lt;enumeration value="restore_switches"/&gt;
- *     &lt;enumeration value="restore_numeric_displays"/&gt;
- *     &lt;enumeration value="restore_graphs_tables"/&gt;
- *     &lt;enumeration value="restore_lamps_gauges"/&gt;
- *     &lt;enumeration value="data_manager"/&gt;
- *     &lt;enumeration value="save_data_now"/&gt;
- *     &lt;enumeration value="import_now"/&gt;
- *     &lt;enumeration value="export_now"/&gt;
- *     &lt;enumeration value="exit"/&gt;
- *     &lt;enumeration value="find"/&gt;
- *     &lt;enumeration value="run_specs"/&gt;
- *   &lt;/restriction&gt;
- * &lt;/simpleType&gt;
- * </pre>
- * 
- */
 @XmlType(name = "menu_action_choices", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
 @XmlEnum
 public enum MenuActionChoices {
