@@ -2,7 +2,7 @@
 <xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE">
 	<header>
 		<smile version="1.0" namespace="std, isee" uses_arrays="1"/>
-		<name/>
+		<name>Example model</name>
 		<uuid>c5e5b6ba-6e2d-41f4-b627-c0ae7c4af38c</uuid>
 		<vendor>isee systems, inc.</vendor>
 		<product version="" isee:build_number="development" isee:saved_by_v1="false" lang="en"/>

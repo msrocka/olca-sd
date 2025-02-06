@@ -1,32 +1,14 @@
 
 package org.openlca.xmile.model;
 
+
 import java.math.BigInteger;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 
-
-/**
- * <p>Java class for style_type complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="style_type"&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attGroup ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}style_attributes"/&gt;
- *       &lt;attGroup ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}style_positioning_attributes"/&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- *
- *
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "style_type", namespace = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0")
 public class StyleType {

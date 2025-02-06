@@ -1,75 +1,19 @@
 
 package org.openlca.xmile.model;
 
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElements;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-
-/**
- * <p>Java class for anonymous complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;choice maxOccurs="unbounded" minOccurs="0"&gt;
- *         &lt;element ref="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}style" minOccurs="0"/&gt;
- *         &lt;element name="view" maxOccurs="unbounded" minOccurs="0"&gt;
- *           &lt;complexType&gt;
- *             &lt;complexContent&gt;
- *               &lt;extension base="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}view_content_type"&gt;
- *                 &lt;attribute name="background" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *                 &lt;attribute name="zoom" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *                 &lt;attribute name="scroll_x" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *                 &lt;attribute name="scroll_y" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *                 &lt;attribute name="home_page" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
- *                 &lt;attribute name="home_view" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
- *                 &lt;attribute name="page_width" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *                 &lt;attribute name="page_height" type="{http://www.w3.org/2001/XMLSchema}double" /&gt;
- *                 &lt;attribute name="show_pages" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
- *                 &lt;attribute name="page_orientation"&gt;
- *                   &lt;simpleType&gt;
- *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *                       &lt;enumeration value="landscape"/&gt;
- *                       &lt;enumeration value="portrait"/&gt;
- *                     &lt;/restriction&gt;
- *                   &lt;/simpleType&gt;
- *                 &lt;/attribute&gt;
- *                 &lt;attribute name="page_sequence"&gt;
- *                   &lt;simpleType&gt;
- *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *                       &lt;enumeration value="row"/&gt;
- *                       &lt;enumeration value="column"/&gt;
- *                     &lt;/restriction&gt;
- *                   &lt;/simpleType&gt;
- *                 &lt;/attribute&gt;
- *                 &lt;attribute name="type" type="{http://docs.oasis-open.org/xmile/ns/XMILE/v1.0}view_type" default="stock_flow" /&gt;
- *                 &lt;attribute name="x" type="{http://www.w3.org/2001/XMLSchema}int" /&gt;
- *                 &lt;attribute name="y" type="{http://www.w3.org/2001/XMLSchema}int" /&gt;
- *                 &lt;attribute name="content" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *               &lt;/extension&gt;
- *             &lt;/complexContent&gt;
- *           &lt;/complexType&gt;
- *         &lt;/element&gt;
- *       &lt;/choice&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- *
- *
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "styleOrView"
