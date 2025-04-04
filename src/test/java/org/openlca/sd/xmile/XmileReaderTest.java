@@ -22,5 +22,55 @@ public class XmileReaderTest {
 	public void testReadHeader() {
 		var header = xmile.header();
 		assertEquals("Example model", header.name());
+		assertEquals("c5e5b6ba-6e2d-41f4-b627-c0ae7c4af38c", header.uuid());
+		assertEquals("isee systems, inc.", header.vendor());
+	}
+
+	@Test
+	public void testReadSimSpecs() {
+		var specs = xmile.simSpecs();
+		assertEquals("Euler", specs.method());
+		assertEquals("Years", specs.timeUnits());
+		assertEquals(1.0, specs.start(), 0.0001);
+		assertEquals(25.0, specs.stop(), 0.0001);
+		assertEquals(0.25, specs.dt(), 0.0001);
+	}
+
+	@Test
+	public void testReadStocks() {
+		var stocks = xmile.model().stocks();
+		assertEquals(2, stocks.size());
+
+		var pop = stocks.stream()
+			.filter(s -> s.name().equals("Population"))
+			.findFirst()
+			.orElseThrow();
+		assertEquals("100", pop.eqn);
+	}
+
+	@Test
+	public void testReadFlows() {
+		var flows = xmile.model().flows();
+		assertEquals(4, flows.size());
+
+		var birth = flows.stream()
+			.filter(f -> f.name().equals("regenerating"))
+			.findFirst()
+			.orElseThrow();
+		assertEquals("(1+0.5)*Natural_Resources*regeneration_rate", birth.eqn);
+	}
+
+	@Test
+	public void testReadAuxs() {
+		var auxs = xmile.model().auxs();
+		assertEquals(6, auxs.size());
+
+		var birthRate = auxs.stream()
+			.filter(a -> a.name().equals("death rate"))
+			.findFirst()
+			.orElseThrow();
+		assertEquals(
+			"\"resources\\\\_person\"/INIT(\"resources\\\\_person\")",
+			birthRate.eqn);
 	}
 }

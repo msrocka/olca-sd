@@ -20,6 +20,12 @@ public class Xmile {
 	@XmlElement(name = "header", namespace = NS)
 	Header header;
 
+	@XmlElement(name = "sim_specs", namespace = NS)
+	SimSpecs simSpecs;
+
+	@XmlElement(name = "model", namespace = NS)
+	Model model;
+
 	public static Xmile readFrom(File file) {
 		try (var stream = new FileInputStream(file);
 				 var buffer = new BufferedInputStream(stream)) {
@@ -39,5 +45,13 @@ public class Xmile {
 
 	public Header header() {
 		return header;
+	}
+
+	public SimSpecs simSpecs() {
+		return simSpecs;
+	}
+
+	public Model model() {
+		return model;
 	}
 }
