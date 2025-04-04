@@ -2,25 +2,29 @@ package org.openlca.sd.xmile;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Stock implements Variable{
+public final class Stock extends Variable {
 
-	@XmlAttribute(name = "name")
-	String name;
+	@XmlElement(name = "inflow", namespace = Xmile.NS)
+	String inflow;
 
-	@XmlElement(name = "eqn", namespace = Xmile.NS)
-	String eqn;
+	@XmlElement(name = "outflow", namespace = Xmile.NS)
+	String outflow;
 
-	@Override
-	public String name() {
-		return name;
+	@XmlElement(name = "non_negative", namespace = Xmile.NS)
+	NonNegative nonNegative;
+
+	public String inflow() {
+		return inflow;
 	}
 
-	@Override
-	public String eqn() {
-		return eqn;
+	public String outflow() {
+		return outflow;
+	}
+
+	public boolean isNonNegative() {
+		return nonNegative != null;
 	}
 }
