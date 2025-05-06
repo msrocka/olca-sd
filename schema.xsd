@@ -9,10 +9,10 @@
 	Source: http://docs.oasis-open.org/xmile/xmile/v1.0/os/schemas/
 
 -->
-  <!-- 
-  
+  <!--
+
   Schema for XMILE v1.0  October 13, 2014
-  
+
     Contributing Authors: Will Glass-Hussain
                           Robert Eberlein
   -->
@@ -37,8 +37,8 @@
           <xs:element ref="macro" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element ref="model" minOccurs="1" maxOccurs="unbounded"/>
 
-          <!-- need to inline dimensions element below to avoid conflict with dimensions element in stock/flow/aux -->
-          <xs:element name="dimensions">
+          <!-- need to inline dims element below to avoid conflict with dims element in stock/flow/aux -->
+          <xs:element name="dims">
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="dim" minOccurs="0" maxOccurs="unbounded">
@@ -69,7 +69,7 @@
     </xs:complexType>
   </xs:element>
 
-  <!-- Certain child options (product, options, vendor) of the header tag are 
+  <!-- Certain child options (product, options, vendor) of the header tag are
   required for main models but not for included files -->
   <xs:element name="header">
     <xs:annotation>
@@ -425,7 +425,7 @@
         <xs:element name="units" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element name="doc" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="gf" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="dimensions" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dims" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="event_poster" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="scale" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="range" minOccurs="0" maxOccurs="1"/>
@@ -503,7 +503,7 @@
         <xs:element name="units" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element name="doc" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="gf" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="dimensions" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dims" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="event_poster" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="scale" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="range" minOccurs="0" maxOccurs="1"/>
@@ -564,7 +564,7 @@
         <xs:element name="units" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element name="doc" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="gf" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="dimensions" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dims" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="event_poster" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="scale" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="range" minOccurs="0" maxOccurs="1"/>
@@ -744,7 +744,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="dimensions">
+  <xs:element name="dims">
     <xs:annotation>
       <xs:documentation>
         Dimensions for a specific stock, flow, or aux in a model.
@@ -1881,7 +1881,7 @@
       </xs:choice>
     </xs:complexType>
   </xs:element>
-  
+
 
   <xs:element name="text_box">
     <xs:complexType>
