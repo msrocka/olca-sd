@@ -63,11 +63,18 @@ public sealed interface Cell {
 	}
 
 	record EmptyCell() implements Cell {
-		private static final  EmptyCell _instance = new EmptyCell();
+		private static final EmptyCell _instance = new EmptyCell();
 
 		private static EmptyCell get() {
 			return _instance;
 		}
+
+		@Override
+		public boolean equals(Object other) {
+			return other == this
+				|| other instanceof Cell cell && cell.isEmpty();
+		}
+
 	}
 
 	record TensorCell(Tensor tensor) implements Cell {

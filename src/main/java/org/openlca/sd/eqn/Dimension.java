@@ -9,7 +9,7 @@ public record Dimension(String name, String[] elements) {
 		Objects.requireNonNull(elements);
 	}
 
-	public static Dimension of(String name, String...elements) {
+	public static Dimension of(String name, String... elements) {
 		return new Dimension(name, elements);
 	}
 
@@ -26,5 +26,22 @@ public record Dimension(String name, String[] elements) {
 			}
 		}
 		return -1;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Dimension(String oName, String[] oElems)))
+			return false;
+		if (!Objects.equals(name, oName))
+			return false;
+		if (elements.length != oElems.length)
+			return false;
+		for (int i = 0; i < elements.length; i++) {
+			if (!Objects.equals(elements[i], oElems[i]))
+				return false;
+		}
+		return true;
 	}
 }

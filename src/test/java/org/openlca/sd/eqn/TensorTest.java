@@ -10,12 +10,20 @@ public class TensorTest {
 	public void test1D() {
 		var dim = Dimension.of("dim", "a", "b", "c");
 		var t = Tensor.of(dim);
-
-
-		var cell = t.get("*");
-
-
+		t.setAll(42);
 		assertEquals(1, t.dimensions());
+		assertEquals(3, t.size());
+
+		assertEquals(t, t.get("*").getAsTensorCell().tensor());
+		assertEquals(t, t.get("dim").getAsTensorCell().tensor());
+
+		for (var elem : dim.elements()) {
+			assertEquals(42, t.get(elem).getAsNumberCell().number(), 1e-16);
+		}
+
+		t.set("b", 21);
+		assertEquals(21, t.get("b").getAsNumberCell().number(), 1e-16);
+
 	}
 
 

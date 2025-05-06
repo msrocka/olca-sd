@@ -59,7 +59,7 @@ public class Tensor {
 	}
 
 	public void set(String elem, double value) {
-		if (Util.isMatchAll(elem)) {
+		if (isMatchAll(elem)) {
 			setAll(value);
 			return;
 		}
@@ -92,7 +92,7 @@ public class Tensor {
 
 	public Cell get(String row) {
 		// match-all rows of this tensor, returns a copy of this sensor.
-		if (Util.isMatchAll(row))
+		if (isMatchAll(row))
 			return Cell.of(this);
 
 
@@ -147,5 +147,36 @@ public class Tensor {
 			}
 		}
 		return copy;
+	}
+
+	private boolean isMatchAll(String s) {
+		if (s == null)
+			return false;
+		var ss = s.strip();
+		return ss.equals("*") || ss.equals(dim.name());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Tensor other))
+			return false;
+
+		// compare dimensions
+		if (this.n != other.n
+			|| !Objects.equals(dim, other.dim))
+			return false;
+		for (int i = 0; i < subs.length; i++) {
+			if (!Objects.equals(subs[i], other.subs[i]))
+				return false;
+		}
+
+		// compare cells
+		for (int i = 0; i < cells.length; i++) {
+			if (!Objects.equals(cells[i], other.cells[i]))
+				return false;
+		}
+		return super.equals(obj);
 	}
 }
