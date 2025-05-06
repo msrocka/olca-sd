@@ -1,4 +1,4 @@
-package org.openlca.sd.eqns;
+package org.openlca.sd.eqn;
 
 public class FunctionContext {
 

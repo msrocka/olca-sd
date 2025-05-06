@@ -1,4 +1,4 @@
-package org.openlca.sd.eqns;
+package org.openlca.sd.eqn;
 
 /// The possible types of a tensor cell entry.
 public sealed interface Cell {
@@ -6,7 +6,7 @@ public sealed interface Cell {
 	static Cell of(Tensor tensor) {
 		return tensor != null
 			? new TensorCell(tensor)
-			: new EmptyCell();
+			: empty();
 	}
 
 	static Cell of(double number) {
@@ -14,9 +14,13 @@ public sealed interface Cell {
 	}
 
 	static Cell of(String eqn) {
-		return eqn != null && !eqn.isBlank()
+		return Util.isEmpty(eqn)
 			? new EqnCell(eqn)
-			: new EmptyCell();
+			: empty();
+	}
+
+	static Cell empty() {
+		return EmptyCell.get();
 	}
 
 	default boolean isEmpty() {
@@ -59,6 +63,11 @@ public sealed interface Cell {
 	}
 
 	record EmptyCell() implements Cell {
+		private static final  EmptyCell _instance = new EmptyCell();
+
+		private static EmptyCell get() {
+			return _instance;
+		}
 	}
 
 	record TensorCell(Tensor tensor) implements Cell {

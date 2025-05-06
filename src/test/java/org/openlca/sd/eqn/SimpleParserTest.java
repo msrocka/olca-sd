@@ -3,7 +3,6 @@ package org.openlca.sd.eqn;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.openlca.sd.eqns.Interpreter;
 
 public class SimpleParserTest {
 

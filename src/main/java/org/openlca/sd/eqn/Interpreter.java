@@ -1,4 +1,4 @@
-package org.openlca.sd.eqns;
+package org.openlca.sd.eqn;
 
 import java.util.Stack;
 
@@ -6,9 +6,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.openlca.sd.eqn.EqnBaseListener;
-import org.openlca.sd.eqn.EqnLexer;
-import org.openlca.sd.eqn.EqnParser;
 import org.openlca.sd.eqn.EqnParser.AddSubContext;
 import org.openlca.sd.eqn.EqnParser.MulDivContext;
 import org.openlca.sd.eqn.EqnParser.NumberContext;
