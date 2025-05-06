@@ -27,6 +27,17 @@ public class XmileReaderTest {
 	}
 
 	@Test
+	public void testReadDims() {
+		var dims = xmile.dims();
+		assertEquals(1, dims.size());
+
+		var dim = dims.getFirst();
+		assertEquals("Dim_Name_1", dim.name());
+		assertEquals(1, dim.size());
+		assertTrue(dim.elems().isEmpty());
+	}
+
+	@Test
 	public void testReadSimSpecs() {
 		var specs = xmile.simSpecs();
 		assertEquals("Euler", specs.method());
