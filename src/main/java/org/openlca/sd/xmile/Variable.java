@@ -4,7 +4,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
 public sealed abstract class Variable
-	permits Aux, Flow, Stock {
+	permits Auxil, Flow, Stock {
 
 	@XmlAttribute(name = "name")
 	String name;

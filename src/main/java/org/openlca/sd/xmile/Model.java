@@ -17,7 +17,7 @@ public class Model {
 	@XmlElements({
 		@XmlElement(name = "stock", namespace = Xmile.NS, type = Stock.class),
 		@XmlElement(name = "flow", namespace = Xmile.NS, type = Flow.class),
-		@XmlElement(name = "aux", namespace = Xmile.NS, type = Aux.class)
+		@XmlElement(name = "aux", namespace = Xmile.NS, type = Auxil.class)
 	})
 	List<Variable> variables;
 
@@ -33,8 +33,8 @@ public class Model {
 		return filter(Flow.class);
 	}
 
-	public List<Aux> auxs() {
-		return filter(Aux.class);
+	public List<Auxil> auxs() {
+		return filter(Auxil.class);
 	}
 
 	private <T> List<T> filter(Class<T> type) {
