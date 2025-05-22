@@ -4,6 +4,6 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Aux extends Variable {
+public final class Auxil extends Variable {
 
 }
