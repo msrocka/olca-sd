@@ -15,7 +15,7 @@ public class XmiDim {
 	String name;
 
 	@XmlAttribute(name = "size")
-	int size;
+	Integer size;
 
 	@XmlElement(name = "elem", namespace = Xmile.NS)
 	List<Elem> elems;
@@ -25,7 +25,7 @@ public class XmiDim {
 	}
 
 	public int size() {
-		return size;
+		return size != null ? size : elems().size();
 	}
 
 	public List<Elem> elems() {

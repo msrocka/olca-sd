@@ -1,16 +1,18 @@
 package org.openlca.sd.xmile;
 
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class XmiAux extends XmiVariable {
+public final class XmiAux extends XmiEvaluatable {
 
-	@XmlElement(name = "eqn", namespace = Xmile.NS)
-	String eqn;
+	@XmlElement(name ="element", namespace = Xmile.NS)
+	List<XmiElement> elements;
 
-	public String eqn() {
-		return eqn;
+	public List<XmiElement> elements() {
+		return elements != null ? elements : List.of();
 	}
 }
