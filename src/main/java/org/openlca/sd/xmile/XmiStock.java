@@ -9,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class XmiStock extends XmiVariable {
 
+	@XmlElement(name = "eqn", namespace = Xmile.NS)
+	String eqn;
+
 	@XmlElement(name = "inflow", namespace = Xmile.NS)
 	List<String> inflows;
 
@@ -17,6 +20,10 @@ public final class XmiStock extends XmiVariable {
 
 	@XmlElement(name = "non_negative", namespace = Xmile.NS)
 	XmiNonNegative nonNegative;
+
+	public String eqn() {
+		return eqn;
+	}
 
 	public List<String> inflows() {
 		return inflows != null ? inflows : List.of();

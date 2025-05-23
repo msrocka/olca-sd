@@ -17,6 +17,7 @@ public class XmiModel {
 	@XmlElements({
 		@XmlElement(name = "stock", namespace = Xmile.NS, type = XmiStock.class),
 		@XmlElement(name = "flow", namespace = Xmile.NS, type = XmiFlow.class),
+		@XmlElement(name = "gf", namespace = Xmile.NS, type = XmiGf.class),
 		@XmlElement(name = "aux", namespace = Xmile.NS, type = XmiAux.class)
 	})
 	List<XmiVariable> variables;
@@ -35,6 +36,10 @@ public class XmiModel {
 
 	public List<XmiAux> auxs() {
 		return filter(XmiAux.class);
+	}
+
+	public List<XmiGf> gfs() {
+		return filter(XmiGf.class);
 	}
 
 	private <T> List<T> filter(Class<T> type) {

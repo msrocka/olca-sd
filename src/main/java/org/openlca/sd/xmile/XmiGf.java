@@ -6,10 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmiGf {
-
-	@XmlAttribute(name = "name")
-	String name;
+public final class XmiGf extends XmiVariable {
 
 	@XmlAttribute(name = "type")
 	XmiGfType type;
@@ -25,10 +22,6 @@ public class XmiGf {
 
 	@XmlElement(name = "ypts", namespace = Xmile.NS)
 	XmiPoints ypts;
-
-	public String name() {
-		return name;
-	}
 
 	public XmiGfType type() {
 		return type != null ? type : XmiGfType.CONTINUOUS;
