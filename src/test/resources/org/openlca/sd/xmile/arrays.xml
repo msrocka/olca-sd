@@ -22,32 +22,32 @@
 		<stop>10</stop>
 		<dt>1.0</dt>
 	</sim_specs>
-	<dimensions>
+	<dims>
 		<dim name="products" size="3"/>
 		<dim name="regions">
 			<elem name="north"/>
 			<elem name="south"/>
 		</dim>
-	</dimensions>
+	</dims>
 	<model>
 		<variables>
 			<aux name="single dim var apply to all">
-				<dimensions>
+				<dims>
 					<dim name="products"/>
-				</dimensions>
+				</dims>
 				<eqn>20</eqn>
 			</aux>
 			<aux name="multi dim var apply to all">
-				<dimensions>
+				<dims>
 					<dim name="products"/>
 					<dim name="regions"/>
-				</dimensions>
+				</dims>
 				<eqn>20</eqn>
 			</aux>
 			<aux name="single dim var non apply to all">
-				<dimensions>
+				<dims>
 					<dim name="products"/>
-				</dimensions>
+				</dims>
 				<element subscript="1">
 					<eqn>20</eqn>
 				</element>
@@ -59,9 +59,9 @@
 				</element>
 			</aux>
 			<aux name="graphical not_apply_to_all">
-				<dimensions>
+				<dims>
 					<dim name="products"/>
-				</dimensions>
+				</dims>
 				<element subscript="1">
 					<gf>
 						<xscale min="1" max="9"/>

@@ -19,6 +19,21 @@ public class XmileArraysTest {
 	}
 
 	@Test
+	public void testDimensions() {
+		var productDim = xmile.dims().getFirst();
+		assertEquals("products", productDim.name());
+		assertEquals(3, productDim.size());
+		assertTrue(productDim.elems().isEmpty());
+
+		var regionDim = xmile.dims().get(1);
+		assertEquals("regions", regionDim.name());
+		assertEquals(2, regionDim.size());
+		assertEquals(2, regionDim.elems().size());
+		assertEquals("north", regionDim.elems().getFirst().name());
+		assertEquals("south", regionDim.elems().get(1).name());
+	}
+
+	@Test
 	public void testSingleDimVarApplyToAll() {
 		var aux = xmile.model().auxs().stream()
 			.filter(a -> a.name().equals("single dim var apply to all"))
