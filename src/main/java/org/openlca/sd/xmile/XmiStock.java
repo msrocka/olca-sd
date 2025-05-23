@@ -1,5 +1,7 @@
 package org.openlca.sd.xmile;
 
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -8,20 +10,20 @@ import jakarta.xml.bind.annotation.XmlElement;
 public final class XmiStock extends XmiVariable {
 
 	@XmlElement(name = "inflow", namespace = Xmile.NS)
-	String inflow;
+	List<String> inflows;
 
 	@XmlElement(name = "outflow", namespace = Xmile.NS)
-	String outflow;
+	List<String> outflows;
 
 	@XmlElement(name = "non_negative", namespace = Xmile.NS)
 	XmiNonNegative nonNegative;
 
-	public String inflow() {
-		return inflow;
+	public List<String> inflows() {
+		return inflows != null ? inflows : List.of();
 	}
 
-	public String outflow() {
-		return outflow;
+	public List<String> outflows() {
+		return outflows != null ? outflows : List.of();
 	}
 
 	public boolean isNonNegative() {

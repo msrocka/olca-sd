@@ -58,8 +58,8 @@ public class XmileReaderTest {
 			.orElseThrow();
 		assertEquals("100", pop.eqn);
 		assertTrue(pop.isNonNegative());
-		assertEquals("being_born", pop.inflow());
-		assertEquals("dying", pop.outflow());
+		assertEquals("being_born", pop.inflows().getFirst());
+		assertEquals("dying", pop.outflows().getFirst());
 	}
 
 	@Test
