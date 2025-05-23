@@ -56,14 +56,14 @@ public class LookupFunc {
 			};
 		}
 
-		if (x > xs[0]) {
+		if (x > xs[n - 1]) {
 			return switch (type) {
-				case CONTINUOUS, DISCRETE -> ys[n-1];
-				case EXTRAPOLATE -> getY(x, n-2, n-1);
+				case CONTINUOUS, DISCRETE -> ys[n - 1];
+				case EXTRAPOLATE -> getY(x, n - 2, n - 1);
 			};
 		}
 
-		for (int i = 0; i < n-1; i++) {
+		for (int i = 0; i < n - 1; i++) {
 			if (x == xs[i])
 				return ys[i];
 			int j = i + 1;
@@ -74,16 +74,16 @@ public class LookupFunc {
 				};
 			}
 		}
-		return ys[n-1];
+		return ys[n - 1];
 	}
 
 	/// Calculates the value `y` for a given x and two points `i` and `j`.
 	/// This is the same formula for linear interpolation and extrapolation:
 	/// ```
-	///   (y - yi) / (x - xi) = (yj - yi) / (xj - xi)
+	///(y - yi) / (x - xi) = (yj - yi) / (xj - xi)
 	///   y - yi = (x - xi) * (yj - yi) / (xj - xi)
 	///   y = yi + (x - xi) * (yj - yi) / (xj - xi)
-	/// ```
+	///```
 	private double getY(double x, int i, int j) {
 		double xi = xs[i];
 		double xj = xs[j];
