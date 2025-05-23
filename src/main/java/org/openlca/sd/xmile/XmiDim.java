@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Dim {
+public class XmiDim {
 
 	@XmlAttribute(name = "name")
 	String name;

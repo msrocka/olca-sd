@@ -5,10 +5,10 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Flow extends Variable {
+public final class XmiFlow extends XmiVariable {
 
 	@XmlElement(name = "non_negative", namespace = Xmile.NS)
-	NonNegative nonNegative;
+	XmiNonNegative nonNegative;
 
 	public boolean isNonNegative() {
 		return nonNegative != null;

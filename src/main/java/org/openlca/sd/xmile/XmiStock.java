@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Stock extends Variable {
+public final class XmiStock extends XmiVariable {
 
 	@XmlElement(name = "inflow", namespace = Xmile.NS)
 	String inflow;
@@ -14,7 +14,7 @@ public final class Stock extends Variable {
 	String outflow;
 
 	@XmlElement(name = "non_negative", namespace = Xmile.NS)
-	NonNegative nonNegative;
+	XmiNonNegative nonNegative;
 
 	public String inflow() {
 		return inflow;

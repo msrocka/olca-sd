@@ -3,8 +3,8 @@ package org.openlca.sd.xmile;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
-public sealed abstract class Variable
-	permits Auxil, Flow, Stock {
+public sealed abstract class XmiVariable
+	permits XmiAux, XmiFlow, XmiStock {
 
 	@XmlAttribute(name = "name")
 	String name;

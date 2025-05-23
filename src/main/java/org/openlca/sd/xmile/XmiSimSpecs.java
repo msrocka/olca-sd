@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SimSpecs {
+public class XmiSimSpecs {
 
 	@XmlAttribute(name = "method")
 	String method;

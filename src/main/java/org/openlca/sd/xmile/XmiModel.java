@@ -11,30 +11,30 @@ import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlElements;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Model {
+public class XmiModel {
 
 	@XmlElementWrapper(name = "variables", namespace = Xmile.NS)
 	@XmlElements({
-		@XmlElement(name = "stock", namespace = Xmile.NS, type = Stock.class),
-		@XmlElement(name = "flow", namespace = Xmile.NS, type = Flow.class),
-		@XmlElement(name = "aux", namespace = Xmile.NS, type = Auxil.class)
+		@XmlElement(name = "stock", namespace = Xmile.NS, type = XmiStock.class),
+		@XmlElement(name = "flow", namespace = Xmile.NS, type = XmiFlow.class),
+		@XmlElement(name = "aux", namespace = Xmile.NS, type = XmiAux.class)
 	})
-	List<Variable> variables;
+	List<XmiVariable> variables;
 
-	public List<Variable> variables() {
+	public List<XmiVariable> variables() {
 		return variables == null ? Collections.emptyList() : variables;
 	}
 
-	public List<Stock> stocks() {
-		return filter(Stock.class);
+	public List<XmiStock> stocks() {
+		return filter(XmiStock.class);
 	}
 
-	public List<Flow> flows() {
-		return filter(Flow.class);
+	public List<XmiFlow> flows() {
+		return filter(XmiFlow.class);
 	}
 
-	public List<Auxil> auxs() {
-		return filter(Auxil.class);
+	public List<XmiAux> auxs() {
+		return filter(XmiAux.class);
 	}
 
 	private <T> List<T> filter(Class<T> type) {
