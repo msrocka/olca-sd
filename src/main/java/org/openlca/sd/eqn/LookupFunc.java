@@ -2,6 +2,7 @@ package org.openlca.sd.eqn;
 
 import java.util.Objects;
 
+/// A lookup function (table function) like defined in the XMILE standard.
 public class LookupFunc {
 
 	public enum Type {
@@ -48,7 +49,48 @@ public class LookupFunc {
 		if (n == 1)
 			return ys[0];
 
+		if (x < xs[0]) {
+			return switch (type) {
+				case CONTINUOUS, DISCRETE -> ys[0];
+				case EXTRAPOLATE -> getY(x, 0, 1);
+			};
+		}
 
+		if (x > xs[0]) {
+			return switch (type) {
+				case CONTINUOUS, DISCRETE -> ys[n-1];
+				case EXTRAPOLATE -> getY(x, n-2, n-1);
+			};
+		}
 
+		for (int i = 0; i < n-1; i++) {
+			if (x == xs[i])
+				return ys[i];
+			int j = i + 1;
+			if (x < xs[j]) {
+				return switch (type) {
+					case CONTINUOUS, EXTRAPOLATE -> getY(x, i, j);
+					case DISCRETE -> ys[i];
+				};
+			}
+		}
+		return ys[n-1];
+	}
+
+	/// Calculates the value `y` for a given x and two points `i` and `j`.
+	/// This is the same formula for linear interpolation and extrapolation:
+	/// ```
+	///   (y - yi) / (x - xi) = (yj - yi) / (xj - xi)
+	///   y - yi = (x - xi) * (yj - yi) / (xj - xi)
+	///   y = yi + (x - xi) * (yj - yi) / (xj - xi)
+	/// ```
+	private double getY(double x, int i, int j) {
+		double xi = xs[i];
+		double xj = xs[j];
+		if (xi == xj)
+			return ys[i];
+		double yi = ys[i];
+		double yj = ys[j];
+		return yi + (x - xi) * (yj - yi) / (xj - xi);
 	}
 }
