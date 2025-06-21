@@ -54,6 +54,8 @@
 						</goals>
 						<configuration>
 							<outputDirectory>${project.build.directory}/generated-sources/org/openlca/sd/eqn</outputDirectory>
+							<visitor>true</visitor>
+							<listener>true</listener>
 							<arguments>
 								<argument>-package</argument>
 								<argument>org.openlca.sd.eqn</argument>

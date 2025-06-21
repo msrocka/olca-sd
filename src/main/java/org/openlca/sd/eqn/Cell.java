@@ -10,7 +10,7 @@ public sealed interface Cell {
 	}
 
 	static Cell of(double number) {
-		return new NumberCell(number);
+		return new NumCell(number);
 	}
 
 	static Cell of(String eqn) {
@@ -26,7 +26,8 @@ public sealed interface Cell {
 	default boolean isEmpty() {
 		return switch (this) {
 			case EmptyCell ignored -> true;
-			case NumberCell ignored -> false;
+			case NumCell ignored -> false;
+			case BoolCell ignored -> false;
 			case TensorCell(Tensor tensor) -> tensor != null;
 			case EqnCell(String eqn) -> eqn != null && !eqn.isBlank();
 		};
@@ -37,26 +38,26 @@ public sealed interface Cell {
 	}
 
 	default boolean isNumberCell() {
-		return this instanceof NumberCell;
+		return this instanceof NumCell;
 	}
 
 	default boolean isEqnCell() {
 		return this instanceof EqnCell;
 	}
 
-	default TensorCell getAsTensorCell() {
+	default TensorCell asTensorCell() {
 		if (this instanceof TensorCell cell)
 			return cell;
 		throw new IllegalStateException("is not a TensorCell");
 	}
 
-	default NumberCell getAsNumberCell() {
-		if (this instanceof NumberCell cell)
+	default NumCell asNumCell() {
+		if (this instanceof NumCell cell)
 			return cell;
 		throw new IllegalStateException("is not a NumberCell");
 	}
 
-	default EqnCell getAsEqnCell() {
+	default EqnCell asEqnCell() {
 		if (this instanceof EqnCell cell)
 			return cell;
 		throw new IllegalStateException("is not a EqnCell");
@@ -77,12 +78,30 @@ public sealed interface Cell {
 
 	}
 
-	record TensorCell(Tensor tensor) implements Cell {
+	record TensorCell(Tensor value) implements Cell {
 	}
 
-	record NumberCell(double number) implements Cell {
+	record NumCell(double value) implements Cell {
+
+		@Override
+		public String toString() {
+			return Double.toString(value);
+		}
 	}
 
-	record EqnCell(String eqn) implements Cell {
+	record BoolCell(boolean value) implements Cell {
+
+		@Override
+		public String toString() {
+			return Boolean.toString(value);
+		}
+	}
+
+	record EqnCell(String value) implements Cell {
+
+		@Override
+		public String toString() {
+			return value;
+		}
 	}
 }

@@ -14,15 +14,15 @@ public class TensorTest {
 		assertEquals(1, t.dimensions());
 		assertEquals(3, t.size());
 
-		assertEquals(t, t.get("*").getAsTensorCell().tensor());
-		assertEquals(t, t.get("dim").getAsTensorCell().tensor());
+		assertEquals(t, t.get("*").asTensorCell().value());
+		assertEquals(t, t.get("dim").asTensorCell().value());
 
 		for (var elem : dim.elements()) {
-			assertEquals(42, t.get(elem).getAsNumberCell().number(), 1e-16);
+			assertEquals(42, t.get(elem).asNumCell().value(), 1e-16);
 		}
 
 		t.set("b", 21);
-		assertEquals(21, t.get("b").getAsNumberCell().number(), 1e-16);
+		assertEquals(21, t.get("b").asNumCell().value(), 1e-16);
 
 	}
 
