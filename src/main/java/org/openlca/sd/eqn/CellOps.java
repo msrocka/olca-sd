@@ -50,6 +50,4 @@ class CellOps {
 		}
 		throw EvalException.unsupported(op, a, b);
 	}
-
-
 }

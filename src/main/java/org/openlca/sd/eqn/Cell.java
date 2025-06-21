@@ -13,6 +13,10 @@ public sealed interface Cell {
 		return new NumCell(number);
 	}
 
+	static Cell of(boolean b) {
+		return new BoolCell(b);
+	}
+
 	static Cell of(String eqn) {
 		return Util.isEmpty(eqn)
 			? new EqnCell(eqn)
@@ -37,8 +41,12 @@ public sealed interface Cell {
 		return this instanceof TensorCell;
 	}
 
-	default boolean isNumberCell() {
+	default boolean isNumCell() {
 		return this instanceof NumCell;
+	}
+
+	default boolean isBoolCell() {
+		return this instanceof BoolCell;
 	}
 
 	default boolean isEqnCell() {
@@ -54,7 +62,13 @@ public sealed interface Cell {
 	default NumCell asNumCell() {
 		if (this instanceof NumCell cell)
 			return cell;
-		throw new IllegalStateException("is not a NumberCell");
+		throw new IllegalStateException("is not a NumCell");
+	}
+
+	default BoolCell asBoolCell() {
+		if (this instanceof BoolCell cell)
+			return cell;
+		throw new IllegalStateException("is not a NumCell");
 	}
 
 	default EqnCell asEqnCell() {

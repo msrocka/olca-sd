@@ -137,14 +137,95 @@ public class EvalVisitorTest {
 		assertEquals(1.0E-308, ev("0.1^308"), 1e-10);
 	}
 
+	@Test
+	public void testComp() {
+
+		assertTrue(evb("5 == 5"));
+		assertTrue(evb("5 = 5"));
+		assertFalse(evb("5 == 6"));
+		assertFalse(evb("5 = 6"));
+		assertTrue(evb("3.14 == 3.14"));
+		assertFalse(evb("3.14 == 3.141"));
+		assertTrue(evb("0 == 0"));
+		assertFalse(evb("0 == 1"));
+		assertTrue(evb("(2 + 3) == 5"));
+		assertFalse(evb("(2 + 3) == 6"));
+
+		assertTrue(evb("5 != 6"));
+		assertTrue(evb("5 <> 6"));
+		assertFalse(evb("5 != 5"));
+		assertFalse(evb("5 <> 5"));
+		assertTrue(evb("3.14 != 3.141"));
+		assertFalse(evb("3.14 != 3.14"));
+		assertTrue(evb("0 != 1"));
+		assertFalse(evb("0 != 0"));
+		assertTrue(evb("(2 + 3) != 6"));
+		assertFalse(evb("(2 + 3) != 5"));
+
+		assertTrue(evb("5 < 6"));
+		assertFalse(evb("6 < 5"));
+		assertFalse(evb("5 < 5"));
+		assertTrue(evb("3.0 < 3.1"));
+		assertFalse(evb("3.1 < 3.0"));
+		assertFalse(evb("3.0 < 3.0"));
+		assertTrue(evb("-5 < -2"));
+		assertFalse(evb("-2 < -5"));
+		assertTrue(evb("2 * 3 < 7"));
+
+		assertTrue(evb("6 > 5"));
+		assertFalse(evb("5 > 6"));
+		assertFalse(evb("5 > 5"));
+		assertTrue(evb("3.1 > 3.0"));
+		assertFalse(evb("3.0 > 3.1"));
+		assertFalse(evb("3.0 > 3.0"));
+		assertTrue(evb("-2 > -5"));
+		assertFalse(evb("-5 > -2"));
+		assertTrue(evb("10 / 2 > 4"));
+
+		assertTrue(evb("5 <= 6"));
+		assertTrue(evb("5 <= 5"));
+		assertFalse(evb("6 <= 5"));
+		assertTrue(evb("3.0 <= 3.1"));
+		assertTrue(evb("3.0 <= 3.0"));
+		assertFalse(evb("3.1 <= 3.0"));
+		assertTrue(evb("-5 <= -2"));
+		assertTrue(evb("-5 <= -5"));
+		assertTrue(evb("2^3 <= 8"));
+
+		assertTrue(evb("6 >= 5"));
+		assertTrue(evb("5 >= 5"));
+		assertFalse(evb("5 >= 6"));
+		assertTrue(evb("3.1 >= 3.0"));
+		assertTrue(evb("3.0 >= 3.0"));
+		assertFalse(evb("3.0 >= 3.1"));
+		assertTrue(evb("-2 >= -5"));
+		assertTrue(evb("-5 >= -5"));
+		assertTrue(evb("10 / 2 >= 5"));
+
+		assertTrue(evb("2 + 3 == 5"));
+		assertFalse(evb("2 * 3 > 7"));
+		assertTrue(evb("10 - 2 <= 8"));
+		assertFalse(evb("10 / 2 != 5"));
+		assertTrue(evb("2^3 >= 7"));
+		assertTrue(evb("5 + 2 * 3 > 10"));
+		assertTrue(evb("15 % 4 <= 3"));
+		assertFalse(evb("10 / 2 * 3 != 15"));
+	}
+
 	private double ev(String eqn) {
+		return eval(eqn).asNumCell().value();
+	}
+
+	private boolean evb(String eqn) {
+		return eval(eqn).asBoolCell().value();
+	}
+
+	private Cell eval(String eqn) {
 		var lexer = new EqnLexer(CharStreams.fromString(eqn));
 		var tokens = new CommonTokenStream(lexer);
 		var parser = new EqnParser(tokens);
 		return new EvalVisitor()
-			.visit(parser.eqn())
-			.asNumCell()
-			.value();
+			.visit(parser.eqn());
 	}
 
 }

@@ -10,8 +10,8 @@ eqn:
     |   <assoc=right> NOT eqn                             # Not
     |   eqn op=( '*' | '/' | MOD ) eqn                    # MulDiv
     |   eqn op=('+'|'-') eqn                              # AddSub
-    |   eqn op=('<'|'>'|'='|'=='|'!='|'<>'|'<='|'>=') eqn # Comp
-    |   eqn op=(AND | OR) eqn                             # Logic
+    |   eqn op=( EQ | NEQ | GT | GE | LT | LE ) eqn       # Comp
+    |   eqn op=( AND | OR ) eqn                           # Logic
     |   NUMBER                                            # number
     |   VAR                                               # var
     ;
