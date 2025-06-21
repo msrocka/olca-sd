@@ -37,7 +37,7 @@ THEN:   [tT][hH][eE][nN] ;
 ELSE:   [eE][lL][sS][eE] ;
 
 VAR :   STR | ID;
-ID  :   [a-zA-Z_]+ ;      // match identifiers
+ID  :   [a-zA-Z_]+ ;
 STR :   '"' .+? '"';
 NUMBER:  [0-9]+ ('.' [0-9]+)? NUM_EXP? | '.' [0-9]+ NUM_EXP? ;
 NUM_EXP: ('e' | 'E') [+-]? [0-9]+ ;

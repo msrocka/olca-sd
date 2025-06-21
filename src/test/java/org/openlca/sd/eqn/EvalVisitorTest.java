@@ -212,6 +212,49 @@ public class EvalVisitorTest {
 		assertFalse(evb("10 / 2 * 3 != 15"));
 	}
 
+	@Test
+	public void testLogical() {
+
+		assertTrue(evb("NOT (5 == 6)"));
+		assertFalse(evb("NOT (5 == 5)"));
+		assertTrue(evb("not (10 < 5)"));
+		assertFalse(evb("not (10 > 5)"));
+		assertTrue(evb("Not (0)"));
+		assertFalse(evb("Not (1)"));
+		assertTrue(evb("!(5 == 6)"));
+		assertFalse(evb("!(5 == 5)"));
+
+		assertTrue(evb("(5 == 5) AND (6 == 6)"));
+		assertFalse(evb("(5 == 5) AND (6 == 7)"));
+		assertFalse(evb("(5 == 6) AND (6 == 6)"));
+		assertFalse(evb("(5 == 6) AND (6 == 7)"));
+		assertTrue(evb("(2 < 3) and (4 > 1)"));
+		assertFalse(evb("(2 < 3) and (4 < 1)"));
+		assertTrue(evb("1 AND 1"));
+		assertFalse(evb("1 AND 0"));
+		assertTrue(evb("(5 == 5) & (6 == 6)"));
+
+		assertTrue(evb("(5 == 5) OR (6 == 6)"));
+		assertTrue(evb("(5 == 5) OR (6 == 7)"));
+		assertTrue(evb("(5 == 6) OR (6 == 6)"));
+		assertFalse(evb("(5 == 6) OR (6 == 7)"));
+		assertTrue(evb("(2 < 3) or (4 < 1)"));
+		assertTrue(evb("1 OR 0"));
+		assertTrue(evb("0 OR 1"));
+		assertFalse(evb("0 OR 0"));
+		assertTrue(evb("(5 == 5) | (6 == 7)"));
+
+		assertTrue(evb("(2 + 3 == 5) AND (10 > 9)"));
+		assertFalse(evb("(2 * 4 < 5) OR (7 == 7 AND 8 != 8)"));
+		assertTrue(evb("NOT (5 * 2 == 10) OR (3 + 1 == 5)"));
+		assertFalse(evb("!(10 / 2 < 3) AND (7 % 2 == 1)"));
+		assertTrue(evb("(2^3 == 8) AND (1 = 1)"));
+
+		assertTrue(evb("(5 > 3 AND 7 < 10) OR (2 == 2 AND 4 != 4)"));
+		assertFalse(evb("NOT ((1 + 1 == 2) OR (3 * 3 == 8))"));
+		assertTrue(evb("((10 > 5) AND !(12 < 10)) OR (1 + 1 == 3)"));
+	}
+
 	private double ev(String eqn) {
 		return eval(eqn).asNumCell().value();
 	}
