@@ -33,6 +33,17 @@ public class SimpleParserTest {
 		assertEquals(10.0, ev("2+2^3"), 1e-10);
 		assertEquals(16.0, ev("2*2^3"), 1e-10);
 		assertEquals(64.0, ev("(2 + 2)^3"), 1e-10);
+
+		assertEquals(8.0, ev("2**3"), 1e-10);
+		assertEquals(10.0, ev("2+2**3"), 1e-10);
+		assertEquals(16.0, ev("2*2**3"), 1e-10);
+		assertEquals(64.0, ev("(2 + 2)**3"), 1e-10);
+	}
+
+	@Test
+	public void test100() {
+		// see https://github.com/lewisakura/100-test
+		assertEquals(100.0, ev("5 + 96 * 1 - 6 / 3 ^ 68 / 2 - 4 + 3"), 1e-10);
 	}
 
 	private double ev(String eqn) {

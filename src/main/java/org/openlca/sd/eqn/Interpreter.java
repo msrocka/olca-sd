@@ -64,14 +64,13 @@ public class Interpreter extends EqnBaseListener {
 		enterEveryRule(ctx.eqn(1));
 		var b = stack.pop();
 		var a = stack.pop();
-		var op = (TerminalNode) ctx.getChild(1);
-		var type = op.getSymbol().getType();
 
-		var r = switch (type) {
+		var r = switch (ctx.op.getType()) {
 			case EqnParser.MUL -> a * b;
 			case EqnParser.DIV -> a / b;
+			case EqnParser.MOD -> a % b;
 			default -> throw new IllegalArgumentException(
-				"Unknown operator: " + op.getText());
+				"Unknown operator: " + ctx.op.getText());
 		};
 		stack.push(r);
 	}
@@ -95,5 +94,4 @@ public class Interpreter extends EqnBaseListener {
 			throw new IllegalArgumentException("Invalid number: " + s, e);
 		}
 	}
-
 }

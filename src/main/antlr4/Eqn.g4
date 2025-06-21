@@ -1,24 +1,27 @@
 grammar Eqn;
 
 eqn:
-        IF eqn THEN eqn ELSE eqn                # IfThenElse
-    |   VAR ('(' ')' | '(' eqn (',' eqn)* ')')  # FunCall
-    |   VAR '[' eqn (',' eqn)* ']'              # ArrayAccess
-    |   eqn '^' eqn                             # Power
-    |   eqn ('*'|'/') eqn                       # MulDiv
-    |   eqn ('+'|'-') eqn                       # AddSub
-    |   eqn ('<'|'>'|'='|'=='|'!='|'<>'|'<='|'>=') eqn    # Comp
-    |   NUMBER                                  # number
-    |   '(' eqn ')'                             # parens
-    |   VAR                                     # var
+        IF eqn THEN eqn ELSE eqn                          # IfThenElse
+    |   '(' eqn ')'                                       # Parens
+    |   VAR '[' eqn (',' eqn)* ']'                        # ArrayAccess
+    |   VAR ('(' ')' | '(' eqn (',' eqn)* ')')            # FunCall
+    |   <assoc=right> eqn POW eqn                         # Power
+    |   <assoc=right> op=('+' | '-') eqn                  # UnarySign
+    |   <assoc=right> NOT eqn                             # Not
+    |   eqn op=( '*' | '/' | MOD ) eqn                    # MulDiv
+    |   eqn op=('+'|'-') eqn                              # AddSub
+    |   eqn op=('<'|'>'|'='|'=='|'!='|'<>'|'<='|'>=') eqn # Comp
+    |   eqn op=(AND | OR) eqn                             # Logic
+    |   NUMBER                                            # number
+    |   VAR                                               # var
     ;
 
 
-MUL :   '*' ; // defines a token for '*'
-DIV :   '/' ; // defines a token for '/'
-ADD :   '+' ; // defines a token for '+'
-SUB :   '-' ; // defines a token for '-'
-POW :   '^' ;
+POW :   '^' | '**' ;
+MUL :   '*' ;
+DIV :   '/' ;
+ADD :   '+' ;
+SUB :   '-' ;
 MOD :   [mM][oO][dD] | '%' ;
 NOT :   [nN][oO][tT] | '!' ;
 AND :   [aA][nN][dD] | '&' ;
