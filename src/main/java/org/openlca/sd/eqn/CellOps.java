@@ -18,7 +18,11 @@ class CellOps {
 	}
 
 	static Cell mod(Cell a, Cell b) {
-		return numeric("%", a, b, (x, y) -> x % y);
+		return numeric("%", a, b, (x, y) -> {
+			if (y != 0)
+				return x % y;
+			throw EvalException.of("division by 0");
+		});
 	}
 
 	static Cell mul(Cell a, Cell b) {
@@ -26,7 +30,11 @@ class CellOps {
 	}
 
 	static Cell div(Cell a, Cell b) {
-		return numeric("/", a, b, (x, y) -> x / y);
+		return numeric("/", a, b, (x, y) -> {
+			if (y != 0)
+				return x / y;
+			throw EvalException.of("division by 0");
+		});
 	}
 
 	static Cell pow(Cell a, Cell b) {
