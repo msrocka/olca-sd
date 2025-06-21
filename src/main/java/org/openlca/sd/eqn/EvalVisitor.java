@@ -5,7 +5,9 @@ import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
 import org.openlca.sd.eqn.generated.EqnParser.CompContext;
+import org.openlca.sd.eqn.generated.EqnParser.LogicContext;
 import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
+import org.openlca.sd.eqn.generated.EqnParser.NotContext;
 import org.openlca.sd.eqn.generated.EqnParser.NumberContext;
 import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
 import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
@@ -70,6 +72,32 @@ class EvalVisitor extends EqnBaseVisitor<Cell> {
 			case EqnParser.LT -> Cell.of(x < y);
 			default -> throw EvalException.of(
 				"unsupported operator in comp context: " + ctx.op.getText());
+		};
+	}
+
+	@Override
+	public Cell visitNot(NotContext ctx) {
+		var cell = visit(ctx.eqn());
+		if (!cell.isBoolCell())
+			throw EvalException.of(
+				"NOT operator requires boolean operand, got: " + cell);
+		boolean value = cell.asBoolCell().value();
+		return Cell.of(!value);
+	}
+
+	@Override
+	public Cell visitLogic(LogicContext ctx) {
+		var a = visit(ctx.eqn(0));
+		var b = visit(ctx.eqn(1));
+		if (!a.isBoolCell() || !b.isBoolCell())
+			throw EvalException.unsupported(ctx.op.getText(), a, b);
+		boolean x = a.asBoolCell().value();
+		boolean y = b.asBoolCell().value();
+		return switch (ctx.op.getType()) {
+			case EqnParser.AND -> Cell.of(x && y);
+			case EqnParser.OR -> Cell.of(x || y);
+			default -> throw EvalException.of(
+				"unsupported operator in logic context: " + ctx.op.getText());
 		};
 	}
 
