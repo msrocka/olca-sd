@@ -91,6 +91,52 @@ public class EvalVisitorTest {
 		assertEquals(0.0, ev("(7 - 1) % 3"), 1e-10);
 	}
 
+	@Test
+	public void testPower() {
+
+		assertEquals(8.0, ev("2^3"), 1e-10);
+		assertEquals(9.0, ev("3**2"), 1e-10);
+		assertEquals(16.0, ev("2^4"), 1e-10);
+		assertEquals(125.0, ev("5**3"), 1e-10);
+
+		assertEquals(1.0, ev("5^0"), 1e-10);
+		assertEquals(1.0, ev("123.45**0"), 1e-10);
+		assertEquals(0.0, ev("0^5"), 1e-10);
+		assertEquals(1.0, ev("1^10"), 1e-10);
+		assertEquals(1.0, ev("1**100"), 1e-10);
+		assertEquals(0.0, ev("0.0^5.0"), 1e-10);
+		assertEquals(1.0, ev("0^0"), 1e-10);
+
+		assertEquals(0.25, ev("2^-2"), 1e-10);
+		assertEquals(0.125, ev("2.0**-3.0"), 1e-10);
+		assertEquals(0.04, ev("5^-2"), 1e-10);
+
+		assertEquals(3.0, ev("9^0.5"), 1e-10);
+		assertEquals(2.0, ev("8**(1/3.0)"), 1e-10);
+		assertEquals(2.0, ev("8**(0.333333333333333333)"), 1e-10);
+
+		assertEquals(6.25, ev("2.5^2"), 1e-10);
+		assertEquals(0.0625, ev("0.5**4"), 1e-10);
+
+		assertEquals(-8.0, ev("(-2)^3"), 1e-10);
+		assertEquals(4.0, ev("(-2)^2"), 1e-10);
+		assertEquals(Double.NaN, ev("(-4)^0.5"), 1e-10);
+
+		assertEquals(10.0, ev("2 + 2^3"), 1e-10);
+		assertEquals(18.0, ev("2 * 3^2"), 1e-10);
+		assertEquals(1.0, ev("16 / 2^3 + 1 - 2"), 1e-10);
+
+		assertEquals(512.0, ev("2^3^2"), 1e-10);
+		assertEquals(81.0, ev("3**2**2"), 1e-10);
+		assertEquals(64.0, ev("(2^3)^2"), 1e-10);
+
+		assertEquals(50.0, ev("(2 + 3)^2 * 2"), 1e-10);
+		assertEquals(17.0, ev("3 + (2^3 - 1) * 2"), 1e-10);
+
+		assertEquals(1.0E308, ev("10^308"), 1e-10);
+		assertEquals(1.0E-308, ev("0.1^308"), 1e-10);
+	}
+
 	private double ev(String eqn) {
 		var lexer = new EqnLexer(CharStreams.fromString(eqn));
 		var tokens = new CommonTokenStream(lexer);

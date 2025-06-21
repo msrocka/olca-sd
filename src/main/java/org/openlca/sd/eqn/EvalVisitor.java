@@ -7,6 +7,7 @@ import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
 import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
 import org.openlca.sd.eqn.generated.EqnParser.NumberContext;
 import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
+import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
 import org.openlca.sd.eqn.generated.EqnParser.UnarySignContext;
 
 class EvalVisitor extends EqnBaseVisitor<Cell> {
@@ -54,6 +55,13 @@ class EvalVisitor extends EqnBaseVisitor<Cell> {
 	@Override
 	public Cell visitParens(ParensContext ctx) {
 		return visit(ctx.eqn());
+	}
+
+	@Override
+	public Cell visitPower(PowerContext ctx) {
+		var a = visit(ctx.eqn(0));
+		var b = visit(ctx.eqn(1));
+		return CellOps.pow(a, b);
 	}
 
 	@Override
