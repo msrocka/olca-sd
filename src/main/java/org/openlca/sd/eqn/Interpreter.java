@@ -6,20 +6,23 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.openlca.sd.eqn.EqnParser.AddSubContext;
-import org.openlca.sd.eqn.EqnParser.MulDivContext;
-import org.openlca.sd.eqn.EqnParser.NumberContext;
-import org.openlca.sd.eqn.EqnParser.ParensContext;
-import org.openlca.sd.eqn.EqnParser.PowerContext;
+import org.openlca.sd.eqn.generated.EqnBaseListener;
+import org.openlca.sd.eqn.generated.EqnLexer;
+import org.openlca.sd.eqn.generated.EqnParser;
+import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
+import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
+import org.openlca.sd.eqn.generated.EqnParser.NumberContext;
+import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
+import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
 
-public class Interpreter extends org.openlca.sd.eqn.EqnBaseListener {
+public class Interpreter extends EqnBaseListener {
 
 	private final Stack<Double> stack = new Stack<>();
 
 	public double eval(String eqn) {
-		var lexer = new org.openlca.sd.eqn.EqnLexer(CharStreams.fromString(eqn));
+		var lexer = new EqnLexer(CharStreams.fromString(eqn));
 		var tokens = new CommonTokenStream(lexer);
-		var parser = new org.openlca.sd.eqn.EqnParser(tokens);
+		var parser = new EqnParser(tokens);
 		enterEveryRule(parser.eqn());
 		if (stack.isEmpty()) {
 			throw new IllegalStateException("Stack is empty");
@@ -49,9 +52,9 @@ public class Interpreter extends org.openlca.sd.eqn.EqnBaseListener {
 		var op = (TerminalNode) ctx.getChild(1);
 		var type = op.getSymbol().getType();
 
-		if (type == org.openlca.sd.eqn.EqnParser.ADD) {
+		if (type == EqnParser.ADD) {
 			stack.push(a + b);
-		} else if (type == org.openlca.sd.eqn.EqnParser.SUB) {
+		} else if (type == EqnParser.SUB) {
 			stack.push(a - b);
 		} else {
 			throw new IllegalArgumentException("Unknown operator: " + op.getText());
@@ -66,9 +69,9 @@ public class Interpreter extends org.openlca.sd.eqn.EqnBaseListener {
 		var a = stack.pop();
 
 		var r = switch (ctx.op.getType()) {
-			case org.openlca.sd.eqn.EqnParser.MUL -> a * b;
-			case org.openlca.sd.eqn.EqnParser.DIV -> a / b;
-			case org.openlca.sd.eqn.EqnParser.MOD -> a % b;
+			case EqnParser.MUL -> a * b;
+			case EqnParser.DIV -> a / b;
+			case EqnParser.MOD -> a % b;
 			default -> throw new IllegalArgumentException(
 				"Unknown operator: " + ctx.op.getText());
 		};

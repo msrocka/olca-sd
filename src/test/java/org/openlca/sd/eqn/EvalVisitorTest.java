@@ -5,15 +5,17 @@ import static org.junit.Assert.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
+import org.openlca.sd.eqn.generated.EqnLexer;
+import org.openlca.sd.eqn.generated.EqnParser;
 
 public class EvalVisitorTest {
 
 	@Test
 	public void testAddSub() {
 		var eqn = "1 + 2";
-		var lexer = new org.openlca.sd.eqn.EqnLexer(CharStreams.fromString(eqn));
+		var lexer = new EqnLexer(CharStreams.fromString(eqn));
 		var tokens = new CommonTokenStream(lexer);
-		var parser = new org.openlca.sd.eqn.EqnParser(tokens);
+		var parser = new EqnParser(tokens);
 		var res = new EvalVisitor()
 			.visit(parser.eqn())
 			.asNumCell()

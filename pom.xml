@@ -53,12 +53,12 @@
 							<goal>antlr4</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/generated-sources/org/openlca/sd/eqn</outputDirectory>
+							<outputDirectory>${project.build.directory}/generated-sources/org/openlca/sd/eqn/generated</outputDirectory>
 							<visitor>true</visitor>
 							<listener>true</listener>
 							<arguments>
 								<argument>-package</argument>
-								<argument>org.openlca.sd.eqn</argument>
+								<argument>org.openlca.sd.eqn.generated</argument>
 							</arguments>
 						</configuration>
 					</execution>
