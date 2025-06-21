@@ -5,6 +5,7 @@ import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
 import org.openlca.sd.eqn.generated.EqnParser.CompContext;
+import org.openlca.sd.eqn.generated.EqnParser.IfThenElseContext;
 import org.openlca.sd.eqn.generated.EqnParser.LogicContext;
 import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
 import org.openlca.sd.eqn.generated.EqnParser.NotContext;
@@ -99,6 +100,17 @@ class EvalVisitor extends EqnBaseVisitor<Cell> {
 			default -> throw EvalException.of(
 				"unsupported operator in logic context: " + ctx.op.getText());
 		};
+	}
+
+	@Override
+	public Cell visitIfThenElse(IfThenElseContext ctx) {
+		var cond = visit(ctx.eqn(0));
+		if (!cond.isBoolCell())
+			throw EvalException.of(
+				"IF condition must be boolean, got: " + cond);
+		return cond.asBoolCell().value()
+			? visit(ctx.eqn(1))
+			: visit(ctx.eqn(2));
 	}
 
 	@Override

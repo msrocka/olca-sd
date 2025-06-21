@@ -248,6 +248,38 @@ public class EvalVisitorTest {
 		assertTrue(evb("((10 > 5) AND !(12 < 10)) OR (1 + 1 == 3)"));
 	}
 
+	@Test
+	public void testIfThenElse() {
+		assertEquals(10.0, ev("IF (5 > 3) THEN 10 ELSE 20"), 1e-10);
+		assertEquals(20.0, ev("IF (5 < 3) THEN 10 ELSE 20"), 1e-10);
+		assertEquals(1.0, ev("IF (2 == 2) THEN 1 ELSE 0"), 1e-10);
+		assertEquals(0.0, ev("IF (2 != 2) THEN 1 ELSE 0"), 1e-10);
+
+		assertTrue(evb("IF (5 > 3) THEN (7 == 7) ELSE (8 == 9)"));
+		assertFalse(evb("IF (5 < 3) THEN (7 == 7) ELSE (8 == 9)"));
+		assertTrue(evb("IF (10 >= 10) THEN (1 == 1) ELSE (2 == 3)"));
+		assertFalse(evb("IF (10 < 10) THEN (1 == 1) ELSE (2 == 3)"));
+
+		assertEquals(100.0, ev("IF (5 > 3) THEN (IF (2 == 2) THEN 100 ELSE 200) ELSE 300"), 1e-10);
+		assertEquals(200.0, ev("IF (5 > 3) THEN (IF (2 != 2) THEN 100 ELSE 200) ELSE 300"), 1e-10);
+		assertEquals(300.0, ev("IF (5 < 3) THEN (IF (2 == 2) THEN 100 ELSE 200) ELSE 300"), 1e-10);
+
+		assertEquals(15.0, ev("IF (3 * 2 == 6) THEN (10 + 5) ELSE (20 - 5)"), 1e-10);
+		assertEquals(15.0, ev("IF (3 * 2 != 6) THEN (10 + 5) ELSE (20 - 5)"), 1e-10);
+		assertEquals(25.0, ev("IF (5^2 == 25) THEN (2 * 10 + 5) ELSE (100 / 4)"), 1e-10);
+
+		assertEquals(42.0, ev("IF ((5 > 3) AND (10 == 10)) THEN 42 ELSE 99"), 1e-10);
+		assertEquals(99.0, ev("IF ((5 < 3) AND (10 == 10)) THEN 42 ELSE 99"), 1e-10);
+		assertEquals(42.0, ev("IF ((5 < 3) OR (10 == 10)) THEN 42 ELSE 99"), 1e-10);
+		assertEquals(42.0, ev("IF (NOT (5 < 3)) THEN 42 ELSE 99"), 1e-10);
+
+		assertEquals(7.0, ev("IF (2 + 3 == 5) THEN (3 + 4) ELSE (5 + 6)"), 1e-10);
+		assertEquals(11.0, ev("IF (2 + 3 != 5) THEN (3 + 4) ELSE (5 + 6)"), 1e-10);
+
+		assertThrows(EvalException.class, () -> ev("IF 5 THEN 10 ELSE 20"));
+		assertThrows(EvalException.class, () -> ev("IF (2 + 3) THEN 10 ELSE 20"));
+	}
+
 	private double ev(String eqn) {
 		return eval(eqn).asNumCell().value();
 	}
