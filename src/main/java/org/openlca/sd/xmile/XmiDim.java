@@ -9,13 +9,13 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Dim {
+public class XmiDim {
 
 	@XmlAttribute(name = "name")
 	String name;
 
 	@XmlAttribute(name = "size")
-	int size;
+	Integer size;
 
 	@XmlElement(name = "elem", namespace = Xmile.NS)
 	List<Elem> elems;
@@ -25,7 +25,7 @@ public class Dim {
 	}
 
 	public int size() {
-		return size;
+		return size != null ? size : elems().size();
 	}
 
 	public List<Elem> elems() {

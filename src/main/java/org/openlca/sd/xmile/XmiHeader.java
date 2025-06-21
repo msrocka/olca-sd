@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Header {
+public class XmiHeader {
 
 	@XmlElement(name = "name", namespace = Xmile.NS)
 	String name;

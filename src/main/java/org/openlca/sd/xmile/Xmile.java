@@ -21,17 +21,17 @@ public class Xmile {
 	public static final String NS = "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0";
 
 	@XmlElement(name = "header", namespace = NS)
-	Header header;
+	XmiHeader header;
 
 	@XmlElement(name = "sim_specs", namespace = NS)
-	SimSpecs simSpecs;
+	XmiSimSpecs simSpecs;
 
 	@XmlElement(name = "model", namespace = NS)
-	Model model;
+	XmiModel model;
 
 	@XmlElementWrapper(name = "dims", namespace = NS)
 	@XmlElement(name = "dim", namespace = Xmile.NS)
-	List<Dim> dims;
+	List<XmiDim> dims;
 
 	public static Xmile readFrom(File file) {
 		try (var stream = new FileInputStream(file);
@@ -50,19 +50,19 @@ public class Xmile {
 		}
 	}
 
-	public Header header() {
+	public XmiHeader header() {
 		return header;
 	}
 
-	public SimSpecs simSpecs() {
+	public XmiSimSpecs simSpecs() {
 		return simSpecs;
 	}
 
-	public List<Dim> dims() {
+	public List<XmiDim> dims() {
 		return dims != null ? dims : Collections.emptyList();
 	}
 
-	public Model model() {
+	public XmiModel model() {
 		return model;
 	}
 }
