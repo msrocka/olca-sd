@@ -2,11 +2,7 @@ package org.openlca.sd.eqn;
 
 import static org.junit.Assert.*;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
-import org.openlca.sd.eqn.generated.EqnLexer;
-import org.openlca.sd.eqn.generated.EqnParser;
 
 public class EvalVisitorTest {
 
@@ -280,20 +276,24 @@ public class EvalVisitorTest {
 		assertThrows(EvalException.class, () -> ev("IF (2 + 3) THEN 10 ELSE 20"));
 	}
 
+	@Test
+	public void testVars() {
+		var ctx = new EvalContext()
+			.bind("a", 20)
+			.bind("b", 2);
+		assertEquals(42, eval("a * b + 2", ctx).asNumCell().value(), 1e-10);
+	}
+
 	private double ev(String eqn) {
-		return eval(eqn).asNumCell().value();
+		return eval(eqn, new EvalContext()).asNumCell().value();
 	}
 
 	private boolean evb(String eqn) {
-		return eval(eqn).asBoolCell().value();
+		return eval(eqn, new EvalContext()).asBoolCell().value();
 	}
 
-	private Cell eval(String eqn) {
-		var lexer = new EqnLexer(CharStreams.fromString(eqn));
-		var tokens = new CommonTokenStream(lexer);
-		var parser = new EqnParser(tokens);
-		return new EvalVisitor()
-			.visit(parser.eqn());
+	private Cell eval(String eqn, EvalContext ctx) {
+		return EvalInterpreter.of(ctx).eval(eqn);
 	}
 
 }

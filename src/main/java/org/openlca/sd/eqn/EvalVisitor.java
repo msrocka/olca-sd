@@ -1,5 +1,7 @@
 package org.openlca.sd.eqn;
 
+import java.util.Objects;
+
 import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
@@ -13,8 +15,15 @@ import org.openlca.sd.eqn.generated.EqnParser.NumberContext;
 import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
 import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
 import org.openlca.sd.eqn.generated.EqnParser.UnarySignContext;
+import org.openlca.sd.eqn.generated.EqnParser.VarContext;
 
 class EvalVisitor extends EqnBaseVisitor<Cell> {
+
+	private final EvalContext evalCtx;
+
+	EvalVisitor(EvalContext evalCtx) {
+		this.evalCtx = Objects.requireNonNull(evalCtx);
+	}
 
 	@Override
 	public Cell visitAddSub(AddSubContext ctx) {
@@ -131,4 +140,8 @@ class EvalVisitor extends EqnBaseVisitor<Cell> {
 		return Cell.of(num);
 	}
 
+	@Override
+	public Cell visitVar(VarContext ctx) {
+		return evalCtx.get(ctx.getText());
+	}
 }
