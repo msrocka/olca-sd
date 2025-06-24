@@ -65,10 +65,18 @@ public sealed interface Cell {
 		throw new IllegalStateException("is not a NumCell");
 	}
 
+	default double asNum() {
+		return asNumCell().value;
+	}
+
 	default BoolCell asBoolCell() {
 		if (this instanceof BoolCell cell)
 			return cell;
 		throw new IllegalStateException("is not a NumCell");
+	}
+
+	default boolean asBool() {
+		return asBoolCell().value;
 	}
 
 	default EqnCell asEqnCell() {

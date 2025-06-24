@@ -281,7 +281,125 @@ public class EvalVisitorTest {
 		var ctx = new EvalContext()
 			.bind("a", 20)
 			.bind("b", 2);
-		assertEquals(42, eval("a * b + 2", ctx).asNumCell().value(), 1e-10);
+		assertEquals(42, eval("a * b + 2", ctx).asNum(), 1e-10);
+
+		// basic variable substitution
+		assertEquals(25.0, eval("x + y",
+			new EvalContext()
+				.bind("x", 10)
+				.bind("y", 15)).asNum(), 1e-10);
+		assertEquals(50.0, eval("price * quantity",
+			new EvalContext()
+				.bind("price", 5.0)
+				.bind("quantity", 10)).asNum(), 1e-10);
+
+		// variables in complex expressions
+		assertEquals(11.025, eval("base * (1 + rate)^time",
+			new EvalContext()
+				.bind("base", 10)
+				.bind("rate", 0.05)
+				.bind("time", 2)).asNum(), 1e-10);
+
+		// variable case insensitivity
+		var caseCtx = new EvalContext()	.bind("Value", 42);
+		assertEquals(42.0, eval("Value", caseCtx).asNum(), 1e-10);
+		assertEquals(42.0, eval("value", caseCtx).asNum(), 1e-10);
+		assertEquals(42.0, eval("VALUE", caseCtx).asNum(), 1e-10);
+
+		// variables with special numeric values
+		var specialCtx = new EvalContext()
+			.bind("zero", 0)
+			.bind("negative", -15.5)
+			.bind("fraction", 0.333333)
+			.bind("large", 1e6)
+			.bind("small", 1e-6);
+		assertEquals(0.0, eval("zero", specialCtx).asNum(), 1e-10);
+		assertEquals(-15.5, eval("negative", specialCtx).asNum(), 1e-10);
+		assertEquals(0.333333, eval("fraction", specialCtx).asNum(), 1e-10);
+		assertEquals(1e6, eval("large", specialCtx).asNum(), 1e-10);
+		assertEquals(1e-6, eval("small", specialCtx).asNum(), 1e-10);
+
+		// variables in logical expressions
+		var logicalCtx = new EvalContext()
+			.bind("isTrue", 1)
+			.bind("isFalse", 0)
+			.bind("threshold", 50);
+		assertTrue(eval("isTrue == 1", logicalCtx).asBool());
+		assertFalse(eval("isFalse == 1", logicalCtx).asBool());
+		assertTrue(eval("threshold > 25", logicalCtx).asBool());
+
+		// variables in IF-THEN-ELSE
+		var condCtx = new EvalContext()
+			.bind("condition", 1)
+			.bind("trueValue", 42)
+			.bind("falseValue", 99);
+		assertEquals(42.0,
+			eval("IF (condition == 1) THEN trueValue ELSE falseValue", condCtx)
+				.asNum(), 1e-10);
+
+		condCtx.bind("condition", 0);
+		assertEquals(99.0,
+			eval("IF (condition == 1) THEN trueValue ELSE falseValue", condCtx)
+				.asNum(), 1e-10);
+
+		// variable shadowing/overriding
+		var shadowCtx = new EvalContext()
+			.bind("x", 10)
+			.bind("x", 20); // override the previous value
+		assertEquals(20.0, eval("x", shadowCtx).asNumCell().value(), 1e-10);
+
+		// variables with underscores and numbers
+		var namingCtx = new EvalContext()
+			.bind("var_1", 10)
+			.bind("var_2", 20)
+			.bind("total_sum", 100)
+			.bind("x1", 5)
+			.bind("y2", 15);
+		assertEquals(30.0, eval("var_1 + var_2", namingCtx).asNum(), 1e-10);
+		assertEquals(100.0, eval("total_sum", namingCtx).asNum(), 1e-10);
+		assertEquals(20.0, eval("x1 + y2", namingCtx).asNum(), 1e-10);
+
+		// Test variables in modulo operations
+		var modCtx = new EvalContext()
+			.bind("dividend", 17)
+			.bind("divisor", 5);
+		assertEquals(2.0, eval("dividend % divisor", modCtx).asNum(), 1e-10);
+		assertEquals(2.0, eval("dividend MOD divisor", modCtx).asNum(), 1e-10);
+
+		// variables in power operations
+		var powerCtx = new EvalContext()
+			.bind("base_val", 2)
+			.bind("exponent", 8);
+		assertEquals(256.0, eval("base_val^exponent", powerCtx).asNum(), 1e-10);
+		assertEquals(256.0, eval("base_val**exponent", powerCtx).asNum(), 1e-10);
+
+		// multiple variables in nested operations
+		var nestedCtx = new EvalContext()
+			.bind("a1", 2)
+			.bind("b1", 3)
+			.bind("c1", 4)
+			.bind("d1", 5);
+		assertEquals(50.0, eval("(a1 + b1) * (c1 + d1) + (a1 * c1) - b1", nestedCtx)
+			.asNum(), 1e-10);
+
+		// undefined variable should throw exception
+		assertThrows(EvalException.class,
+			() -> eval("undefined_var", new EvalContext()));
+		assertThrows(EvalException.class,
+			() -> eval("x + y", new EvalContext().bind("x", 10)));
+
+			// variables with extreme values
+		var extremeCtx = new EvalContext()
+			.bind("maxVal", Double.MAX_VALUE)
+			.bind("minVal", Double.MIN_VALUE)
+			.bind("posInf", Double.POSITIVE_INFINITY)
+			.bind("negInf", Double.NEGATIVE_INFINITY)
+			.bind("notANumber", Double.NaN);
+		assertEquals(Double.MAX_VALUE, eval("maxVal", extremeCtx).asNum(), 1e-10);
+		assertEquals(Double.MIN_VALUE, eval("minVal", extremeCtx).asNum(), 1e-10);
+		assertEquals(Double.POSITIVE_INFINITY, eval("posInf", extremeCtx).asNum(), 1e-10);
+		assertEquals(Double.NEGATIVE_INFINITY, eval("negInf", extremeCtx).asNum(), 1e-10);
+		assertEquals(Double.NaN, eval("notANumber", extremeCtx).asNum(), 1e-10);
 	}
 
 	private double ev(String eqn) {

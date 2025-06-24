@@ -8,7 +8,7 @@ public class EvalContext {
 	private final Map<String, Cell> vars = new HashMap<>();
 
 	public EvalContext bind(String v, Cell value) {
-		vars.put(v, value);
+		vars.put(norm(v), value);
 		return this;
 	}
 
@@ -17,6 +17,12 @@ public class EvalContext {
 	}
 
 	public Cell get(String v) {
-		return vars.getOrDefault(v, Cell.empty());
+		return vars.getOrDefault(norm(v), Cell.empty());
+	}
+
+	private String norm(String v) {
+		return v != null
+			? v.trim().toLowerCase()
+			: "";
 	}
 }

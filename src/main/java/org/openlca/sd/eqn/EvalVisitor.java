@@ -142,6 +142,10 @@ class EvalVisitor extends EqnBaseVisitor<Cell> {
 
 	@Override
 	public Cell visitVar(VarContext ctx) {
-		return evalCtx.get(ctx.getText());
+		var v = ctx.getText();
+		var cell =  evalCtx.get(v);
+		if (cell == null || cell.isEmpty())
+			throw EvalException.of("unknown variable: " + v);
+		return cell;
 	}
 }
