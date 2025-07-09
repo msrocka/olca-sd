@@ -44,3 +44,4 @@ NUMBER:  [0-9]+ ('.' [0-9]+)? NUM_EXP? | '.' [0-9]+ NUM_EXP? ;
 NUM_EXP: ('e' | 'E') [+-]? [0-9]+ ;
 
 WS  :   [ \t\r\n]+ -> skip ; // skip all whitespaces
+COMMENT : '{' .*? '}' -> skip ; // skip comments in curly braces

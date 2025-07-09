@@ -402,6 +402,103 @@ public class EvalVisitorTest {
 		assertEquals(Double.NaN, eval("notANumber", extremeCtx).asNum(), 1e-10);
 	}
 
+	@Test
+	public void testComments() {
+		// Basic arithmetic with comments
+		assertEquals(5.0, ev("2 {adding} + 3"), 1e-10);
+		assertEquals(5.0, ev("{start} 2 + 3 {end}"), 1e-10);
+		assertEquals(5.0, ev("2 + {some comment} 3"), 1e-10);
+		assertEquals(5.0, ev("{prefix} 2 {middle} + {between} 3 {suffix}"), 1e-10);
+
+		// Multiple operations with comments
+		assertEquals(17.0, ev("2 {first} + 3 {second} * 4 {third} + 3 {fourth}"), 1e-10);
+		assertEquals(20.0, ev("(2 {adding} + 3) {result} * 4 {multiplying}"), 1e-10);
+
+		// Comments in parentheses
+		assertEquals(5.0, ev("({start comment} 2 + 3 {end comment})"), 1e-10);
+		assertEquals(15.0, ev("({left side} 2 + 3 {right side}) * 3"), 1e-10);
+
+		// Comments in division and multiplication
+		assertEquals(6.0, ev("2 {multiply} * 3 {by three}"), 1e-10);
+		assertEquals(2.0, ev("6 {divide} / 3 {by three}"), 1e-10);
+		assertEquals(1.0, ev("7 {remainder} % 3 {modulo three}"), 1e-10);
+		assertEquals(1.0, ev("7 {remainder} MOD {keyword} 3 {modulo three}"), 1e-10);
+
+		// Comments in power operations
+		assertEquals(8.0, ev("2 {base} ^ 3 {exponent}"), 1e-10);
+		assertEquals(9.0, ev("3 {base} ** {power operator} 2 {exponent}"), 1e-10);
+		assertEquals(512.0, ev("2 {base} ^ 3 {first power} ^ 2 {second power}"), 1e-10);
+
+		// Comments in unary operations
+		assertEquals(-5.0, ev("{negative} - 5"), 1e-10);
+		assertEquals(5.0, ev("{positive} + 5"), 1e-10);
+		assertEquals(-3.0, ev("{negative} - 5 {minus} + 2"), 1e-10);
+
+		// Comments in comparison operations
+		assertTrue(evb("5 {left} == 5 {right}"));
+		assertTrue(evb("5 {left} = {equals} 5 {right}"));
+		assertFalse(evb("5 {left} != {not equal} 5 {right}"));
+		assertTrue(evb("5 {left} != {not equal} 6 {right}"));
+		assertTrue(evb("5 {left} < {less than} 6 {right}"));
+		assertTrue(evb("6 {left} > {greater than} 5 {right}"));
+		assertTrue(evb("5 {left} <= {less or equal} 5 {right}"));
+		assertTrue(evb("5 {left} >= {greater or equal} 5 {right}"));
+
+		// Comments in logical operations
+		assertTrue(evb("NOT {operator} (5 {left} == 6 {right})"));
+		assertTrue(evb("{negation} ! (5 {left} == 6 {right})"));
+		assertTrue(evb("not {lowercase} (5 {left} == 6 {right})"));
+		assertTrue(evb("(5 {left} == 5 {right}) AND {logical and} (6 {left} == 6 {right})"));
+		assertTrue(evb("(5 {left} == 5 {right}) & {ampersand} (6 {left} == 6 {right})"));
+		assertTrue(evb("(5 {left} == 5 {right}) OR {logical or} (6 {left} == 7 {right})"));
+		assertTrue(evb("(5 {left} == 5 {right}) | {pipe} (6 {left} == 7 {right})"));
+
+		// Comments in IF-THEN-ELSE
+		assertEquals(10.0, ev("IF {condition start} 5 > 3 {condition end} THEN {then start} 10 {then end} ELSE {else start} 20 {else end}"), 1e-10);
+		assertEquals(20.0, ev("IF {condition} (5 < 3) {end condition} THEN {true branch} 10 {end true} ELSE {false branch} 20 {end false}"), 1e-10);
+
+		// Nested IF-THEN-ELSE with comments
+		assertEquals(100.0, ev("IF {outer condition} (5 > 3) {end outer} THEN {outer then} (IF {inner condition} (2 == 2) {end inner} THEN {inner then} 100 {end inner then} ELSE {inner else} 200 {end inner else}) {end outer then} ELSE {outer else} 300 {end outer else}"), 1e-10);
+
+		// Comments with variables
+		var ctx = new EvalContext().bind("a", 20).bind("b", 2);
+		assertEquals(42.0, eval("a {variable a} * {multiply} b {variable b} + {add} 2 {constant}", ctx).asNum(), 1e-10);
+
+		// Complex expressions with many comments
+		assertEquals(46.0, ev("{start} 2 {base} * {multiply} (3 {inner base} + {add} 4 {inner add}) {inner result} + {add to result} 10 {final add} * {multiply final} 3 {final multiplier} + {final add} 2 {final constant}"), 1e-10);
+
+		// Comments in scientific notation
+		assertEquals(1500.0, ev("1.5e3 {scientific notation}"), 1e-10);
+		assertEquals(0.0015, ev("1.5E-3 {negative exponent}"), 1e-10);
+
+		// Comments with nested parentheses
+		assertEquals(26.0, ev("({outer start} 2 {first} + {add} 3 {second} {outer end}) {result} * {multiply} ({inner start} 4 {third} + {add} 1 {fourth} {inner end}) {final} + {final add} 1 {last}"), 1e-10);
+
+		// Comments in complex arithmetic
+		assertEquals(14.0, ev("2 {base} + {add} 3 {addend} * {multiply} 4 {multiplier} {following precedence rules}"), 1e-10);
+		assertEquals(20.0, ev("({start group} 2 {first} + {add} 3 {second} {end group}) {result} * {multiply} 4 {multiplier} {override precedence}"), 1e-10);
+
+		// Empty comments
+		assertEquals(5.0, ev("2 {} + 3"), 1e-10);
+		assertEquals(5.0, ev("{} 2 + 3 {}"), 1e-10);
+
+		// Comments with special characters and spaces
+		assertEquals(5.0, ev("2 {this is a long comment with spaces} + 3"), 1e-10);
+		assertEquals(5.0, ev("2 {comment with numbers 123 and symbols !@#$%^&*()_+-=[]|;:,.<>?} + 3"), 1e-10);
+		assertEquals(5.0, ev("2 {comment with\nnewlines\nand\ttabs} + 3"), 1e-10);
+
+		// Test the spec example: a*b { take product of a and b } + c { then add c }
+		var specCtx = new EvalContext().bind("a", 3).bind("b", 4).bind("c", 5);
+		assertEquals(17.0, eval("a*b { take product of a and b } + c { then add c }", specCtx).asNum(), 1e-10);
+
+		// Multiple consecutive comments
+		assertEquals(5.0, ev("2 {first comment} {second comment} + {third comment} {fourth comment} 3"), 1e-10);
+
+		// Comments that could be used to "turn off" parts of equations (as mentioned in spec)
+		assertEquals(2.0, ev("2 {* 3 + 4} + 0"), 1e-10); // the multiplication and addition are commented out
+		assertEquals(7.0, ev("2 + 3 {* 4} + 2"), 1e-10); // the multiplication is commented out
+	}
+
 	private double ev(String eqn) {
 		return eval(eqn, new EvalContext()).asNumCell().value();
 	}
