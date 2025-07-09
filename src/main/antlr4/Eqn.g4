@@ -1,8 +1,7 @@
 grammar Eqn;
 
 eqn:
-        IF eqn THEN eqn ELSE eqn                          # IfThenElse
-    |   '(' eqn ')'                                       # Parens
+       '(' eqn ')'                                        # Parens
     |   VAR '[' eqn (',' eqn)* ']'                        # ArrayAccess
     |   VAR ('(' ')' | '(' eqn (',' eqn)* ')')            # FunCall
     |   <assoc=right> eqn POW eqn                         # Power
@@ -12,6 +11,7 @@ eqn:
     |   eqn op=('+'|'-') eqn                              # AddSub
     |   eqn op=( EQ | NEQ | GT | GE | LT | LE ) eqn       # Comp
     |   eqn op=( AND | OR ) eqn                           # Logic
+    |   IF eqn THEN eqn ELSE eqn                          # IfThenElse
     |   NUMBER                                            # number
     |   VAR                                               # var
     ;
