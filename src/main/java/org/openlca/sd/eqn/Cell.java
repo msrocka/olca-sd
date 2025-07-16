@@ -33,7 +33,9 @@ public sealed interface Cell {
 			case NumCell ignored -> false;
 			case BoolCell ignored -> false;
 			case TensorCell(Tensor tensor) -> tensor != null;
-			case EqnCell(String eqn) -> eqn != null && !eqn.isBlank();
+			case EqnCell(String eqn) -> Id.isNil(eqn);
+			case LookupCell(String eqn, LookupFunc func)
+				-> Id.isNil(eqn) || func == null;
 		};
 	}
 
@@ -124,6 +126,14 @@ public sealed interface Cell {
 		@Override
 		public String toString() {
 			return value;
+		}
+	}
+
+	record LookupCell(String eqn, LookupFunc func) implements Cell {
+
+		@Override
+		public String toString() {
+			return "gf(" + eqn + ")";
 		}
 	}
 }
