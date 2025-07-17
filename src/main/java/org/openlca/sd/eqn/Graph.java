@@ -33,7 +33,7 @@ public class Graph {
 	private static class Reader {
 
 		private final Xmile xmile;
-		private final HashMap<String, Dimension> dimensions;
+		private final HashMap<Id, Dimension> dimensions;
 
 		Reader(Xmile xmile) {
 			this.xmile = xmile;
@@ -47,7 +47,7 @@ public class Graph {
 		private Dimension dimOf(XmiDim d) {
 			var id = Id.of(d.name());
 			int n = d.elems().size();
-			var elements = new String[n];
+			var elements = new Id[n];
 			for (int i = 0; i < d.elems().size(); i++) {
 				var elem = d.elems().get(i);
 				elements[i] = Id.of(elem.name());
@@ -92,6 +92,7 @@ public class Graph {
 
 			}
 
+			return Res.error("not yet implemented");
 		}
 
 

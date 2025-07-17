@@ -1,8 +1,22 @@
 package org.openlca.sd.eqn;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public sealed interface Subscript {
 
-	static Subscript parse(String s) {
+	static Subscript of(String id) {
+		return Id.isNil(id)
+				? Empty.instance
+				: new Identifier(Id.of(id));
+	}
+
+	static Subscript of(int idx) {
+		return idx < 0 ? Empty.instance : new Index(idx);
+	}
+
+	/// Parses a subscript from a string, like "1", "Product", or "*".
+	static Subscript parseFrom(String s) {
 		if (Id.isNil(s))
 			return Empty.instance;
 		var t = s.strip();
@@ -21,10 +35,22 @@ public sealed interface Subscript {
 		return new Identifier(Id.of(t));
 	}
 
+	/// Parses a list of subscripts from a string, like "1, Product, *".
+	static List<Subscript> parseAllFrom(String s) {
+		if (Id.isNil(s))
+			return List.of();
+		var subs = new ArrayList<Subscript>();
+		for (var si : s.strip().split(",")) {
+			var sub = parseFrom(si);
+			subs.add(sub);
+		}
+		return subs;
+	}
+
 	record Index(int value) implements Subscript {
 	}
 
-	record Identifier(String value) implements Subscript {
+	record Identifier(Id value) implements Subscript {
 	}
 
 	record Wildcard() implements Subscript {

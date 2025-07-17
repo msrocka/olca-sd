@@ -72,10 +72,11 @@ public class Tensor {
 		if (idx == null)
 			return;
 		switch (idx) {
-			case Empty $ -> {}
+			case Empty $ -> {
+			}
 			case Wildcard $ -> setAll(cell);
 			case Index(int i) -> set(i, cell);
-			case Identifier(String id) -> {
+			case Identifier(Id id) -> {
 				if (id.equals(dim.name())) {
 					setAll(cell);
 				} else {
@@ -105,13 +106,32 @@ public class Tensor {
 			return;
 		}
 
+		var subIxs = ixs.subList(1, ixs.size());
+
 		switch (idx) {
+
 			case Index(int i) -> withTensorAt(i,
-				tensor -> tensor.set(ixs.subList(1, ixs.size()), cell));
+				tensor -> tensor.set(subIxs, cell));
 
+			case Identifier(Id id) -> {
+				if (id.equals(dim.name())) {
+					for (int i = 0; i < cells.length; i++) {
+						withTensorAt(i, tensor -> tensor.set(subIxs, cell));
+					}
+				} else {
+					withTensorAt(dim.indexOf(id), tensor -> tensor.set(subIxs, cell));
+				}
+			}
+
+			case Wildcard $ -> {
+				for (int i = 0; i < cells.length; i++) {
+					withTensorAt(i, tensor -> tensor.set(subIxs, cell));
+				}
+			}
+
+			case Empty $ -> {
+			}
 		}
-
-
 	}
 
 
@@ -128,17 +148,23 @@ public class Tensor {
 		}
 	}
 
-	public Cell get(String row) {
-		// match-all rows of this tensor, returns a copy of this sensor.
-		if (isMatchAll(row))
+	public Cell get(Subscript sub) {
+		if (isMatchAll(sub))
 			return Cell.of(this);
+		int i = dim.indexOf(sub);
+		return get(i);
+	}
 
-
-		int i = dim.indexOf(row);
-		if (i < 0)
+	public Cell get(int index) {
+		if (index < 0 || index >= dim.size())
 			return Cell.empty();
-		var cell = cells[i];
-		return cell != null ? cell : Cell.empty();
+		if (n == 1)
+			return cells[index];
+		var cell = cells[index];
+		if (cell instanceof TensorCell(Tensor tensor)) {
+			return tensor.copy();
+		}
+		return Cell.of(Tensor.of(subs));
 	}
 
 	public Cell get(String... elements) {
@@ -196,11 +222,12 @@ public class Tensor {
 		return copy;
 	}
 
-	private boolean isMatchAll(String s) {
-		if (s == null)
-			return false;
-		var ss = s.strip();
-		return ss.equals("*") || ss.equals(dim.name());
+	private boolean isMatchAll(Subscript s) {
+		return switch (s) {
+			case Wildcard $ -> true;
+			case Identifier(Id id) -> id.equals(dim.name());
+			case null, default -> false;
+		};
 	}
 
 	@Override
