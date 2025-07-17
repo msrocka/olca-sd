@@ -3,8 +3,14 @@ package org.openlca.sd.eqn;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
+import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.Cell.TensorCell;
+import org.openlca.sd.eqn.Subscript.Empty;
+import org.openlca.sd.eqn.Subscript.Identifier;
+import org.openlca.sd.eqn.Subscript.Index;
+import org.openlca.sd.eqn.Subscript.Wildcard;
 
 public class Tensor {
 
@@ -46,7 +52,11 @@ public class Tensor {
 	}
 
 	public int dimensions() {
-		return 1 + subs.length;
+		return n;
+	}
+
+	public Dimension dimension() {
+		return dim;
 	}
 
 	/// Returns the number of possible elements of this tensor.
@@ -58,35 +68,63 @@ public class Tensor {
 		return s;
 	}
 
-	public void set(String elem, double value) {
-		if (isMatchAll(elem)) {
-			setAll(value);
+	public void set(Subscript idx, Cell cell) {
+		if (idx == null)
 			return;
-		}
-
-		int i = dim.indexOf(elem);
-		if (i < 0)
-			return;
-		if (n == 1) {
-			cells[i] = Cell.of(value);
-			return;
-		}
-		var sub = cells[i];
-		if (sub instanceof TensorCell(Tensor tensor)) {
-			tensor.setAll(value);
-		} else {
-			var tensor = Tensor.of(subs);
-			tensor.setAll(value);
-			cells[i] = Cell.of(tensor);
+		switch (idx) {
+			case Empty $ -> {}
+			case Wildcard $ -> setAll(cell);
+			case Index(int i) -> set(i, cell);
+			case Identifier(String id) -> {
+				if (id.equals(dim.name())) {
+					setAll(cell);
+				} else {
+					set(dim.indexOf(id), cell);
+				}
+			}
 		}
 	}
 
-	public void set(String row, String col, double value) {
-		if (n < 2)
+	public void set(int index, Cell cell) {
+		if (index < 0 || index >= dim.size())
 			return;
-		if (n == 2) {
+		if (n == 1) {
+			cells[index] = cell;
+			return;
+		}
+		withTensorAt(index, tensor -> tensor.setAll(cell));
+	}
+
+	public void set(List<Subscript> ixs, Cell cell) {
+		if (ixs == null || ixs.isEmpty())
+			return;
+
+		var idx = ixs.getFirst();
+		if (ixs.size() == 1 || n == 1) {
+			set(idx, cell);
+			return;
+		}
+
+		switch (idx) {
+			case Index(int i) -> withTensorAt(i,
+				tensor -> tensor.set(ixs.subList(1, ixs.size()), cell));
+
+		}
 
 
+	}
+
+
+	private void withTensorAt(int idx, Consumer<Tensor> fn) {
+		if (idx < 0 || idx >= cells.length)
+			return;
+		var cell = cells[idx];
+		if (cell instanceof TensorCell(Tensor tensor)) {
+			fn.accept(tensor);
+		} else {
+			var tensor = Tensor.of(subs);
+			cells[idx] = Cell.of(tensor);
+			fn.accept(tensor);
 		}
 	}
 
@@ -119,21 +157,30 @@ public class Tensor {
 			: Cell.empty();
 	}
 
-	public void setAll(double value) {
+	public void setAll(Cell cell) {
+		if (cell == null) {
+			setAll(Cell.empty());
+			return;
+		}
 		if (n == 1) {
-			Arrays.fill(cells, Cell.of(value));
+			Arrays.fill(cells, cell);
 			return;
 		}
 		for (int i = 0; i < cells.length; i++) {
 			var c = cells[i];
 			if (c instanceof TensorCell(Tensor tensor)) {
-				tensor.setAll(value);
+				tensor.setAll(cell);
 			} else {
 				var sub = Tensor.of(subs);
-				sub.setAll(value);
+				sub.setAll(cell);
 				cells[i] = Cell.of(sub);
 			}
 		}
+
+	}
+
+	public void setAll(double value) {
+		setAll(new NumCell(value));
 	}
 
 	public Tensor copy() {

@@ -31,6 +31,9 @@ public sealed abstract class XmiEvaluatable
 	@XmlElement(name = "element", namespace = Xmile.NS)
 	List<XmiElement> elements;
 
+	@XmlElement(name = "non_negative", namespace = Xmile.NS)
+	XmiNonNegative nonNegative;
+
 	public String eqn() {
 		return eqn;
 	}
@@ -53,6 +56,10 @@ public sealed abstract class XmiEvaluatable
 
 	public List<XmiElement> elements() {
 		return elements != null ? elements : List.of();
+	}
+
+	public boolean isNonNegative() {
+		return nonNegative != null;
 	}
 
 	@XmlAccessorType(XmlAccessType.FIELD)

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
 import org.openlca.sd.xmile.XmiEvaluatable;
@@ -77,21 +78,33 @@ public class Graph {
 			return null;
 		}
 
-		private Cell cellOf(XmiEvaluatable v) {
+		private Res<Cell> cellOf(XmiEvaluatable v) {
 			if (v == null)
-				return null;
+				return Res.error("variable is null");
 
 			if (!v.dimensions().isEmpty()) {
-				var dims = new ArrayList<Dimension>();
-				for (var d : v.dimensions()) {
-					var dim = dimensions.get(Id.of(d.name()));
+				var dims = dimsOf(v);
+				if (dims.hasError())
+					return dims.wrapError("could not read dimensions of: " + v);
+				var array = new Tensor(dims.value());
 
-				}
+
+
 			}
 
 		}
 
 
+		private Res<List<Dimension>> dimsOf(XmiEvaluatable v) {
+			var dims = new ArrayList<Dimension>();
+			for (var d : v.dimensions()) {
+				var dim = dimensions.get(Id.of(d.name()));
+				if (dim == null)
+					return Res.error("unknown dimension: " + d.name());
+				dims.add(dim);
+			}
+			return Res.of(dims);
+		}
 
 	}
 }
