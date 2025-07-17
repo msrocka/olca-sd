@@ -36,6 +36,7 @@ public sealed interface Cell {
 			case EqnCell(String eqn) -> Id.isNil(eqn);
 			case LookupCell(String eqn, LookupFunc func)
 				-> Id.isNil(eqn) || func == null;
+			case NonNegativeCell(Cell value) -> value == null;
 		};
 	}
 
@@ -135,5 +136,16 @@ public sealed interface Cell {
 		public String toString() {
 			return "gf(" + eqn + ")";
 		}
+	}
+
+	record NonNegativeCell(Cell value) implements Cell {
+
+		@Override
+		public String toString() {
+			return isEmpty()
+				? "nonNegative(nil)"
+				: "nonNegative(" + value.toString() + ")";
+		}
+
 	}
 }

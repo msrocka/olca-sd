@@ -17,6 +17,9 @@ public class XmiElement {
 	@XmlElement(name ="gf", namespace = Xmile.NS)
 	XmiGf gf;
 
+	@XmlElement(name="non_negative", namespace = Xmile.NS)
+	XmiNonNegative nonNegative;
+
 	public String subscript() {
 		return subscript;
 	}
@@ -27,6 +30,10 @@ public class XmiElement {
 
 	public XmiGf gf() {
 		return gf;
+	}
+
+	public boolean isNonNegative() {
+		return nonNegative != null;
 	}
 
 }

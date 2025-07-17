@@ -28,6 +28,9 @@ public sealed abstract class XmiEvaluatable
 	@XmlElement(name="dim", namespace = Xmile.NS)
 	List<Dim> dimensions;
 
+	@XmlElement(name = "element", namespace = Xmile.NS)
+	List<XmiElement> elements;
+
 	public String eqn() {
 		return eqn;
 	}
@@ -48,6 +51,10 @@ public sealed abstract class XmiEvaluatable
 		return dimensions == null ? List.of() : dimensions;
 	}
 
+	public List<XmiElement> elements() {
+		return elements != null ? elements : List.of();
+	}
+
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class Dim {
 
@@ -57,6 +64,5 @@ public sealed abstract class XmiEvaluatable
 		public String name() {
 			return name;
 		}
-
 	}
 }

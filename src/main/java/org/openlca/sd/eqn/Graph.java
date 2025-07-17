@@ -1,11 +1,13 @@
 package org.openlca.sd.eqn;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
+import org.openlca.sd.xmile.XmiEvaluatable;
 import org.openlca.sd.xmile.XmiFlow;
 import org.openlca.sd.xmile.XmiGf;
 import org.openlca.sd.xmile.XmiStock;
@@ -70,8 +72,26 @@ public class Graph {
 		}
 
 		private Node auxNodeOf(XmiAux aux) {
+
+
 			return null;
 		}
+
+		private Cell cellOf(XmiEvaluatable v) {
+			if (v == null)
+				return null;
+
+			if (!v.dimensions().isEmpty()) {
+				var dims = new ArrayList<Dimension>();
+				for (var d : v.dimensions()) {
+					var dim = dimensions.get(Id.of(d.name()));
+
+				}
+			}
+
+		}
+
+
 
 	}
 }
