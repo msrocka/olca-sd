@@ -9,6 +9,10 @@ public sealed interface Subscript {
 		return idx < 0 ? Empty.instance : new Index(idx);
 	}
 
+	static Subscript of(Id id) {
+		return id == null ? Empty.instance : new Identifier(id);
+	}
+
 	/// Parses a subscript from a string, like "1", "Product", or "*".
 	static Subscript of(String s) {
 		if (Id.isNil(s))

@@ -101,6 +101,10 @@ public sealed interface Cell {
 				|| other instanceof Cell cell && cell.isEmpty();
 		}
 
+		@Override
+		public String toString() {
+			return "'()";
+		}
 	}
 
 	record TensorCell(Tensor value) implements Cell {
