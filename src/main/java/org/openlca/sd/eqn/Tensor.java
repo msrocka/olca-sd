@@ -1,9 +1,9 @@
 package org.openlca.sd.eqn;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.Cell.TensorCell;
@@ -16,68 +16,74 @@ public class Tensor {
 
 	private final Dimension dim;
 	private final Cell[] cells;
-	private final Dimension[] subs;
+	private final List<Dimension> subs;
 	private final int n;
 
-	/// Private copy constructor.
-	private Tensor(Dimension dim, Dimension[] subs) {
-		this.dim = dim;
-		this.subs = subs;
+	private Tensor(Dimension dim, List<Dimension> subs) {
+		this.dim = Objects.requireNonNull(dim);
+		this.subs = Objects.requireNonNull(subs);
 		this.cells = new Cell[dim.size()];
-		this.n = 1 + subs.length;
+		this.n = 1 + subs.size();
+		if (!subs.isEmpty()) {
+			for (int i = 0; i < dim.size(); i++) {
+				this.cells[i] = Cell.of(Tensor.of(subs));
+			}
+		}
 	}
 
 	public Tensor(Dimension dim) {
-		this.dim = Objects.requireNonNull(dim);
-		this.cells = new Cell[dim.size()];
-		this.subs = new Dimension[0];
-		this.n = 1;
+		this(dim, List.of());
 	}
 
-	public Tensor(List<Dimension> dims) {
+	public static Tensor of(List<Dimension> dims) {
 		if (dims.isEmpty())
 			throw new IllegalArgumentException(
 				"Tensor must have at least one dimension");
-		this.dim = dims.getFirst();
-		this.cells = new Cell[dim.size()];
-		this.subs = new Dimension[dims.size() - 1];
+		var primary = dims.getFirst();
+		if (dims.size() == 1)
+			return new Tensor(primary);
+
+		var subs = new ArrayList<Dimension>(dims.size() - 1);
 		for (int i = 1; i < dims.size(); i++) {
-			this.subs[i - 1] = dims.get(i);
+			subs.add(dims.get(i));
 		}
-		this.n = 1 + subs.length;
+		return new Tensor(primary, subs);
 	}
 
 	public static Tensor of(Dimension... dims) {
-		return new Tensor(Arrays.asList(dims));
+		return Tensor.of(Arrays.asList(dims));
 	}
 
-	public int dimensions() {
-		return n;
-	}
-
-	public Dimension dimension() {
-		return dim;
-	}
-
-	/// Returns the number of possible elements of this tensor.
-	public int size() {
-		int s = dim.size();
-		for (var sub : subs) {
-			s *= sub.size();
+	public int[] shape() {
+		var shape = new int[n];
+		shape[0] = dim.size();
+		if (n == 1)
+			return shape;
+		for (int i = 0; i < subs.size(); i++) {
+			shape[i + 1] = subs.get(i).size();
 		}
-		return s;
+		return shape;
+	}
+
+	public List<Dimension> dimensions() {
+		var list = new ArrayList<Dimension>(n);
+		list.add(dim);
+		if (n > 1) {
+			list.addAll(subs);
+		}
+		return list;
 	}
 
 	public void set(Subscript idx, Cell cell) {
 		if (idx == null)
 			return;
 		switch (idx) {
-			case Empty $ -> {
+			case Empty ignored -> {
 			}
-			case Wildcard $ -> setAll(cell);
+			case Wildcard ignored -> setAll(cell);
 			case Index(int i) -> set(i, cell);
 			case Identifier(Id id) -> {
-				if (id.equals(dim.name())) {
+				if (dim.hasName(id)) {
 					setAll(cell);
 				} else {
 					set(dim.indexOf(id), cell);
@@ -89,62 +95,41 @@ public class Tensor {
 	public void set(int index, Cell cell) {
 		if (index < 0 || index >= dim.size())
 			return;
-		if (n == 1) {
-			cells[index] = cell;
-			return;
-		}
-		withTensorAt(index, tensor -> tensor.setAll(cell));
-	}
-
-	public void set(List<Subscript> ixs, Cell cell) {
-		if (ixs == null || ixs.isEmpty())
-			return;
-
-		var idx = ixs.getFirst();
-		if (ixs.size() == 1 || n == 1) {
-			set(idx, cell);
-			return;
-		}
-
-		var subIxs = ixs.subList(1, ixs.size());
-
-		switch (idx) {
-
-			case Index(int i) -> withTensorAt(i,
-				tensor -> tensor.set(subIxs, cell));
-
-			case Identifier(Id id) -> {
-				if (id.equals(dim.name())) {
-					for (int i = 0; i < cells.length; i++) {
-						withTensorAt(i, tensor -> tensor.set(subIxs, cell));
-					}
-				} else {
-					withTensorAt(dim.indexOf(id), tensor -> tensor.set(subIxs, cell));
-				}
-			}
-
-			case Wildcard $ -> {
-				for (int i = 0; i < cells.length; i++) {
-					withTensorAt(i, tensor -> tensor.set(subIxs, cell));
-				}
-			}
-
-			case Empty $ -> {
-			}
+		var c = cell != null ? cell : Cell.empty();
+		var target = cells[index];
+		if (target instanceof TensorCell(Tensor tensor)) {
+			tensor.setAll(c);
+		} else {
+			cells[index] = c;
 		}
 	}
 
+	public void set(List<Subscript> subs, Cell cell) {
+		if (subs == null || subs.isEmpty())
+			return;
 
-	private void withTensorAt(int idx, Consumer<Tensor> fn) {
+		var sub = subs.getFirst();
+		if (subs.size() == 1 || n == 1) {
+			set(sub, cell);
+			return;
+		}
+
+		var rest = subs.subList(1, subs.size());
+
+		if (isMatchAll(sub)) {
+			for (var target : cells) {
+				if (target instanceof TensorCell(Tensor tensor)) {
+					tensor.set(rest, cell);
+				}
+			}
+			return;
+		}
+
+		int idx = dim.indexOf(sub);
 		if (idx < 0 || idx >= cells.length)
 			return;
-		var cell = cells[idx];
-		if (cell instanceof TensorCell(Tensor tensor)) {
-			fn.accept(tensor);
-		} else {
-			var tensor = Tensor.of(subs);
-			cells[idx] = Cell.of(tensor);
-			fn.accept(tensor);
+		if (cells[idx] instanceof TensorCell(Tensor tensor)) {
+			tensor.set(rest, cell);
 		}
 	}
 
@@ -158,29 +143,55 @@ public class Tensor {
 	public Cell get(int index) {
 		if (index < 0 || index >= dim.size())
 			return Cell.empty();
-		if (n == 1)
-			return cells[index];
 		var cell = cells[index];
-		if (cell instanceof TensorCell(Tensor tensor)) {
-			return tensor.copy();
-		}
-		return Cell.of(Tensor.of(subs));
-	}
-
-	public Cell get(String... elements) {
-		return get(Arrays.asList(elements));
-	}
-
-	public Cell get(List<String> elements) {
-		if (elements == null || elements.isEmpty())
-			return Cell.empty();
-		String first = elements.getFirst();
-		var cell = get(first);
-		if (elements.size() == 1)
-			return cell;
-		return cell instanceof TensorCell(Tensor t)
-			? t.get(elements.subList(1, elements.size()))
+		return cell != null
+			? cell
 			: Cell.empty();
+	}
+
+	public Cell get(Subscript... subs) {
+		return subs != null ? get(Arrays.asList(subs)) : Cell.empty();
+	}
+
+	public Cell get(List<Subscript> subs) {
+		if (subs == null || subs.isEmpty())
+			return Cell.empty();
+
+		var sub = subs.getFirst();
+		if (subs.size() == 1 || n == 1)
+			return get(sub);
+
+		var rest = subs.subList(1, subs.size());
+		if (isMatchAll(sub)) {
+			List<Dimension> innerDims = null;
+			var cs = new Cell[dim.size()];
+			for (int i = 0; i < cs.length; i++) {
+				if ( cells[i] instanceof TensorCell(Tensor queryTensor)) {
+					var rs = queryTensor.get(rest);
+					if (rs instanceof TensorCell(Tensor resultTensor)) {
+						innerDims = resultTensor.dimensions();
+					}
+					cs[i] = rs;
+				} else {
+					cs[i] = Cell.empty();
+				}
+			}
+
+			var outerResult = innerDims != null
+				? new Tensor(dim, innerDims)
+				: new Tensor(dim);
+			System.arraycopy(cs, 0, outerResult.cells, 0, cs.length);
+			return Cell.of(outerResult);
+		}
+
+		var idx = dim.indexOf(sub);
+		if (idx < 0 || idx >= cells.length)
+			return Cell.empty();
+
+		if (cells[idx] instanceof TensorCell(Tensor tensor)) {
+			return tensor.get(rest);
+		}
+		return Cell.empty();
 	}
 
 	public void setAll(Cell cell) {
@@ -192,17 +203,11 @@ public class Tensor {
 			Arrays.fill(cells, cell);
 			return;
 		}
-		for (int i = 0; i < cells.length; i++) {
-			var c = cells[i];
+		for (var c : cells) {
 			if (c instanceof TensorCell(Tensor tensor)) {
 				tensor.setAll(cell);
-			} else {
-				var sub = Tensor.of(subs);
-				sub.setAll(cell);
-				cells[i] = Cell.of(sub);
 			}
 		}
-
 	}
 
 	public void setAll(double value) {
@@ -224,7 +229,7 @@ public class Tensor {
 
 	private boolean isMatchAll(Subscript s) {
 		return switch (s) {
-			case Wildcard $ -> true;
+			case Wildcard ignored -> true;
 			case Identifier(Id id) -> id.equals(dim.name());
 			case null, default -> false;
 		};
@@ -238,11 +243,11 @@ public class Tensor {
 			return false;
 
 		// compare dimensions
-		if (this.n != other.n
-			|| !Objects.equals(dim, other.dim))
+		if (this.n != other.n || !Objects.equals(dim, other.dim))
 			return false;
-		for (int i = 0; i < subs.length; i++) {
-			if (!Objects.equals(subs[i], other.subs[i]))
+
+		for (int i = 0; i < subs.size(); i++) {
+			if (!Objects.equals(subs.get(i), other.subs.get(i)))
 				return false;
 		}
 

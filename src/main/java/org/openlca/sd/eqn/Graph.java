@@ -16,8 +16,8 @@ import org.openlca.sd.xmile.Xmile;
 
 public class Graph {
 
-	private final Map<String, Node> nodes = new HashMap<>();
-	private final Map<String, String> edges = new HashMap<>();
+	private final Map<Id, Node> nodes = new HashMap<>();
+	private final Map<Id, Id> edges = new HashMap<>();
 
 	public record Node(Var var, List<Cell> values) {
 	}

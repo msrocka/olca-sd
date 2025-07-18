@@ -26,6 +26,10 @@ public class Dimension {
 		return name;
 	}
 
+	public boolean hasName(Id name) {
+		return this.name.equals(name);
+	}
+
 	public int size() {
 		return elements.length;
 	}
