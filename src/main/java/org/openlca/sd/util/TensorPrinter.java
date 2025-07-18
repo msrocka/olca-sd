@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openlca.sd.eqn.Cell;
+import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.eqn.Dimension;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Subscript;
@@ -15,6 +17,21 @@ public class TensorPrinter {
 
 	public TensorPrinter() {
 		o = System.out;
+	}
+
+	public void print(Cell cell) {
+		if (cell == null) {
+			o.println("No tensor");
+			o.println("'()\n");
+			return;
+		}
+
+		if (cell instanceof TensorCell(Tensor tensor)) {
+			print(tensor);
+			return;
+		}
+
+		o.println("Cell:\n" + cell + "\n");
 	}
 
 	public void print(Tensor tensor) {
@@ -50,7 +67,6 @@ public class TensorPrinter {
 	private void printDim2(Dimension rows, Dimension cols, Tensor tensor) {
 		o.println("Tensor of dimension: " + rows.name().label()
 			+ " x " + cols.name().label());
-		o.print("\t");
 		for (var colElem : cols.elements()) {
 			o.print("\t" + colElem.label());
 		}

@@ -18,9 +18,7 @@ public sealed interface Cell {
 	}
 
 	static Cell of(String eqn) {
-		return Util.isEmpty(eqn)
-			? new EqnCell(eqn)
-			: empty();
+		return Id.isNil(eqn) ? Cell.empty() : new EqnCell(eqn);
 	}
 
 	static Cell empty() {

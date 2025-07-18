@@ -1,7 +1,10 @@
 package org.openlca.sd;
 
+import static org.openlca.sd.eqn.Subscript.of;
+
 import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Dimension;
+import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.util.TensorPrinter;
 
@@ -17,12 +20,22 @@ public class TensorExamples {
 		var t1 = Tensor.of(plastics);
 		printer.print(t1);
 
-
 		var t2 = Tensor.of(plastics, metals);
 		printer.print(t2);
 
 		t2.set(0, Cell.of("X"));
 		printer.print(t2);
+
+		t2.set(Subscript.parseAllFrom("PET, *"), Cell.of(1));
+		t2.set(Subscript.parseAllFrom("PVC, *"), Cell.of(2));
+		t2.set(Subscript.parseAllFrom("ABS, *"), Cell.of(3));
+		t2.set(Subscript.parseAllFrom("*, Cu"), Cell.of(5));
+		printer.print(t2);
+
+		printer.print(t2.get(of("*")));
+		printer.print(t2.get(of("PET")));
+		printer.print(t2.get(of("*"), of("Al")));
+
 	}
 
 }
