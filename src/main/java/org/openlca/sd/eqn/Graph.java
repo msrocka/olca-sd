@@ -86,7 +86,7 @@ public class Graph {
 				var dims = dimsOf(v);
 				if (dims.hasError())
 					return dims.wrapError("could not read dimensions of: " + v);
-				var array = new Tensor(dims.value());
+				var array = Tensor.of(dims.value());
 
 
 

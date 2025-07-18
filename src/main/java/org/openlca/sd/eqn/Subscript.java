@@ -5,18 +5,12 @@ import java.util.List;
 
 public sealed interface Subscript {
 
-	static Subscript of(String id) {
-		return Id.isNil(id)
-				? Empty.instance
-				: new Identifier(Id.of(id));
-	}
-
 	static Subscript of(int idx) {
 		return idx < 0 ? Empty.instance : new Index(idx);
 	}
 
 	/// Parses a subscript from a string, like "1", "Product", or "*".
-	static Subscript parseFrom(String s) {
+	static Subscript of(String s) {
 		if (Id.isNil(s))
 			return Empty.instance;
 		var t = s.strip();
@@ -31,7 +25,6 @@ public sealed interface Subscript {
 			} catch (Exception ignored) {
 			}
 		}
-
 		return new Identifier(Id.of(t));
 	}
 
@@ -41,7 +34,7 @@ public sealed interface Subscript {
 			return List.of();
 		var subs = new ArrayList<Subscript>();
 		for (var si : s.strip().split(",")) {
-			var sub = parseFrom(si);
+			var sub = of(si);
 			subs.add(sub);
 		}
 		return subs;
