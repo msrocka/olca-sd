@@ -12,7 +12,7 @@ public class Add implements Func {
 
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
-		return Fn.with2Args(args, (a, b) -> {
+		return Fn.withTwoArgs(args, (a, b) -> {
 
 			if (a.isNumCell() && b.isNumCell()) {
 				double result = a.asNum() + b.asNum();

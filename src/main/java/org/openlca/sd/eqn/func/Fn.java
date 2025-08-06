@@ -11,7 +11,7 @@ class Fn {
 	private Fn() {
 	}
 
-	static Res<Cell> with2Args(
+	static Res<Cell> withTwoArgs(
 		List<Cell> args, BiFunction<Cell, Cell, Res<Cell>> fn
 	) {
 		if (args == null || args.size() != 2)
