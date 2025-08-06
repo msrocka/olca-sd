@@ -1,6 +1,7 @@
 package org.openlca.sd.eqn;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +25,20 @@ public class Graph {
 	private final Map<Id, Id> edges = new HashMap<>();
 
 	public record Node(Var var, List<Cell> values) {
+		static Node of(Var var) {
+			return new Node(var, new ArrayList<>());
+		}
 	}
 
-	public static Graph readFrom(Xmile xmile) {
+	public static Res<Graph> readFrom(Xmile xmile) {
 		return xmile != null
 			? new Reader(xmile).read()
-			: new Graph();
+			: Res.error("no Xmile model provided");
 	}
 
+	public Collection<Node> nodes() {
+		return nodes.values();
+	}
 
 	private static class Reader {
 
@@ -58,32 +65,50 @@ public class Graph {
 			return new Dimension(id, elements);
 		}
 
-		Graph read() {
-			var g = new Graph();
+		Res<Graph> read() {
 			var model = xmile.model();
 			if (model == null)
-				return g;
+				return Res.error("no model found");
 
+			var g = new Graph();
 			for (var v : model.variables()) {
+
 				switch (v) {
 					case XmiAux aux -> {
+						var cellRes = cellOf(aux);
+						if (cellRes.hasError())
+							return cellRes.wrapError("failed to create cell for aux: " + aux.name());
+						var var = new Var.Aux(Id.of(aux.name()), cellRes.value());
+						var node = Node.of(var);
+						g.nodes.put(var.id(), node);
 					}
 					case XmiFlow flow -> {
+						var cellRes = cellOf(flow);
+						if (cellRes.hasError())
+							return cellRes.wrapError("failed to create cell for flow: " + flow.name());
+						var var = new Var.Rate(Id.of(flow.name()), cellRes.value());
+						var node = Node.of(var);
+						g.nodes.put(var.id(), node);
 					}
 					case XmiStock stock -> {
+						var cellRes = cellOf(stock);
+						if (cellRes.hasError())
+							return cellRes.wrapError("failed to create cell for stock: " + stock.name());
+						var inFlows = stock.inflows();
+						var outFlows = stock.outflows();
+						var var = new Var.Stock(Id.of(stock.name()), cellRes.value(), inFlows, outFlows);
+						var node = Node.of(var);
+						g.nodes.put(var.id(), node);
 					}
 					case XmiGf gf -> {
+						// TODO: top-level look-up functions need to be bound as functions
+						// in the interpreter context
 					}
 				}
 			}
-			return g;
+			return Res.of(g);
 		}
 
-		private Node auxNodeOf(XmiAux aux) {
-
-
-			return null;
-		}
 
 		private Res<Cell> cellOf(XmiEvaluatable v) {
 			if (v == null)
