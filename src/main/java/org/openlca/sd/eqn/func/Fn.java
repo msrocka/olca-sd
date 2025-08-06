@@ -5,6 +5,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.openlca.sd.eqn.Cell;
+import org.openlca.sd.eqn.Cell.TensorCell;
+import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.util.Res;
 
 class Fn {
@@ -33,6 +35,26 @@ class Fn {
 		if (a == null || b == null)
 			return Res.error("function arguments cannot be null");
 		return fn.apply(a, b);
+	}
+
+	/// Applies the given function recursively on each cell of the given tensor.
+	static Res<Cell> each(
+		TensorCell tCell, Function<Cell, Res<Cell>> fn, String op
+	) {
+		var tensor = tCell.value();
+		var result = Tensor.of(tensor.dimensions());
+		var shape = tensor.shape();
+
+		for (int i = 0; i < shape[0]; i++) {
+			var elem = tensor.get(i);
+			var r = fn.apply(elem);
+			if (r.hasError()) {
+				return r.wrapError(
+					"error computing " + op + " at index " + i);
+			}
+			result.set(i, r.value());
+		}
+		return Res.of(Cell.of(result));
 	}
 
 }

@@ -3,8 +3,6 @@ package org.openlca.sd.eqn.func;
 import java.util.List;
 
 import org.openlca.sd.eqn.Cell;
-import org.openlca.sd.eqn.Cell.TensorCell;
-import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.util.Res;
 
 public class Abs implements Func {
@@ -13,35 +11,21 @@ public class Abs implements Func {
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withOneArg(args, arg -> {
 
-			// Absolute value of a number
 			if (arg.isNumCell()) {
 				double result = Math.abs(arg.asNum());
 				return Res.of(Cell.of(result));
 			}
 
-			// Absolute value applied element-wise to tensors
 			if (arg.isTensorCell()) {
-				return tensorAbs(arg.asTensorCell());
+				return Fn.each(
+					arg.asTensorCell(),
+					element -> apply(List.of(element)),
+					"absolute value");
 			}
 
 			return Res.error("ABS is not defined for cell type: " +
 				arg.getClass().getSimpleName());
 		});
-	}
-
-	private Res<Cell> tensorAbs(TensorCell tensorCell) {
-		var tensor = tensorCell.value();
-		var result = Tensor.of(tensor.dimensions());
-		var shape = tensor.shape();
-		for (int i = 0; i < shape[0]; i++) {
-			var element = tensor.get(i);
-			var r = apply(List.of(element));
-			if (r.hasError()) {
-				return r.wrapError("error computing absolute value at index " + i);
-			}
-			result.set(i, r.value());
-		}
-		return Res.of(Cell.of(result));
 	}
 
 }
