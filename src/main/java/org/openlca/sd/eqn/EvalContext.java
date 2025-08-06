@@ -2,27 +2,39 @@ package org.openlca.sd.eqn;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import org.openlca.sd.eqn.func.Func;
 
 public class EvalContext {
 
-	private final Map<String, Cell> vars = new HashMap<>();
+	private final Map<Id, Var> vars = new HashMap<>();
+	private final Map<Id, Func> funcs = new HashMap<>();
 
-	public EvalContext bind(String v, Cell value) {
-		vars.put(norm(v), value);
+	public EvalContext bind(Var var) {
+		if (var != null) {
+			vars.put(var.name(), var);
+		}
 		return this;
 	}
 
-	public EvalContext bind(String v, double value) {
-		return bind(v, Cell.of(value));
+	public Optional<Var> getVar(Id name) {
+		return name != null
+			? Optional.ofNullable(vars.get(name))
+			: Optional.empty();
 	}
 
-	public Cell get(String v) {
-		return vars.getOrDefault(norm(v), Cell.empty());
+	public EvalContext bind(Id name, Func func) {
+		if (name != null && func != null) {
+			funcs.put(name, func);
+		}
+		return this;
 	}
 
-	private String norm(String v) {
-		return v != null
-			? v.trim().toLowerCase()
-			: "";
+	public Optional<Func> getFunc(Id name) {
+		return name != null
+			? Optional.ofNullable(funcs.get(name))
+			: Optional.empty();
 	}
+
 }

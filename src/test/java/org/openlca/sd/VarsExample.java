@@ -14,7 +14,7 @@ public class VarsExample {
 		var vars = Vars.readFrom(xmile).orElseThrow();
 		var prt = new TensorPrinter();
 		for (var v : vars) {
-			System.out.println(v.id());
+			System.out.println(v.name());
 			prt.print(v.cell());
 		}
 	}
