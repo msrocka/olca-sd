@@ -7,39 +7,42 @@ import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.util.Res;
 
-public class Abs implements Func {
+public class ArcCos implements Func {
 
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withOneArg(args, arg -> {
 
-			// Absolute value of a number
+			// Arccosine of a number
 			if (arg.isNumCell()) {
-				double result = Math.abs(arg.asNum());
+				double value = arg.asNum();
+				if (value < -1.0 || value > 1.0) {
+					return Res.error("ARCCOS domain error: input must be in range [-1, 1], got " + value);
+				}
+				double result = Math.acos(value);
 				return Res.of(Cell.of(result));
 			}
 
-			// Absolute value applied element-wise to tensors
+			// Arccosine applied element-wise to tensors
 			if (arg.isTensorCell()) {
-				return tensorAbs(arg.asTensorCell());
+				return tensorArcCos(arg.asTensorCell());
 			}
 
-			return Res.error("ABS is not defined for cell type: " +
+			return Res.error("ARCCOS is not defined for cell type: " +
 				arg.getClass().getSimpleName());
 		});
 	}
 
-	private Res<Cell> tensorAbs(TensorCell tensorCell) {
+	private Res<Cell> tensorArcCos(TensorCell tensorCell) {
 		var tensor = tensorCell.value();
 		var result = Tensor.of(tensor.dimensions());
 		var shape = tensor.shape();
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
-			var r = apply(List.of(element));
-			if (r.hasError()) {
-				return r.wrapError("error computing absolute value at index " + i);
-			}
-			result.set(i, r.value());
+			var ri = apply(List.of(element));
+			if (ri.hasError())
+				return ri.wrapError("error computing arccosine at index " + i);
+			result.set(i, ri.value());
 		}
 		return Res.of(Cell.of(result));
 	}
