@@ -54,6 +54,7 @@ public class Tensor {
 		return Tensor.of(Arrays.asList(dims));
 	}
 
+	/// Returns the sizes of the respective dimensions of this tensor.
 	public int[] shape() {
 		var shape = new int[n];
 		shape[0] = dim.size();
@@ -63,6 +64,12 @@ public class Tensor {
 			shape[i + 1] = subs.get(i).size();
 		}
 		return shape;
+	}
+
+	/// Returns the size of the primary dimension of this tensor (the number
+	/// of rows, as we store tensors row-oriented).
+	public int size() {
+		return cells.length;
 	}
 
 	public List<Dimension> dimensions() {
