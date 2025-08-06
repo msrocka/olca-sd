@@ -9,9 +9,12 @@ import org.openlca.sd.eqn.Cell.LookupCell;
 import org.openlca.sd.eqn.Cell.NonNegativeCell;
 import org.openlca.sd.eqn.LookupFunc.Type;
 import org.openlca.sd.util.Res;
+import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
 import org.openlca.sd.xmile.XmiEvaluatable;
+import org.openlca.sd.xmile.XmiFlow;
 import org.openlca.sd.xmile.XmiGf;
+import org.openlca.sd.xmile.XmiStock;
 import org.openlca.sd.xmile.Xmile;
 
 public class Vars {
@@ -62,12 +65,28 @@ public class Vars {
 				var cell = cellOf(eva);
 				if (cell.hasError())
 					return cell.wrapError("failed to create cell for: " + eva.name());
-				var var = new Var.Aux(Id.of(eva.name()), cell.value());
-				vars.add(var);
+
+				switch (eva) {
+					case XmiAux ignored -> {
+						var aux = new Var.Aux(Id.of(eva.name()), cell.value());
+						vars.add(aux);
+					}
+					case XmiFlow ignored -> {
+						var flow = new Var.Rate(Id.of(eva.name()), cell.value());
+						vars.add(flow);
+					}
+					case XmiStock s -> {
+						var stock = new Var.Stock(
+							Id.of(eva.name()),
+							cell.value(),
+							Id.allOf(s.inflows()),
+							Id.allOf(s.outflows()));
+						vars.add(stock);
+					}
+				}
 			}
 			return Res.of(vars);
 		}
-
 
 		private Res<Cell> cellOf(XmiEvaluatable v) {
 			if (v == null)

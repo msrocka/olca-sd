@@ -1,5 +1,8 @@
 package org.openlca.sd.eqn;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Id {
 
 	private static final Id NIL = new Id("*nil*", "");
@@ -28,6 +31,16 @@ public class Id {
 			ids[i] = of(ss[i]);
 		}
 		return ids;
+	}
+
+	static List<Id> allOf(List<String> ss) {
+		if (ss == null || ss.isEmpty())
+			return List.of();
+		var list = new ArrayList<Id>(ss.size());
+		for (var s : ss) {
+			list.add(Id.of(s));
+		}
+		return list;
 	}
 
 	static boolean isNil(String s) {

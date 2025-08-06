@@ -15,10 +15,7 @@ public sealed interface Var {
 	}
 
 	record Stock(
-		Id id,
-		Cell cell,
-		List<String> inFlows,
-		List<String> outFlows
+		Id id, Cell cell, List<Id> inFlows, List<Id> outFlows
 	) implements Var {
 	}
 }
