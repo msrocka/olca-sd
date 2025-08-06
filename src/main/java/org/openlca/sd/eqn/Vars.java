@@ -55,13 +55,13 @@ public class Vars {
 			if (model == null)
 				return Res.error("no model found");
 
-		var vars = new ArrayList<Var>();
+			var vars = new ArrayList<Var>();
 			for (var v : model.variables()) {
 				if (!(v instanceof XmiEvaluatable eva))
 					continue;
 				var cell = cellOf(eva);
 				if (cell.hasError())
-					return Res.error("failed to create cell for: " + eva.name());
+					return cell.wrapError("failed to create cell for: " + eva.name());
 				var var = new Var.Aux(Id.of(eva.name()), cell.value());
 				vars.add(var);
 			}
@@ -104,7 +104,7 @@ public class Vars {
 				array.set(subs, cell.value());
 			}
 
-			return Res.error("not yet implemented");
+			return Res.of(Cell.of(array));
 		}
 
 		private Res<List<Dimension>> dimsOf(XmiEvaluatable v) {
