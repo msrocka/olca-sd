@@ -56,10 +56,10 @@ public class Dimension {
 	/// (could be also a wildcard or empty subscript).
 	public int indexOf(Subscript sub) {
 		return switch (sub) {
-			case Empty $ -> -1;
+			case Empty ignored -> -1;
 			case Index(int i) -> i >= 0 && i < elements.length ? i : -1;
 			case Identifier id -> indexOf(id.value());
-			case Wildcard $ -> -1;
+			case Wildcard ignored -> -1;
 			case null -> -1;
 		};
 	}
