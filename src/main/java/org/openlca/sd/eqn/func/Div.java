@@ -4,10 +4,18 @@ import java.util.List;
 
 import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Cell.TensorCell;
+import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.util.Res;
 
 public class Div implements Func {
+
+	private final Id name = Id.of("DIV");
+
+	@Override
+	public Id name() {
+		return name;
+	}
 
 	@Override
 	public Res<Cell> apply(List<Cell> args) {

@@ -5,11 +5,17 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.openlca.sd.eqn.func.Func;
+import org.openlca.sd.eqn.func.Max;
 
 public class EvalContext {
 
 	private final Map<Id, Var> vars = new HashMap<>();
 	private final Map<Id, Func> funcs = new HashMap<>();
+
+	public EvalContext() {
+		// bind default functions
+		funcs.put(Id.of("MAX"), new Max());
+	}
 
 	public EvalContext bind(Var var) {
 		if (var != null) {

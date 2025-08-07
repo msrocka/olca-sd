@@ -14,7 +14,7 @@ public class Id {
 		this.value = value;
 	}
 
-	static Id of(String s) {
+	public static Id of(String s) {
 		if (isNil(s))
 			return NIL;
 		var value = s.strip()
