@@ -1,5 +1,6 @@
 package org.openlca.sd.eqn;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import org.openlca.sd.eqn.func.Add;
@@ -13,6 +14,7 @@ import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
 import org.openlca.sd.eqn.generated.EqnParser.CompContext;
+import org.openlca.sd.eqn.generated.EqnParser.FunCallContext;
 import org.openlca.sd.eqn.generated.EqnParser.IfThenElseContext;
 import org.openlca.sd.eqn.generated.EqnParser.LogicContext;
 import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
@@ -196,5 +198,23 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		if (v == null)
 			return Res.error("unknown variable: " + ctx.getText());
 		return Res.of(v.cell());
+	}
+
+	@Override
+	public Res<Cell> visitFunCall(FunCallContext ctx) {
+		var funcName = ctx.VAR().getText();
+		var func = evalCtx.getFunc(Id.of(funcName)).orElse(null);
+		if (func == null)
+			return Res.error("unknown function: " + funcName);
+
+		// evaluate arguments & call function
+		var args = new ArrayList<Cell>();
+		for (var argCtx : ctx.eqn()) {
+			var argRes = visit(argCtx);
+			if (argRes.hasError())
+				return argRes;
+			args.add(argRes.value());
+		}
+		return func.apply(args);
 	}
 }

@@ -403,6 +403,64 @@ public class EvalVisitorTest {
 	}
 
 	@Test
+	public void testFunctions() {
+		// Single argument functions
+		assertEquals(5.0, ev("ABS(-5)"), 1e-10);
+		assertEquals(5.0, ev("abs(-5)"), 1e-10);
+		assertEquals(2.0, ev("SQRT(4)"), 1e-10);
+		assertEquals(2.0, ev("sqrt(4)"), 1e-10);
+		assertEquals(1.0, ev("SIN(1.5707963267948966)"), 1e-6); // π/2
+		assertEquals(1.0, ev("sin(1.5707963267948966)"), 1e-6);
+		assertEquals(1.0, ev("COS(0)"), 1e-10);
+		assertEquals(1.0, ev("cos(0)"), 1e-10);
+		assertEquals(1.0, ev("TAN(0.7853981633974483)"), 1e-6); // π/4
+		assertEquals(2.718281828459045, ev("EXP(1)"), 1e-10);
+		assertEquals(1.0, ev("LN(2.718281828459045)"), 1e-10);
+		assertEquals(2.0, ev("LOG10(100)"), 1e-10);
+		assertEquals(3.0, ev("INT(3.7)"), 1e-10);
+
+		// Arc functions
+		assertEquals(1.5707963267948966, ev("ARCCOS(0)"), 1e-10); // π/2
+		assertEquals(1.5707963267948966, ev("ACOS(0)"), 1e-10);
+		assertEquals(1.5707963267948966, ev("ARCSIN(1)"), 1e-10);
+		assertEquals(1.5707963267948966, ev("ASIN(1)"), 1e-10);
+		assertEquals(0.7853981633974483, ev("ARCTAN(1)"), 1e-10); // π/4
+		assertEquals(0.7853981633974483, ev("ATAN(1)"), 1e-10);
+
+		// Multi-argument functions
+		assertEquals(8.0, ev("MAX(3, 8, 5)"), 1e-10);
+		assertEquals(3.0, ev("MIN(3, 8, 5)"), 1e-10);
+		assertEquals(16.0, ev("SUM(3, 8, 5)"), 1e-10);
+
+		// Functions with single arguments (instead of no arguments)
+		assertEquals(5.0, ev("SUM(5)"), 1e-10);
+
+		// Nested function calls
+		assertEquals(1.0, ev("ABS(SIN(-1.5707963267948966))"), 1e-6); // |sin(-π/2)| = |-1| = 1
+		assertEquals(2.0, ev("SQRT(MAX(1, 4, 2))"), 1e-10);
+		assertEquals(5.0, ev("SUM(ABS(-2), SQRT(9))"), 1e-10);
+
+		// Functions in expressions
+		assertEquals(7.0, ev("2 + ABS(-5)"), 1e-10);
+		assertEquals(15.0, ev("3 * MIN(7, 5, 9)"), 1e-10);
+		assertEquals(6.0, ev("SQRT(4) * MAX(1, 3, 2)"), 1e-10);
+
+		// Functions with variables
+		var funcCtx = new EvalContext().bind("x", -3).bind("y", 4);
+		assertEquals(5.0, eval("SQRT(x * x + y * y)", funcCtx).asNum(), 1e-10);
+		assertEquals(7.0, eval("ABS(x) + y", funcCtx).asNum(), 1e-10);
+		assertEquals(4.0, eval("MAX(ABS(x), y)", funcCtx).asNum(), 1e-10);
+
+		// Error cases - unknown functions
+		try {
+			ev("UNKNOWN(5)");
+			fail("Should throw exception for unknown function");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("unknown function: UNKNOWN"));
+		}
+	}
+
+	@Test
 	public void testComments() {
 		// Basic arithmetic with comments
 		assertEquals(5.0, ev("2 {adding} + 3"), 1e-10);
