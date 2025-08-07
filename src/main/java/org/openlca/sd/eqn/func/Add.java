@@ -25,18 +25,13 @@ public class Add implements Func {
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withTwoArgs(args, (a, b) -> {
-
 			if (a.isNumCell() && b.isNumCell()) {
 				double result = a.asNum() + b.asNum();
 				return Res.of(Cell.of(result));
 			}
-
-			if (a.isTensorCell() && b.isTensorCell())
-				return add(a.asTensorCell(), b.asTensorCell());
-
-			return Res.error("addition is not defined for cell types: " +
-				a.getClass().getSimpleName() + " and " +
-				b.getClass().getSimpleName());
+			return a.isTensorCell() && b.isTensorCell()
+				? add(a.asTensorCell(), b.asTensorCell())
+				: Res.error("addition is not defined for: " + a + " + " + b);
 		});
 	}
 

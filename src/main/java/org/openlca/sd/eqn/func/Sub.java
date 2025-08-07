@@ -34,9 +34,7 @@ public class Sub implements Func {
 			if (a.isTensorCell() && b.isTensorCell())
 				return sub(a.asTensorCell(), b.asTensorCell());
 
-			return Res.error("subtraction is not defined for cell types: " +
-				a.getClass().getSimpleName() + " and " +
-				b.getClass().getSimpleName());
+			return Res.error("subtraction is not defined for: " + a + " - " + b);
 		});
 	}
 

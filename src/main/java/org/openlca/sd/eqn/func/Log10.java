@@ -20,18 +20,18 @@ public class Log10 implements Func {
 		return Fn.withOneArg(args, arg -> {
 
 			if (arg.isNumCell()) {
-				double value = arg.asNum();
-				if (value <= 0.0) {
-					return Res.error("LOG10 domain error: input must be positive, got " + value);
+				double v = arg.asNum();
+				if (v <= 0.0) {
+					return Res.error(
+						"LOG10 domain error: input must be positive, got " + v);
 				}
-				double result = Math.log10(value);
+				double result = Math.log10(v);
 				return Res.of(Cell.of(result));
 			}
 
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("LOG10 is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("LOG10 is not defined for: " + arg);
 		});
 	}
 

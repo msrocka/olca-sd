@@ -42,8 +42,7 @@ public class Mod implements Func {
 				return scalar(a.asTensorCell(), divisor);
 			}
 
-			return Res.error(
-				"modulo is not defined for cell types: " + a + " and " + b);
+			return Res.error("modulo is not defined for: " + a + " % " + b);
 		});
 	}
 

@@ -44,9 +44,7 @@ public class Div implements Func {
 				return scalar(a.asTensorCell(), divisor);
 			}
 
-			return Res.error("division is not defined for cell types: " +
-				a.getClass().getSimpleName() + " and " +
-				b.getClass().getSimpleName());
+			return Res.error("division is not defined for: " + a + " / " + b);
 		});
 	}
 

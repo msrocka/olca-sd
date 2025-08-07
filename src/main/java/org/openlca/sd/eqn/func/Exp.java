@@ -26,8 +26,7 @@ public class Exp implements Func {
 
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("EXP is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("EXP is not defined for: " + arg);
 		});
 	}
 

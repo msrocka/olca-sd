@@ -42,9 +42,7 @@ public class Mul implements Func {
 			if (a.isTensorCell() && b.isTensorCell())
 				return matrixMul(a.asTensorCell(), b.asTensorCell());
 
-			return Res.error("multiplication is not defined for cell types: " +
-				a.getClass().getSimpleName() + " and " +
-				b.getClass().getSimpleName());
+			return Res.error("multiplication is not defined for: " + a + " * " + b);
 		});
 	}
 

@@ -20,18 +20,18 @@ public class ArcCos implements Func {
 		return Fn.withOneArg(args, arg -> {
 
 			if (arg.isNumCell()) {
-				double value = arg.asNum();
-				if (value < -1.0 || value > 1.0) {
-					return Res.error("ARCCOS domain error: input must be in range [-1, 1], got " + value);
+				double v = arg.asNum();
+				if (v < -1.0 || v > 1.0) {
+					return Res.error(
+						"ARCCOS domain error: input must be in range [-1, 1], got " + v);
 				}
-				double result = Math.acos(value);
+				double result = Math.acos(v);
 				return Res.of(Cell.of(result));
 			}
 
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("ARCCOS is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("ARCCOS is not defined for: " + arg);
 		});
 	}
 

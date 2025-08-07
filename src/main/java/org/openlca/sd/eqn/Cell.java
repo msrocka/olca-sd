@@ -1,5 +1,7 @@
 package org.openlca.sd.eqn;
 
+import java.util.stream.Collectors;
+
 /// The possible types of a tensor cell entry.
 public sealed interface Cell {
 
@@ -32,8 +34,8 @@ public sealed interface Cell {
 			case BoolCell ignored -> false;
 			case TensorCell(Tensor tensor) -> tensor != null;
 			case EqnCell(String eqn) -> Id.isNil(eqn);
-			case LookupCell(String eqn, LookupFunc func)
-				-> Id.isNil(eqn) || func == null;
+			case LookupCell(String eqn, LookupFunc func) ->
+				Id.isNil(eqn) || func == null;
 			case NonNegativeCell(Cell value) -> value == null;
 		};
 	}
@@ -101,18 +103,29 @@ public sealed interface Cell {
 
 		@Override
 		public String toString() {
-			return "'()";
+			return "{}";
 		}
 	}
 
 	record TensorCell(Tensor value) implements Cell {
+
+		@Override
+		public String toString() {
+			if (value == null)
+				return "tensor{}";
+			var dims = value.dimensions()
+				.stream()
+				.map(d -> d.name().label())
+				.collect(Collectors.joining(" × "));
+			return "tensor{" + dims + "}";
+		}
 	}
 
 	record NumCell(double value) implements Cell {
 
 		@Override
 		public String toString() {
-			return Double.toString(value);
+			return "{" + value + "}";
 		}
 	}
 
@@ -120,7 +133,7 @@ public sealed interface Cell {
 
 		@Override
 		public String toString() {
-			return Boolean.toString(value);
+			return "{" + value + "}";
 		}
 	}
 
@@ -128,7 +141,7 @@ public sealed interface Cell {
 
 		@Override
 		public String toString() {
-			return value;
+			return "{'" + value + "'}";
 		}
 	}
 
@@ -136,7 +149,7 @@ public sealed interface Cell {
 
 		@Override
 		public String toString() {
-			return "gf(" + eqn + ")";
+			return "lookup{'" + eqn + "'}";
 		}
 	}
 
@@ -144,9 +157,9 @@ public sealed interface Cell {
 
 		@Override
 		public String toString() {
-			return isEmpty()
-				? "nonNegative(nil)"
-				: "nonNegative(" + value.toString() + ")";
+			return value == null
+				? "nonNeg{}"
+				: "nonNeg{" + value + "}";
 		}
 
 	}

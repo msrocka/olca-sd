@@ -24,8 +24,7 @@ public class Abs implements Func {
 			}
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("ABS is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("ABS is not defined for: " + arg);
 		});
 	}
 

@@ -20,18 +20,18 @@ public class Sqrt implements Func {
 		return Fn.withOneArg(args, arg -> {
 
 			if (arg.isNumCell()) {
-				double value = arg.asNum();
-				if (value < 0.0) {
-					return Res.error("SQRT domain error: input must be non-negative, got " + value);
+				double v = arg.asNum();
+				if (v < 0.0) {
+					return Res.error(
+						"SQRT domain error: input must be non-negative, got " + v);
 				}
-				double result = Math.sqrt(value);
+				double result = Math.sqrt(v);
 				return Res.of(Cell.of(result));
 			}
 
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("SQRT is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("SQRT is not defined for: " + arg);
 		});
 	}
 

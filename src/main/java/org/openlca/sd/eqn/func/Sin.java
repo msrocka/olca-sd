@@ -18,16 +18,13 @@ public class Sin implements Func {
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withOneArg(args, arg -> {
-
 			if (arg.isNumCell()) {
 				double result = Math.sin(arg.asNum());
 				return Res.of(Cell.of(result));
 			}
-
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("SIN is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("SIN is not defined for: " + arg);
 		});
 	}
 

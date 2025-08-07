@@ -20,18 +20,18 @@ public class Ln implements Func {
 		return Fn.withOneArg(args, arg -> {
 
 			if (arg.isNumCell()) {
-				double value = arg.asNum();
-				if (value <= 0.0) {
-					return Res.error("LN domain error: input must be positive, got " + value);
+				double v = arg.asNum();
+				if (v <= 0.0) {
+					return Res.error(
+						"LN domain error: input must be positive, got " + v);
 				}
-				double result = Math.log(value);
+				double result = Math.log(v);
 				return Res.of(Cell.of(result));
 			}
 
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("LN is not defined for cell type: " +
-				arg.getClass().getSimpleName());
+				: Res.error("LN is not defined for: " + arg);
 		});
 	}
 
