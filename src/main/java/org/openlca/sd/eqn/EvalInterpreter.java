@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
+import org.openlca.sd.util.Res;
 
 public class EvalInterpreter {
 
@@ -19,14 +20,13 @@ public class EvalInterpreter {
 			: new EvalInterpreter(new EvalContext());
 	}
 
-	public Cell eval(String expression) {
+	public Res<Cell> eval(String expression) {
 		if (Util.isEmpty(expression))
-			return Cell.empty();
+			return Res.error("empty expression provided");
 		var lexer = new EqnLexer(CharStreams.fromString(expression));
 		var tokens = new CommonTokenStream(lexer);
 		var parser = new EqnParser(tokens);
-		return new EvalVisitor(ctx)
-			.visit(parser.eqn());
+		return new EvalVisitor(ctx).visit(parser.eqn());
 	}
 
 }

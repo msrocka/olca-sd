@@ -13,6 +13,10 @@ public class Add implements Func {
 
 	private final Id name = Id.of("ADD");
 
+	public static Res<Cell> apply(Cell a, Cell b) {
+		return new Add().apply(List.of(a, b));
+	}
+
 	@Override
 	public Id name() {
 		return name;

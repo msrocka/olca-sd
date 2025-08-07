@@ -508,7 +508,7 @@ public class EvalVisitorTest {
 	}
 
 	private Cell eval(String eqn, EvalContext ctx) {
-		return EvalInterpreter.of(ctx).eval(eqn);
+		return EvalInterpreter.of(ctx).eval(eqn).orElseThrow();
 	}
 
 }

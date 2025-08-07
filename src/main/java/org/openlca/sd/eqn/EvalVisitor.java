@@ -3,6 +3,7 @@ package org.openlca.sd.eqn;
 import java.util.Objects;
 
 import org.openlca.sd.eqn.Cell.NumCell;
+import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
@@ -16,8 +17,9 @@ import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
 import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
 import org.openlca.sd.eqn.generated.EqnParser.UnarySignContext;
 import org.openlca.sd.eqn.generated.EqnParser.VarContext;
+import org.openlca.sd.util.Res;
 
-class EvalVisitor extends EqnBaseVisitor<Cell> {
+class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 
 	private final EvalContext evalCtx;
 
@@ -26,125 +28,166 @@ class EvalVisitor extends EqnBaseVisitor<Cell> {
 	}
 
 	@Override
-	public Cell visitAddSub(AddSubContext ctx) {
+	public Res<Cell> visitAddSub(AddSubContext ctx) {
 		var a = visit(ctx.eqn(0));
+		if (a.hasError())
+			return a;
 		var b = visit(ctx.eqn(1));
+		if (b.hasError())
+			return b;
+
 		return switch (ctx.op.getType()) {
-			case EqnParser.ADD -> CellOps.add(a, b);
-			case EqnParser.SUB -> CellOps.sub(a, b);
-			default -> throw EvalException.of(
+			case EqnParser.ADD -> Add.apply(a.value(), b.value());
+			case EqnParser.SUB -> CellOps.sub(a.value(), b.value());
+			default -> Res.error(
 				"unsupported operator in add-sub context: " + ctx.op.getText());
 		};
 	}
 
 	@Override
-	public Cell visitUnarySign(UnarySignContext ctx) {
-		var cell = visit(ctx.eqn());
+	public Res<Cell> visitUnarySign(UnarySignContext ctx) {
+		var cellRes = visit(ctx.eqn());
+		if (cellRes.hasError()) return cellRes;
+
+		var cell = cellRes.value();
 		if (!(cell instanceof NumCell(double x)))
-			throw EvalException.of("unary operator " + ctx.op.getText()
+			return Res.error("unary operator " + ctx.op.getText()
 				+ " not supported for " + cell);
 
 		return switch (ctx.op.getType()) {
-			case EqnParser.ADD -> Cell.of(x);
-			case EqnParser.SUB -> Cell.of(-x);
-			default -> throw EvalException.of(
+			case EqnParser.ADD -> Res.of(Cell.of(x));
+			case EqnParser.SUB -> Res.of(Cell.of(-x));
+			default -> Res.error(
 				"unsupported unary operator " + ctx.op.getText());
 		};
 	}
 
 	@Override
-	public Cell visitMulDiv(MulDivContext ctx) {
+	public Res<Cell> visitMulDiv(MulDivContext ctx) {
 		var a = visit(ctx.eqn(0));
+		if (a.hasError()) return a;
 		var b = visit(ctx.eqn(1));
+		if (b.hasError()) return b;
+
 		return switch (ctx.op.getType()) {
-			case EqnParser.MUL -> CellOps.mul(a, b);
-			case EqnParser.DIV -> CellOps.div(a, b);
-			case EqnParser.MOD -> CellOps.mod(a, b);
-			default -> throw EvalException.of(
+			case EqnParser.MUL -> CellOps.mul(a.value(), b.value());
+			case EqnParser.DIV -> CellOps.div(a.value(), b.value());
+			case EqnParser.MOD -> CellOps.mod(a.value(), b.value());
+			default -> Res.error(
 				"unsupported operator in mul-div context: " + ctx.op.getText());
 		};
 	}
 
 	@Override
-	public Cell visitComp(CompContext ctx) {
+	public Res<Cell> visitComp(CompContext ctx) {
 		var a = visit(ctx.eqn(0));
+		if (a.hasError()) return a;
 		var b = visit(ctx.eqn(1));
-		if (!a.isNumCell() || !b.isNumCell())
-			throw EvalException.unsupported(ctx.op.getText(), a, b);
-		double x = a.asNumCell().value();
-		double y = b.asNumCell().value();
+		if (b.hasError()) return b;
+
+		var cellA = a.value();
+		var cellB = b.value();
+		if (!cellA.isNumCell() || !cellB.isNumCell())
+			return Res.error("comparison operator " + ctx.op.getText() +
+				" not supported for cell types: " + cellA.getClass().getSimpleName() +
+				" and " + cellB.getClass().getSimpleName());
+
+		double x = cellA.asNumCell().value();
+		double y = cellB.asNumCell().value();
 		return switch (ctx.op.getType()) {
-			case EqnParser.EQ -> Cell.of(x == y);
-			case EqnParser.NEQ -> Cell.of(x != y);
-			case EqnParser.GE -> Cell.of(x >= y);
-			case EqnParser.GT -> Cell.of(x > y);
-			case EqnParser.LE -> Cell.of(x <= y);
-			case EqnParser.LT -> Cell.of(x < y);
-			default -> throw EvalException.of(
+			case EqnParser.EQ -> Res.of(Cell.of(x == y));
+			case EqnParser.NEQ -> Res.of(Cell.of(x != y));
+			case EqnParser.GE -> Res.of(Cell.of(x >= y));
+			case EqnParser.GT -> Res.of(Cell.of(x > y));
+			case EqnParser.LE -> Res.of(Cell.of(x <= y));
+			case EqnParser.LT -> Res.of(Cell.of(x < y));
+			default -> Res.error(
 				"unsupported operator in comp context: " + ctx.op.getText());
 		};
 	}
 
 	@Override
-	public Cell visitNot(NotContext ctx) {
-		var cell = visit(ctx.eqn());
+	public Res<Cell> visitNot(NotContext ctx) {
+		var cellRes = visit(ctx.eqn());
+		if (cellRes.hasError()) return cellRes;
+
+		var cell = cellRes.value();
 		if (!cell.isBoolCell())
-			throw EvalException.of(
+			return Res.error(
 				"NOT operator requires boolean operand, got: " + cell);
 		boolean value = cell.asBoolCell().value();
-		return Cell.of(!value);
+		return Res.of(Cell.of(!value));
 	}
 
 	@Override
-	public Cell visitLogic(LogicContext ctx) {
+	public Res<Cell> visitLogic(LogicContext ctx) {
 		var a = visit(ctx.eqn(0));
+		if (a.hasError()) return a;
 		var b = visit(ctx.eqn(1));
-		if (!a.isBoolCell() || !b.isBoolCell())
-			throw EvalException.unsupported(ctx.op.getText(), a, b);
-		boolean x = a.asBoolCell().value();
-		boolean y = b.asBoolCell().value();
+		if (b.hasError()) return b;
+
+		var cellA = a.value();
+		var cellB = b.value();
+		if (!cellA.isBoolCell() || !cellB.isBoolCell())
+			return Res.error("logical operator " + ctx.op.getText() +
+				" not supported for cell types: " + cellA.getClass().getSimpleName() +
+				" and " + cellB.getClass().getSimpleName());
+
+		boolean x = cellA.asBoolCell().value();
+		boolean y = cellB.asBoolCell().value();
 		return switch (ctx.op.getType()) {
-			case EqnParser.AND -> Cell.of(x && y);
-			case EqnParser.OR -> Cell.of(x || y);
-			default -> throw EvalException.of(
+			case EqnParser.AND -> Res.of(Cell.of(x && y));
+			case EqnParser.OR -> Res.of(Cell.of(x || y));
+			default -> Res.error(
 				"unsupported operator in logic context: " + ctx.op.getText());
 		};
 	}
 
 	@Override
-	public Cell visitIfThenElse(IfThenElseContext ctx) {
-		var cond = visit(ctx.eqn(0));
+	public Res<Cell> visitIfThenElse(IfThenElseContext ctx) {
+		var condRes = visit(ctx.eqn(0));
+		if (condRes.hasError()) return condRes;
+
+		var cond = condRes.value();
 		if (!cond.isBoolCell())
-			throw EvalException.of(
+			return Res.error(
 				"IF condition must be boolean, got: " + cond);
+
 		return cond.asBoolCell().value()
 			? visit(ctx.eqn(1))
 			: visit(ctx.eqn(2));
 	}
 
 	@Override
-	public Cell visitParens(ParensContext ctx) {
+	public Res<Cell> visitParens(ParensContext ctx) {
 		return visit(ctx.eqn());
 	}
 
 	@Override
-	public Cell visitPower(PowerContext ctx) {
+	public Res<Cell> visitPower(PowerContext ctx) {
 		var a = visit(ctx.eqn(0));
+		if (a.hasError()) return a;
 		var b = visit(ctx.eqn(1));
-		return CellOps.pow(a, b);
+		if (b.hasError()) return b;
+
+		return CellOps.pow(a.value(), b.value());
 	}
 
 	@Override
-	public Cell visitNumber(NumberContext ctx) {
-		var num = Double.parseDouble(ctx.getText());
-		return Cell.of(num);
+	public Res<Cell> visitNumber(NumberContext ctx) {
+		try {
+			var num = Double.parseDouble(ctx.getText());
+			return Res.of(Cell.of(num));
+		} catch (NumberFormatException e) {
+			return Res.error("invalid number format: " + ctx.getText());
+		}
 	}
 
 	@Override
-	public Cell visitVar(VarContext ctx) {
+	public Res<Cell> visitVar(VarContext ctx) {
 		var v = evalCtx.getVar(Id.of(ctx.getText())).orElse(null);
 		if (v == null)
-			throw EvalException.of("unknown variable: " + ctx.getText());
-		return v.cell();
+			return Res.error("unknown variable: " + ctx.getText());
+		return Res.of(v.cell());
 	}
 }
