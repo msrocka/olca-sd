@@ -2,7 +2,7 @@ grammar Eqn;
 
 eqn:
        '(' eqn ')'                                        # Parens
-    |   ID '[' eqn (',' eqn)* ']'                         # ArrayAccess
+    |   ID '[' subscript (',' subscript)* ']'             # ArrayAccess
     |   ID ('(' ')' | '(' eqn (',' eqn)* ')')             # FunCall
     |   <assoc=right> eqn POW eqn                         # Power
     |   <assoc=right> op=('+' | '-') eqn                  # UnarySign
@@ -14,6 +14,11 @@ eqn:
     |   IF eqn THEN eqn ELSE eqn                          # IfThenElse
     |   NUMBER                                            # number
     |   ID                                                # var
+    ;
+
+subscript:
+       ID                                                 # IdSubscript
+    |  NUMBER                                             # IntSubscript
     ;
 
 

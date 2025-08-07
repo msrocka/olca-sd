@@ -13,9 +13,12 @@ import org.openlca.sd.eqn.func.Sub;
 import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
+import org.openlca.sd.eqn.generated.EqnParser.ArrayAccessContext;
 import org.openlca.sd.eqn.generated.EqnParser.CompContext;
 import org.openlca.sd.eqn.generated.EqnParser.FunCallContext;
+import org.openlca.sd.eqn.generated.EqnParser.IdSubscriptContext;
 import org.openlca.sd.eqn.generated.EqnParser.IfThenElseContext;
+import org.openlca.sd.eqn.generated.EqnParser.IntSubscriptContext;
 import org.openlca.sd.eqn.generated.EqnParser.LogicContext;
 import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
 import org.openlca.sd.eqn.generated.EqnParser.NotContext;
@@ -198,6 +201,55 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		if (v == null)
 			return Res.error("unknown variable: " + ctx.getText());
 		return Res.of(v.cell());
+	}
+
+	@Override
+	public Res<Cell> visitArrayAccess(ArrayAccessContext ctx) {
+		// Get the variable
+		var varName = ctx.ID().getText();
+		var v = evalCtx.getVar(Id.of(varName)).orElse(null);
+		if (v == null)
+			return Res.error("unknown variable: " + varName);
+
+		var cell = v.cell();
+		if (!cell.isTensorCell())
+			return Res.error("variable " + varName + " is not a tensor");
+
+		// Parse subscripts
+		var subscripts = new ArrayList<Subscript>();
+		for (var subCtx : ctx.subscript()) {
+			try {
+				if (subCtx instanceof IdSubscriptContext idCtx) {
+					var id = Id.of(idCtx.ID().getText());
+					subscripts.add(Subscript.of(id));
+				} else if (subCtx instanceof IntSubscriptContext intCtx) {
+					String numText = intCtx.NUMBER().getText();
+					// Check if it's a positive integer (no decimal point, no scientific notation)
+					if (numText.contains(".") || numText.toLowerCase().contains("e")) {
+						return Res.error("subscript must be a positive integer, got: " + numText);
+					}
+					int index = Integer.parseInt(numText);
+					if (index < 1) {
+						return Res.error("subscript must be positive (>= 1), got: " + index);
+					}
+					// Convert from 1-based to 0-based indexing
+					subscripts.add(Subscript.of(index - 1));
+				} else {
+					return Res.error("unknown subscript type");
+				}
+			} catch (NumberFormatException e) {
+				return Res.error("invalid integer subscript: " + subCtx.getText());
+			}
+		}
+
+		// Access tensor element
+		try {
+			var tensor = cell.asTensorCell().value();
+			var resultCell = tensor.get(subscripts);
+			return Res.of(resultCell);
+		} catch (Exception e) {
+			return Res.error("array access failed for " + varName + ": " + e.getMessage());
+		}
 	}
 
 	@Override

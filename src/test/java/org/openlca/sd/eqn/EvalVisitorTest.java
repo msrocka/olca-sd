@@ -2,6 +2,8 @@ package org.openlca.sd.eqn;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class EvalVisitorTest {
@@ -457,6 +459,80 @@ public class EvalVisitorTest {
 			fail("Should throw exception for unknown function");
 		} catch (Exception e) {
 			assertTrue(e.getMessage().contains("unknown function: UNKNOWN"));
+		}
+	}
+
+	@Test
+	public void testArrayAccess() {
+		// Create a context with tensor variables
+		var ctx = new EvalContext();
+
+		// Create 1D tensor
+		var dim1 = Dimension.of("Products", "PET", "PVC", "Nylon");
+		var products = Tensor.of(dim1);
+		products.set(Subscript.of("PET"), Cell.of(10.0));
+		products.set(Subscript.of("PVC"), Cell.of(20.0));
+		products.set(Subscript.of("Nylon"), Cell.of(30.0));
+		ctx.bind(new Var.Aux(Id.of("products"), Cell.of(products)));
+
+		// Create 2D tensor
+		var dim2 = Dimension.of("Location", "US", "DE", "FR");
+		var prices = Tensor.of(dim1, dim2);
+		prices.set(List.of(Subscript.of("PET"), Subscript.of("US")), Cell.of(1.0));
+		prices.set(List.of(Subscript.of("PET"), Subscript.of("DE")), Cell.of(1.1));
+		prices.set(List.of(Subscript.of("PVC"), Subscript.of("US")), Cell.of(2.0));
+		prices.set(List.of(Subscript.of("Nylon"), Subscript.of("FR")), Cell.of(3.5));
+		ctx.bind(new Var.Aux(Id.of("prices"), Cell.of(prices)));
+
+		// Test 1D array access with identifier subscripts
+		assertEquals(10.0, eval("products[PET]", ctx).asNum(), 1e-10);
+		assertEquals(20.0, eval("products[PVC]", ctx).asNum(), 1e-10);
+		assertEquals(30.0, eval("products[Nylon]", ctx).asNum(), 1e-10);
+
+		// Test 1D array access with integer subscripts (1-based indexing)
+		assertEquals(10.0, eval("products[1]", ctx).asNum(), 1e-10);
+		assertEquals(20.0, eval("products[2]", ctx).asNum(), 1e-10);
+		assertEquals(30.0, eval("products[3]", ctx).asNum(), 1e-10);
+
+		// Test 2D array access
+		assertEquals(1.0, eval("prices[PET, US]", ctx).asNum(), 1e-10);
+		assertEquals(1.1, eval("prices[PET, DE]", ctx).asNum(), 1e-10);
+		assertEquals(2.0, eval("prices[PVC, US]", ctx).asNum(), 1e-10);
+		assertEquals(3.5, eval("prices[Nylon, FR]", ctx).asNum(), 1e-10);
+
+		// Test mixed subscripts (identifier and integer)
+		assertEquals(1.0, eval("prices[1, 1]", ctx).asNum(), 1e-10);
+		assertEquals(2.0, eval("prices[PVC, 1]", ctx).asNum(), 1e-10);
+
+		// Error cases
+		try {
+			eval("products[0]", ctx); // zero index
+			fail("Should throw exception for zero index");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("must be positive"));
+		}
+
+		try {
+			eval("products[1.5]", ctx); // decimal subscript
+			fail("Should throw exception for decimal subscript");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("must be a positive integer"));
+		}
+
+		try {
+			eval("nonexistent[1]", ctx); // unknown variable
+			fail("Should throw exception for unknown variable");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("unknown variable"));
+		}
+
+		// Test with regular numeric variable (should fail)
+		ctx.bind("number", 42.0);
+		try {
+			eval("number[1]", ctx);
+			fail("Should throw exception when accessing non-tensor as array");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("is not a tensor"));
 		}
 	}
 
