@@ -28,13 +28,9 @@ public class Ln implements Func {
 				return Res.of(Cell.of(result));
 			}
 
-			if (arg.isTensorCell()) {
-				return Fn.each(arg.asTensorCell(),
-					element -> apply(List.of(element)),
-					"natural logarithm");
-			}
-
-			return Res.error("LN is not defined for cell type: " +
+			return arg.isTensorCell()
+				? Fn.each(this, arg.asTensorCell())
+				: Res.error("LN is not defined for cell type: " +
 				arg.getClass().getSimpleName());
 		});
 	}

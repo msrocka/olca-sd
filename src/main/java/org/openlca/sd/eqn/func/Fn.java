@@ -38,19 +38,19 @@ class Fn {
 	}
 
 	/// Applies the given function recursively on each cell of the given tensor.
-	static Res<Cell> each(
-		TensorCell tCell, Function<Cell, Res<Cell>> fn, String op
-	) {
-		var tensor = tCell.value();
+	static Res<Cell> each(Func func, TensorCell cell) {
+		if (func == null || cell == null)
+			return Res.error("no function or tensor cell provided");
+		var tensor = cell.value();
 		var result = Tensor.of(tensor.dimensions());
 		var shape = tensor.shape();
 
 		for (int i = 0; i < shape[0]; i++) {
 			var elem = tensor.get(i);
-			var r = fn.apply(elem);
+			var r = func.apply(List.of(elem));
 			if (r.hasError()) {
 				return r.wrapError(
-					"error computing " + op + " at index " + i);
+					"error computing " + func.name() + " at index " + i);
 			}
 			result.set(i, r.value());
 		}

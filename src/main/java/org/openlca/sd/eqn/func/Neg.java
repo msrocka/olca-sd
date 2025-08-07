@@ -6,9 +6,9 @@ import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.util.Res;
 
-public class ArcCos implements Func {
+public class Neg implements Func {
 
-	private final Id name = Id.of("ARCCOS");
+	private final Id name = Id.of("NEG");
 
 	@Override
 	public Id name() {
@@ -20,17 +20,13 @@ public class ArcCos implements Func {
 		return Fn.withOneArg(args, arg -> {
 
 			if (arg.isNumCell()) {
-				double value = arg.asNum();
-				if (value < -1.0 || value > 1.0) {
-					return Res.error("ARCCOS domain error: input must be in range [-1, 1], got " + value);
-				}
-				double result = Math.acos(value);
+				double result = -arg.asNum();
 				return Res.of(Cell.of(result));
 			}
 
 			return arg.isTensorCell()
 				? Fn.each(this, arg.asTensorCell())
-				: Res.error("ARCCOS is not defined for cell type: " +
+				: Res.error("NEG is not defined for cell type: " +
 				arg.getClass().getSimpleName());
 		});
 	}
