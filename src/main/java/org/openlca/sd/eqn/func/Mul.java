@@ -13,6 +13,10 @@ public class Mul implements Func {
 
 	private final Id name = Id.of("MUL");
 
+	public static Res<Cell> apply(Cell a, Cell b) {
+		return new Mul().apply(List.of(a, b));
+	}
+
 	@Override
 	public Id name() {
 		return name;

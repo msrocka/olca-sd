@@ -10,6 +10,10 @@ public class Neg implements Func {
 
 	private final Id name = Id.of("NEG");
 
+	public static Res<Cell> apply(Cell a) {
+		return new Neg().apply(List.of(a));
+	}
+
 	@Override
 	public Id name() {
 		return name;

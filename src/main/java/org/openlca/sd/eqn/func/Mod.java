@@ -8,12 +8,12 @@ import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.util.Res;
 
-public class Div implements Func {
+public class Mod implements Func {
 
-	private final Id name = Id.of("DIV");
+	private final Id name = Id.of("MOD");
 
 	public static Res<Cell> apply(Cell a, Cell b) {
-		return new Div().apply(List.of(a, b));
+		return new Mod().apply(List.of(a, b));
 	}
 
 	@Override
@@ -25,42 +25,38 @@ public class Div implements Func {
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withTwoArgs(args, (a, b) -> {
 
-			// division of numbers
+			// modulo of numbers
 			if (a.isNumCell() && b.isNumCell()) {
 				double divisor = b.asNum();
-				if (divisor == 0.0) {
-					return Res.error("division by zero");
-				}
-				double result = a.asNum() / divisor;
+				if (divisor == 0.0)
+					return Res.error("modulo by zero");
+				double result = a.asNum() % divisor;
 				return Res.of(Cell.of(result));
 			}
 
-			// division: tensor ÷ number
+			// modulo: tensor % number
 			if (a.isTensorCell() && b.isNumCell()) {
 				double divisor = b.asNum();
-				if (divisor == 0.0) {
-					return Res.error("division by zero");
-				}
+				if (divisor == 0.0)
+					return Res.error("modulo by zero");
 				return scalar(a.asTensorCell(), divisor);
 			}
 
-			return Res.error("division is not defined for cell types: " +
-				a.getClass().getSimpleName() + " and " +
-				b.getClass().getSimpleName());
+			return Res.error(
+				"modulo is not defined for cell types: " + a + " and " + b);
 		});
 	}
 
-	private Res<Cell> scalar(TensorCell tensorCell, double divisor) {
-		var tensor = tensorCell.value();
+	private Res<Cell> scalar(TensorCell cell, double divisor) {
+		var tensor = cell.value();
 		var result = Tensor.of(tensor.dimensions());
 		var shape = tensor.shape();
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
-			var di = apply(List.of(element, Cell.of(divisor)));
-			if (di.hasError()) {
-				return di.wrapError("error in scalar division at index " + i);
-			}
-			result.set(i, di.value());
+			var mi = apply(List.of(element, Cell.of(divisor)));
+			if (mi.hasError())
+				return mi.wrapError("error in scalar modulo at index " + i);
+			result.set(i, mi.value());
 		}
 		return Res.of(Cell.of(result));
 	}

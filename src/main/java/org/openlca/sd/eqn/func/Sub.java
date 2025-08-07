@@ -13,6 +13,10 @@ public class Sub implements Func {
 
 	private final Id name = Id.of("SUB");
 
+	public static Res<Cell> apply(Cell a, Cell b) {
+		return new Sub().apply(List.of(a, b));
+	}
+
 	@Override
 	public Id name() {
 		return name;

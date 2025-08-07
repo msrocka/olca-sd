@@ -2,8 +2,12 @@ package org.openlca.sd.eqn;
 
 import java.util.Objects;
 
-import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.func.Add;
+import org.openlca.sd.eqn.func.Div;
+import org.openlca.sd.eqn.func.Mod;
+import org.openlca.sd.eqn.func.Mul;
+import org.openlca.sd.eqn.func.Neg;
+import org.openlca.sd.eqn.func.Sub;
 import org.openlca.sd.eqn.generated.EqnBaseVisitor;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
@@ -38,7 +42,7 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 
 		return switch (ctx.op.getType()) {
 			case EqnParser.ADD -> Add.apply(a.value(), b.value());
-			case EqnParser.SUB -> CellOps.sub(a.value(), b.value());
+			case EqnParser.SUB -> Sub.apply(a.value(), b.value());
 			default -> Res.error(
 				"unsupported operator in add-sub context: " + ctx.op.getText());
 		};
@@ -49,14 +53,9 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		var cellRes = visit(ctx.eqn());
 		if (cellRes.hasError()) return cellRes;
 
-		var cell = cellRes.value();
-		if (!(cell instanceof NumCell(double x)))
-			return Res.error("unary operator " + ctx.op.getText()
-				+ " not supported for " + cell);
-
 		return switch (ctx.op.getType()) {
-			case EqnParser.ADD -> Res.of(Cell.of(x));
-			case EqnParser.SUB -> Res.of(Cell.of(-x));
+			case EqnParser.ADD -> cellRes;
+			case EqnParser.SUB -> Neg.apply(cellRes.value());
 			default -> Res.error(
 				"unsupported unary operator " + ctx.op.getText());
 		};
@@ -70,9 +69,9 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		if (b.hasError()) return b;
 
 		return switch (ctx.op.getType()) {
-			case EqnParser.MUL -> CellOps.mul(a.value(), b.value());
-			case EqnParser.DIV -> CellOps.div(a.value(), b.value());
-			case EqnParser.MOD -> CellOps.mod(a.value(), b.value());
+			case EqnParser.MUL -> Mul.apply(a.value(), b.value());
+			case EqnParser.DIV -> Div.apply(a.value(), b.value());
+			case EqnParser.MOD -> Mod.apply(a.value(), b.value());
 			default -> Res.error(
 				"unsupported operator in mul-div context: " + ctx.op.getText());
 		};
