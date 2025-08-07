@@ -2,8 +2,8 @@ grammar Eqn;
 
 eqn:
        '(' eqn ')'                                        # Parens
-    |   VAR '[' eqn (',' eqn)* ']'                        # ArrayAccess
-    |   VAR ('(' ')' | '(' eqn (',' eqn)* ')')            # FunCall
+    |   ID '[' eqn (',' eqn)* ']'                         # ArrayAccess
+    |   ID ('(' ')' | '(' eqn (',' eqn)* ')')             # FunCall
     |   <assoc=right> eqn POW eqn                         # Power
     |   <assoc=right> op=('+' | '-') eqn                  # UnarySign
     |   <assoc=right> NOT eqn                             # Not
@@ -13,7 +13,7 @@ eqn:
     |   eqn op=( AND | OR ) eqn                           # Logic
     |   IF eqn THEN eqn ELSE eqn                          # IfThenElse
     |   NUMBER                                            # number
-    |   VAR                                               # var
+    |   ID                                                # var
     ;
 
 
@@ -36,10 +36,10 @@ IF  :   [iI][fF] ;
 THEN:   [tT][hH][eE][nN] ;
 ELSE:   [eE][lL][sS][eE] ;
 
-VAR :   STR | ID;
-ID  :     ID_START (ID_START | [0-9])* ;
-ID_START :  ([a-z] | [A-Z] | '_' | '$') ;
-STR :   '"' .+? '"';
+ID : STR | KEYWORD;
+KEYWORD : KEYWORD_START (KEYWORD_START | [0-9])* ;
+KEYWORD_START :  ([a-z] | [A-Z] | '_' | '$') ;
+STR : '"' .+? '"';
 NUMBER:  [0-9]+ ('.' [0-9]+)? NUM_EXP? | '.' [0-9]+ NUM_EXP? ;
 NUM_EXP: ('e' | 'E') [+-]? [0-9]+ ;
 

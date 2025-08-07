@@ -202,7 +202,7 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 
 	@Override
 	public Res<Cell> visitFunCall(FunCallContext ctx) {
-		var funcName = ctx.VAR().getText();
+		var funcName = ctx.ID().getText();
 		var func = evalCtx.getFunc(Id.of(funcName)).orElse(null);
 		if (func == null)
 			return Res.error("unknown function: " + funcName);
