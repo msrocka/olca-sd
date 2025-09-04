@@ -1,100 +1,32 @@
 package org.openlca.sd.eqn;
 
-import java.util.Stack;
-
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.openlca.sd.eqn.generated.EqnBaseListener;
 import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
-import org.openlca.sd.eqn.generated.EqnParser.AddSubContext;
-import org.openlca.sd.eqn.generated.EqnParser.MulDivContext;
-import org.openlca.sd.eqn.generated.EqnParser.NumberContext;
-import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
-import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
+import org.openlca.sd.util.Res;
 
-public class Interpreter extends EqnBaseListener {
+public class Interpreter {
 
-	private final Stack<Double> stack = new Stack<>();
+	private final EvalContext ctx;
 
-	public double eval(String eqn) {
-		var lexer = new EqnLexer(CharStreams.fromString(eqn));
+	private Interpreter(EvalContext ctx) {
+		this.ctx = ctx;
+	}
+
+	public static Interpreter of(EvalContext ctx) {
+		return ctx != null
+			? new Interpreter(ctx)
+			: new Interpreter(new EvalContext());
+	}
+
+	public Res<Cell> eval(String expression) {
+		if (Util.isEmpty(expression))
+			return Res.error("empty expression provided");
+		var lexer = new EqnLexer(CharStreams.fromString(expression));
 		var tokens = new CommonTokenStream(lexer);
 		var parser = new EqnParser(tokens);
-		enterEveryRule(parser.eqn());
-		if (stack.isEmpty()) {
-			throw new IllegalStateException("Stack is empty");
-		}
-		return stack.pop();
+		return new EvalVisitor(ctx).visit(parser.eqn());
 	}
 
-	@Override
-	public void enterEveryRule(ParserRuleContext ctx) {
-		switch (ctx) {
-			case NumberContext num -> enterNumber(num);
-			case AddSubContext addSub -> enterAddSub(addSub);
-			case MulDivContext mulDiv -> enterMulDiv(mulDiv);
-			case PowerContext powCtx -> enterPower(powCtx);
-			case ParensContext parens -> enterEveryRule(parens.eqn());
-			default -> throw new IllegalArgumentException(
-				"Unknown rule: " + ctx.getClass().getSimpleName());
-		}
-	}
-
-	@Override
-	public void enterAddSub(AddSubContext ctx) {
-		enterEveryRule(ctx.eqn(0));
-		enterEveryRule(ctx.eqn(1));
-		var b = stack.pop();
-		var a = stack.pop();
-		var op = (TerminalNode) ctx.getChild(1);
-		var type = op.getSymbol().getType();
-
-		if (type == EqnParser.ADD) {
-			stack.push(a + b);
-		} else if (type == EqnParser.SUB) {
-			stack.push(a - b);
-		} else {
-			throw new IllegalArgumentException("Unknown operator: " + op.getText());
-		}
-	}
-
-	@Override
-	public void enterMulDiv(MulDivContext ctx) {
-		enterEveryRule(ctx.eqn(0));
-		enterEveryRule(ctx.eqn(1));
-		var b = stack.pop();
-		var a = stack.pop();
-
-		var r = switch (ctx.op.getType()) {
-			case EqnParser.MUL -> a * b;
-			case EqnParser.DIV -> a / b;
-			case EqnParser.MOD -> a % b;
-			default -> throw new IllegalArgumentException(
-				"Unknown operator: " + ctx.op.getText());
-		};
-		stack.push(r);
-	}
-
-	@Override
-	public void enterPower(PowerContext ctx) {
-		enterEveryRule(ctx.eqn(0));
-		enterEveryRule(ctx.eqn(1));
-		var b = stack.pop();
-		var a = stack.pop();
-		stack.push(Math.pow(a, b));
-	}
-
-	@Override
-	public void enterNumber(NumberContext ctx) {
-		var s = ctx.getText();
-		try {
-			var d = Double.parseDouble(s);
-			stack.push(d);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Invalid number: " + s, e);
-		}
-	}
 }

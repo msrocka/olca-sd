@@ -10,11 +10,11 @@ public class VarsExample {
 
 	public static void main(String[] args) {
 
-		var xmile = Xmile.readFrom(new File("examples/generic-plastic-case.xml"));
+		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
 		var vars = Vars.readFrom(xmile).orElseThrow();
 		var prt = new TensorPrinter();
 		for (var v : vars) {
-			System.out.println(v.name());
+			System.out.println(v.name() + " :: " + v.name().value());
 			prt.print(v.cell());
 		}
 	}

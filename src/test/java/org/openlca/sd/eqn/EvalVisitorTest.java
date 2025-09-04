@@ -642,7 +642,7 @@ public class EvalVisitorTest {
 	}
 
 	private Cell eval(String eqn, EvalContext ctx) {
-		return EvalInterpreter.of(ctx).eval(eqn).orElseThrow();
+		return Interpreter.of(ctx).eval(eqn).orElseThrow();
 	}
 
 }
