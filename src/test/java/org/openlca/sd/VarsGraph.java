@@ -2,6 +2,7 @@ package org.openlca.sd;
 
 import java.io.File;
 
+import org.openlca.sd.eqn.EvaluationOrder;
 import org.openlca.sd.eqn.Vars;
 import org.openlca.sd.xmile.Xmile;
 
@@ -13,7 +14,7 @@ public class VarsGraph {
 
 		System.out.println("digraph g {");
 		for (var v : vars) {
-			for (var dep : v.dependencies()) {
+			for (var dep : EvaluationOrder.dependenciesOf(v)) {
 				System.out.printf("  \"%s\" -> \"%s\";%n", dep.value(), v.name().value());
 			}
 		}

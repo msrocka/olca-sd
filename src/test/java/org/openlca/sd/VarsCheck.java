@@ -3,6 +3,7 @@ package org.openlca.sd;
 import java.io.File;
 import java.util.HashSet;
 
+import org.openlca.sd.eqn.EvaluationOrder;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Var.Stock;
 import org.openlca.sd.eqn.Vars;
@@ -23,7 +24,7 @@ public class VarsCheck {
 		// check that used vars are defined
 		int undef = 0;
 		for (var v : vars) {
-			for (var dep : v.dependencies()) {
+			for (var dep : EvaluationOrder.dependenciesOf(v)) {
 				if (!ids.contains(dep)) {
 					System.out.println("use of undefined var: " + dep);
 					undef++;
