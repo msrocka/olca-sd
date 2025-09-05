@@ -2,10 +2,13 @@ package org.openlca.sd.eqn;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.openlca.sd.eqn.generated.EqnBaseListener;
 import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
@@ -39,6 +42,18 @@ public class Interpreter {
 	public static Res<List<Id>> varsOf(String expression) {
 		if (Util.isEmpty(expression))
 			return Res.error("provided expression is empty");
+
+		// predefined no-parameter functions that are not variables
+		var fns = Set.of(
+			Id.of("INF"),
+			Id.of("PI"),
+			Id.of("DT"),
+			Id.of("STARTTIME"),
+			Id.of("STOPTIME"),
+			Id.of("TIME"),
+			Id.of("SELF")
+		);
+
 		try {
 			var lexer = new EqnLexer(CharStreams.fromString(expression));
 			var tokens = new CommonTokenStream(lexer);
@@ -46,21 +61,24 @@ public class Interpreter {
 			var tree = parser.eqn();
 
 			var vars = new HashSet<Id>();
+			Consumer<TerminalNode> pushVar = (node) -> {
+				if (node == null)
+					return;
+				var v = Id.of(node.getText());
+				if (!v.isNil() && !fns.contains(v)) {
+					vars.add(v);
+				}
+			};
+
 			var collector = new EqnBaseListener() {
 				@Override
 				public void enterVar(VarContext ctx) {
-					if (ctx.ID() == null)
-						return;
-					var id = Id.of(ctx.ID().getText());
-					vars.add(id);
+					pushVar.accept(ctx.ID());
 				}
 
 				@Override
 				public void enterArrayAccess(ArrayAccessContext ctx) {
-					if (ctx.ID() == null)
-						return;
-					var id = Id.of(ctx.ID().getText());
-					vars.add(id);
+					pushVar.accept(ctx.ID());
 				}
 			};
 

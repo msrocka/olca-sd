@@ -27,3 +27,10 @@ Implement one or more solvers for SD models.
 ## Phase 4
 
 Implement a first GUI version and make the parameter connection with openLCA.
+
+
+## Backlog
+
++ Model check
+  + Check dependencies of expressions: referenced variables must exist as
+    stock, aux, or flow
