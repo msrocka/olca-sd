@@ -254,10 +254,30 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 
 	@Override
 	public Res<Cell> visitFunCall(FunCallContext ctx) {
-		var funcName = ctx.ID().getText();
-		var func = evalCtx.getFunc(Id.of(funcName)).orElse(null);
+		var funcId = Id.of(ctx.ID().getText());
+
+		// handle init-function calls
+		if ("init".equals(funcId.value())) {
+			if (ctx.eqn().size() != 1
+			|| !(ctx.eqn().getFirst() instanceof VarContext varCtx)) {
+				return Res.error("init-function must have a " +
+					"single variable name as argument");
+			}
+			var varId = Id.of(varCtx.ID().getText());
+			var v = evalCtx.getVar(varId).orElse(null);
+			if (v == null) {
+				return Res.error("unknown variable '"
+					+ varId + "' used in init-function");
+			}
+			if (v.values().isEmpty()) {
+				return Res.error("variable '" + varId + "' was not initialized yet");
+			}
+			return Res.of(v.values().getFirst());
+		}
+
+		var func = evalCtx.getFunc(funcId).orElse(null);
 		if (func == null)
-			return Res.error("unknown function: " + funcName);
+			return Res.error("unknown function: " + funcId);
 
 		// evaluate arguments & call function
 		var args = new ArrayList<Cell>();

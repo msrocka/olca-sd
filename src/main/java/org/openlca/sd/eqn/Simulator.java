@@ -61,7 +61,6 @@ public class Simulator {
 
 		// initialisation
 		for (var v : vars) {
-			System.out.println("init " + v.name().label());
 			var res = interpreter.eval(v.def());
 			if (res.hasError()) {
 				return res.wrapError("initialization of variable '"
@@ -138,7 +137,7 @@ public class Simulator {
 
 		}
 
-		return Res.error("no yet implemented");
+		return Res.of(vars);
 	}
 
 }
