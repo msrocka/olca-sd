@@ -27,7 +27,7 @@ public class EvaluationOrder {
 		if (var == null)
 			return Set.of();
 		var ids = new HashSet<Id>();
-		fillDeps(var.cell(), ids);
+		fillDeps(var.def(), ids);
 		return ids;
 	}
 

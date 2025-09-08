@@ -200,7 +200,7 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		var v = evalCtx.getVar(Id.of(ctx.getText())).orElse(null);
 		if (v == null)
 			return Res.error("unknown variable: " + ctx.getText());
-		return Res.of(v.cell());
+		return Res.of(v.value());
 	}
 
 	@Override
@@ -211,7 +211,7 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		if (v == null)
 			return Res.error("unknown variable: " + varName);
 
-		var cell = v.cell();
+		var cell = v.def();
 		if (!cell.isTensorCell())
 			return Res.error("variable " + varName + " is not a tensor");
 

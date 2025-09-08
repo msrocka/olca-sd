@@ -1,7 +1,13 @@
 package org.openlca.sd.eqn;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.openlca.sd.eqn.Var.Aux;
+import org.openlca.sd.eqn.Var.Stock;
+import org.openlca.sd.eqn.func.Add;
+import org.openlca.sd.eqn.func.Mul;
+import org.openlca.sd.eqn.func.Sub;
 import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.Xmile;
 
@@ -28,7 +34,106 @@ public class Simulator {
 		return Res.of(new Simulator(time.value(), order.value()));
 	}
 
-	public Res<Void> run() {
+	public Res<List<Var>> run() {
+
+		var ctx = new EvalContext();
+		ctx.bind("INF", Double.POSITIVE_INFINITY);
+		ctx.bind("PI", Math.PI);
+		ctx.bind("DT", time.dt());
+		ctx.bind("STARTTIME", time.start());
+		ctx.bind("STOPTIME", time.end());
+
+		var timeVar = new Aux(Id.of("TIME"), Cell.of(time.start()));
+		timeVar.pushValue(timeVar.value());
+		ctx.bind(timeVar);
+
+		for (var v : vars) {
+			ctx.bind(v);
+		}
+
+		// TODO: bind top-level lookup functions
+		// maybe in each iteration bind SELF to the var
+		// that is currently evaluated
+
+		var interpreter = Interpreter.of(ctx);
+		var stocks = new ArrayList<Stock>();
+		var evalVars = new ArrayList<Var>();
+
+		// initialisation
+		for (var v : vars) {
+			var res = interpreter.eval(v.def());
+			if (res.hasError())
+				return res.wrapError("initialization failed");
+			v.pushValue(res.value());
+			if (v instanceof Stock stock) {
+				stocks.add(stock);
+			} else {
+				evalVars.add(v);
+			}
+		}
+
+		var dt = Cell.of(time.dt());
+		while (!time.isFinished()) {
+
+			timeVar.pushValue(Cell.of(time.next()));
+
+			// evaluate the variables
+			for (var v : evalVars) {
+				var res = interpreter.eval(v.def());
+				if (res.hasError())
+					return res.wrapError("evaluation error at t=" + time.current());
+				v.pushValue(res.value());
+			}
+
+			// update the stocks
+			// TODO: array projections
+			for (var stock : stocks) {
+				var val = stock.value();
+
+				// adding the in-flows
+				for (var inFlowId : stock.inFlows()) {
+					var inFlow = ctx.getVar(inFlowId).orElse(null);
+					if (inFlow == null) {
+						return Res.error("unknown in-flow '" + inFlowId
+							+ "' of stock: " + stock.name());
+					}
+
+					var inFlowDelta = Mul.apply(inFlow.value(), dt);
+					if (inFlowDelta.hasError())
+						return Res.error("failed to calculate " + inFlowId + " * dt");
+
+					var nextVal = Add.apply(val, inFlowDelta.value());
+					if (nextVal.hasError()) {
+						nextVal.wrapError("failed to add flow " + inFlowId
+							+ " to stock " + stock.name());
+					}
+					val = nextVal.value();
+				}
+
+				//  subtract the out-flows
+				for (var outFlowId : stock.outFlows()) {
+					var outFlow = ctx.getVar(outFlowId).orElse(null);
+					if (outFlow == null) {
+						return Res.error("unknown out-flow '" + outFlowId
+							+ "' of stock: " + stock.name());
+					}
+
+					var outFlowDelta = Mul.apply(outFlow.value(), dt);
+					if (outFlowDelta.hasError())
+						return Res.error("failed to calculate " + outFlowId + " * dt");
+
+					var nextVal = Sub.apply(val, outFlowDelta.value());
+					if (nextVal.hasError()) {
+						nextVal.wrapError("failed to subtract out-flow " + outFlowId
+							+ " from stock " + stock.name());
+					}
+					val = nextVal.value();
+				}
+
+				stock.pushValue(val);
+			}
+
+		}
 
 		return Res.error("no yet implemented");
 	}
