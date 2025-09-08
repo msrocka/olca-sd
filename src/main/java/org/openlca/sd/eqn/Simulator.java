@@ -61,9 +61,12 @@ public class Simulator {
 
 		// initialisation
 		for (var v : vars) {
+			System.out.println("init " + v.name().label());
 			var res = interpreter.eval(v.def());
-			if (res.hasError())
-				return res.wrapError("initialization failed");
+			if (res.hasError()) {
+				return res.wrapError("initialization of variable '"
+					+ v.name().label() + "' failed");
+			}
 			v.pushValue(res.value());
 			if (v instanceof Stock stock) {
 				stocks.add(stock);

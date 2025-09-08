@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.openlca.sd.eqn.Cell.EqnCell;
 import org.openlca.sd.eqn.Cell.LookupCell;
+import org.openlca.sd.eqn.Cell.NonNegativeCell;
 import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.util.Res;
 
@@ -38,6 +39,11 @@ public class EvaluationOrder {
 			if (!vars.hasError()) {
 				ids.addAll(vars.value());
 			}
+			return;
+		}
+
+		if (cell instanceof NonNegativeCell(Cell inner)) {
+			fillDeps(inner, ids);
 			return;
 		}
 
