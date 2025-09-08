@@ -44,7 +44,7 @@ public class XmileReaderTest {
 		assertEquals("Years", specs.timeUnits());
 		assertEquals(1.0, specs.start(), 0.0001);
 		assertEquals(25.0, specs.stop(), 0.0001);
-		assertEquals(0.25, specs.dt(), 0.0001);
+		assertEquals(4.0, specs.dt().value(), 0.0001);
 	}
 
 	@Test

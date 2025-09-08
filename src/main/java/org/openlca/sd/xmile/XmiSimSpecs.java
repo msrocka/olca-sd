@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmiSimSpecs {
@@ -21,7 +22,7 @@ public class XmiSimSpecs {
 	Double stop;
 
 	@XmlElement(name = "dt", namespace = Xmile.NS)
-	Double dt;
+	DeltaT dt;
 
 	public String method() {
 		return method;
@@ -39,7 +40,29 @@ public class XmiSimSpecs {
 		return stop;
 	}
 
-	public Double dt() {
+	public DeltaT dt() {
 		return dt;
+	}
+
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class DeltaT {
+
+		@XmlAttribute(name = "reciprocal")
+		Boolean reciprocal;
+
+		@XmlValue
+		Double value;
+
+		public Boolean reciprocal() {
+			return reciprocal;
+		}
+
+		public Double value() {
+			return value;
+		}
+
+		public boolean isReciprocal() {
+			return reciprocal != null && reciprocal;
+		}
 	}
 }
