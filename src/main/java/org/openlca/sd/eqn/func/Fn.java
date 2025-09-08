@@ -43,9 +43,8 @@ class Fn {
 			return Res.error("no function or tensor cell provided");
 		var tensor = cell.value();
 		var result = Tensor.of(tensor.dimensions());
-		var shape = tensor.shape();
 
-		for (int i = 0; i < shape[0]; i++) {
+		for (int i = 0; i < tensor.size(); i++) {
 			var elem = tensor.get(i);
 			var r = func.apply(List.of(elem));
 			if (r.hasError()) {

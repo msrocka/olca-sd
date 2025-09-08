@@ -9,6 +9,14 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.openlca.sd.eqn.Cell.BoolCell;
+import org.openlca.sd.eqn.Cell.EmptyCell;
+import org.openlca.sd.eqn.Cell.EqnCell;
+import org.openlca.sd.eqn.Cell.LookupCell;
+import org.openlca.sd.eqn.Cell.NonNegativeCell;
+import org.openlca.sd.eqn.Cell.NumCell;
+import org.openlca.sd.eqn.Cell.TensorCell;
+import org.openlca.sd.eqn.func.Abs;
 import org.openlca.sd.eqn.generated.EqnBaseListener;
 import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
@@ -28,6 +36,50 @@ public class Interpreter {
 		return ctx != null
 			? new Interpreter(ctx)
 			: new Interpreter(new EvalContext());
+	}
+
+	public Res<Cell> eval(Cell cell) {
+		return switch (cell) {
+			case BoolCell bool -> Res.of(bool);
+			case EmptyCell empty -> Res.of(empty);
+			case EqnCell(String eqn) -> eval(eqn);
+			case NumCell num -> Res.of(num);
+			case TensorCell(Tensor t) -> eval(t);
+
+			case LookupCell(String eqn, LookupFunc func) -> {
+				var res = eval(eqn);
+				if (res.hasError())
+					yield res;
+				if (!(res.value() instanceof NumCell(double  x))) {
+					yield Res.error("equation of lookup function " +
+						"does not evaluate to a number");
+				}
+				yield Res.of(Cell.of(func.get(x)));
+			}
+
+			case NonNegativeCell(Cell sub) -> {
+				var res = eval(sub);
+				yield res.hasError()
+					? res
+					: new Abs().apply(List.of(res.value()));
+			}
+
+
+			case null -> Res.error("no cell provided");
+		};
+	}
+
+	private Res<Cell> eval(Tensor tensor) {
+		if (tensor == null)
+			return Res.error("no tensor provided");
+		var res = Tensor.of(tensor.dimensions());
+		for (int i = 0; i < tensor.size(); i++) {
+			var cell = eval(tensor.get(i));
+			if (cell.hasError())
+				return cell;
+			res.set(i, cell.value());
+		}
+		return Res.of(Cell.of(res));
 	}
 
 	public Res<Cell> eval(String expression) {
