@@ -103,12 +103,7 @@ public class Tensor {
 		if (index < 0 || index >= dim.size())
 			return;
 		var c = cell != null ? cell : Cell.empty();
-		var target = cells[index];
-		if (target instanceof TensorCell(Tensor tensor)) {
-			tensor.setAll(c);
-		} else {
-			cells[index] = c;
-		}
+		cells[index] = c;
 	}
 
 	public void set(List<Subscript> subs, Cell cell) {
@@ -173,7 +168,7 @@ public class Tensor {
 			List<Dimension> innerDims = null;
 			var cs = new Cell[dim.size()];
 			for (int i = 0; i < cs.length; i++) {
-				if ( cells[i] instanceof TensorCell(Tensor queryTensor)) {
+				if (cells[i] instanceof TensorCell(Tensor queryTensor)) {
 					var rs = queryTensor.get(rest);
 					if (rs instanceof TensorCell(Tensor resultTensor)) {
 						innerDims = resultTensor.dimensions();

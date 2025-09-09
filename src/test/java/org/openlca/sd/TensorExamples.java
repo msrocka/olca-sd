@@ -6,6 +6,7 @@ import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Dimension;
 import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.util.TensorPrinter;
 
 public class TensorExamples {
@@ -36,6 +37,8 @@ public class TensorExamples {
 		printer.print(t2.get(of("PET")));
 		printer.print(t2.get(of("*"), of("Al")));
 
+		printer.print(t2.get(of("Plastics"), of("Fe")));
+		printer.print(Add.apply(t2.get(of("Plastics"), of("Fe")), t2.get(of("*"), of("Al"))).value());
 	}
 
 }

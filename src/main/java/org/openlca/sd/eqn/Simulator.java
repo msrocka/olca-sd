@@ -20,6 +20,10 @@ public class Simulator {
 	private final List<Var> vars;
 	private final Map<Id, Var> state;
 
+	private final EvalContext ctx;
+	private final Aux timeVar;
+	private final Interpreter interpreter;
+
 	private Simulator(TimeSeq time, List<Var> vars) {
 		this.time = time;
 		this.vars = vars;
@@ -27,6 +31,21 @@ public class Simulator {
 		for (var v : vars) {
 			state.put(v.name(), v);
 		}
+
+		ctx = new EvalContext();
+		ctx.bind("INF", Double.POSITIVE_INFINITY);
+		ctx.bind("PI", Math.PI);
+		ctx.bind("DT", time.dt());
+		ctx.bind("STARTTIME", time.start());
+		ctx.bind("STOPTIME", time.end());
+
+		timeVar = new Aux(Id.of("TIME"), Cell.of(time.start()));
+		ctx.bind(timeVar);
+		for (var v : vars) {
+			ctx.bind(v);
+		}
+
+		interpreter = Interpreter.of(ctx);
 	}
 
 	public static Res<Simulator> of(Xmile xmile) {
@@ -46,34 +65,22 @@ public class Simulator {
 		return vars;
 	}
 
+	public Interpreter interpreter() {
+		return interpreter;
+	}
+
 	public void forEach(Consumer<Res<SimulationState>> fn) {
 		if (fn == null)
 			return;
 
-		var ctx = new EvalContext();
-		ctx.bind("INF", Double.POSITIVE_INFINITY);
-		ctx.bind("PI", Math.PI);
-		ctx.bind("DT", time.dt());
-		ctx.bind("STARTTIME", time.start());
-		ctx.bind("STOPTIME", time.end());
-
-		var timeVar = new Aux(Id.of("TIME"), Cell.of(time.start()));
-		timeVar.pushValue(timeVar.value());
-		ctx.bind(timeVar);
-
-		for (var v : vars) {
-			ctx.bind(v);
-		}
-
-		// TODO: bind top-level lookup functions
+    // TODO: bind top-level lookup functions
 		// maybe in each iteration bind SELF to the var
 		// that is currently evaluated
 
-		var interpreter = Interpreter.of(ctx);
+		// initialisation
+		timeVar.pushValue(timeVar.value());
 		var stocks = new ArrayList<Stock>();
 		var evalVars = new ArrayList<Var>();
-
-		// initialisation
 		for (var v : vars) {
 			var res = interpreter.eval(v.def());
 			if (res.hasError()) {

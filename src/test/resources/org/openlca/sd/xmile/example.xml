@@ -12,9 +12,9 @@
 		<stop>25</stop>
 		<dt reciprocal="true">4</dt>
 	</sim_specs>
-	<dims>
+	<dimensions>
 		<dim name="Dim_Name_1" size="1"/>
-	</dims>
+	</dimensions>
 	<isee:prefs show_module_prefix="true" live_update_on_drag="true" show_restore_buttons="true" layer="model" interface_scale_ui="true" interface_max_page_width="10000" interface_max_page_height="10000" interface_min_page_width="0" interface_min_page_height="0" saved_runs="5" keep="false" rifp="false"/>
 	<isee:multiplayer_settings include_chat="true" allow_observers="false" advance_time_increment="1" observer_start_page="home_page" enabled="false"/>
 	<isee:time_formats default_format="Builtin">

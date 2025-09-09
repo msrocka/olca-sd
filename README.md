@@ -8,6 +8,10 @@ This is an experimental project for running system dynamics (SD) models in openL
 + https://github.com/SDXchange/SDXlate/tree/gh-pages/models
 + https://www.oasis-open.org/standard/xmile1-0/
 
+## Notes
+
++ Stella uses `dimensions` instead of `dims`
+
 
 ## Phase 1
 

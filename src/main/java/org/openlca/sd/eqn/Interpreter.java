@@ -38,6 +38,10 @@ public class Interpreter {
 			: new Interpreter(new EvalContext());
 	}
 
+	public EvalContext context() {
+		return ctx;
+	}
+
 	public Res<Cell> eval(Cell cell) {
 		return switch (cell) {
 			case BoolCell bool -> Res.of(bool);
@@ -63,7 +67,6 @@ public class Interpreter {
 					? res
 					: new Abs().apply(List.of(res.value()));
 			}
-
 
 			case null -> Res.error("no cell provided");
 		};

@@ -211,7 +211,7 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		if (v == null)
 			return Res.error("unknown variable: " + varName);
 
-		var cell = v.def();
+		var cell = v.value();
 		if (!cell.isTensorCell())
 			return Res.error("variable " + varName + " is not a tensor");
 
