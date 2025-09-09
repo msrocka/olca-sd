@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.func.Div;
+import org.openlca.sd.eqn.func.Eq;
 import org.openlca.sd.eqn.func.Mod;
 import org.openlca.sd.eqn.func.Mul;
 import org.openlca.sd.eqn.func.Neg;
@@ -97,6 +98,19 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 
 		var cellA = a.value();
 		var cellB = b.value();
+
+		if (ctx.op.getType() == EqnParser.EQ)
+			return Eq.apply(cellA, cellB);
+		if (ctx.op.getType() == EqnParser.NEQ) {
+			var res = Eq.apply(cellA, cellB);
+			if (res.hasError())
+				return res;
+			var resCell = res.value();
+			return resCell.isBoolCell()
+				? Res.of(Cell.of(!resCell.asBool()))
+				: Res.error("does not evaluate to a boolean");
+		}
+
 		if (!cellA.isNumCell() || !cellB.isNumCell())
 			return Res.error("operator not supported: "
 				+ cellA + ctx.op.getText() + cellB);
@@ -104,8 +118,6 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		double x = cellA.asNumCell().value();
 		double y = cellB.asNumCell().value();
 		return switch (ctx.op.getType()) {
-			case EqnParser.EQ -> Res.of(Cell.of(x == y));
-			case EqnParser.NEQ -> Res.of(Cell.of(x != y));
 			case EqnParser.GE -> Res.of(Cell.of(x >= y));
 			case EqnParser.GT -> Res.of(Cell.of(x > y));
 			case EqnParser.LE -> Res.of(Cell.of(x <= y));
@@ -259,7 +271,7 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 		// handle init-function calls
 		if ("init".equals(funcId.value())) {
 			if (ctx.eqn().size() != 1
-			|| !(ctx.eqn().getFirst() instanceof VarContext varCtx)) {
+				|| !(ctx.eqn().getFirst() instanceof VarContext varCtx)) {
 				return Res.error("init-function must have a " +
 					"single variable name as argument");
 			}
