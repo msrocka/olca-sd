@@ -1,7 +1,10 @@
 package org.openlca.sd.eqn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import org.openlca.sd.eqn.Var.Aux;
 import org.openlca.sd.eqn.Var.Stock;
@@ -15,10 +18,15 @@ public class Simulator {
 
 	private final TimeSeq time;
 	private final List<Var> vars;
+	private final Map<Id, Var> state;
 
 	private Simulator(TimeSeq time, List<Var> vars) {
 		this.time = time;
 		this.vars = vars;
+		this.state = new HashMap<>();
+		for (var v : vars) {
+			state.put(v.name(), v);
+		}
 	}
 
 	public static Res<Simulator> of(Xmile xmile) {
@@ -34,7 +42,9 @@ public class Simulator {
 		return Res.of(new Simulator(time.value(), order.value()));
 	}
 
-	public Res<List<Var>> run() {
+	public void forEach(Consumer<Res<SimulationState>> fn) {
+		if (fn == null)
+			return;
 
 		var ctx = new EvalContext();
 		ctx.bind("INF", Double.POSITIVE_INFINITY);
@@ -63,9 +73,11 @@ public class Simulator {
 		for (var v : vars) {
 			var res = interpreter.eval(v.def());
 			if (res.hasError()) {
-				return res.wrapError("initialization of variable '"
-					+ v.name().label() + "' failed");
+				fn.accept(res.wrapError("initialization of variable '"
+					+ v.name().label() + "' failed"));
+				return;
 			}
+
 			v.pushValue(res.value());
 			if (v instanceof Stock stock) {
 				stocks.add(stock);
@@ -73,8 +85,10 @@ public class Simulator {
 				evalVars.add(v);
 			}
 		}
+		fn.accept(Res.of(new SimulationState(0, time.current(), state)));
 
 		var dt = Cell.of(time.dt());
+		int i = 0;
 		while (!time.isFinished()) {
 
 			timeVar.pushValue(Cell.of(time.next()));
@@ -82,8 +96,10 @@ public class Simulator {
 			// evaluate the variables
 			for (var v : evalVars) {
 				var res = interpreter.eval(v.def());
-				if (res.hasError())
-					return res.wrapError("evaluation error at t=" + time.current());
+				if (res.hasError()) {
+					fn.accept(res.wrapError("evaluation error at t=" + time.current()));
+					return;
+				}
 				v.pushValue(res.value());
 			}
 
@@ -96,18 +112,22 @@ public class Simulator {
 				for (var inFlowId : stock.inFlows()) {
 					var inFlow = ctx.getVar(inFlowId).orElse(null);
 					if (inFlow == null) {
-						return Res.error("unknown in-flow '" + inFlowId
-							+ "' of stock: " + stock.name());
+						fn.accept(Res.error("unknown in-flow '" + inFlowId
+							+ "' of stock: " + stock.name()));
+						return;
 					}
 
 					var inFlowDelta = Mul.apply(inFlow.value(), dt);
-					if (inFlowDelta.hasError())
-						return Res.error("failed to calculate " + inFlowId + " * dt");
+					if (inFlowDelta.hasError()) {
+						fn.accept(Res.error("failed to calculate " + inFlowId + " * dt"));
+						return;
+					}
 
 					var nextVal = Add.apply(val, inFlowDelta.value());
 					if (nextVal.hasError()) {
-						nextVal.wrapError("failed to add flow " + inFlowId
-							+ " to stock " + stock.name());
+						fn.accept(nextVal.wrapError("failed to add flow " + inFlowId
+							+ " to stock " + stock.name()));
+						return;
 					}
 					val = nextVal.value();
 				}
@@ -116,18 +136,22 @@ public class Simulator {
 				for (var outFlowId : stock.outFlows()) {
 					var outFlow = ctx.getVar(outFlowId).orElse(null);
 					if (outFlow == null) {
-						return Res.error("unknown out-flow '" + outFlowId
-							+ "' of stock: " + stock.name());
+						fn.accept(Res.error("unknown out-flow '" + outFlowId
+							+ "' of stock: " + stock.name()));
+						return;
 					}
 
 					var outFlowDelta = Mul.apply(outFlow.value(), dt);
-					if (outFlowDelta.hasError())
-						return Res.error("failed to calculate " + outFlowId + " * dt");
+					if (outFlowDelta.hasError()) {
+						fn.accept(Res.error("failed to calculate " + outFlowId + " * dt"));
+						return;
+					}
 
 					var nextVal = Sub.apply(val, outFlowDelta.value());
 					if (nextVal.hasError()) {
-						nextVal.wrapError("failed to subtract out-flow " + outFlowId
-							+ " from stock " + stock.name());
+						fn.accept(nextVal.wrapError("failed to subtract out-flow " + outFlowId
+							+ " from stock " + stock.name()));
+						return;
 					}
 					val = nextVal.value();
 				}
@@ -135,9 +159,8 @@ public class Simulator {
 				stock.pushValue(val);
 			}
 
+			i++;
+			fn.accept(Res.of(new SimulationState(i, time.current(), state)));
 		}
-
-		return Res.of(vars);
 	}
-
 }
