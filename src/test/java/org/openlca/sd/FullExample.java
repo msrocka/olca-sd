@@ -2,7 +2,6 @@ package org.openlca.sd;
 
 import java.io.File;
 
-import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Simulator;
 import org.openlca.sd.util.TensorPrinter;
 import org.openlca.sd.xmile.Xmile;
@@ -16,20 +15,52 @@ public class FullExample {
 		var prnt = new TensorPrinter();
 		var interpreter = sim.interpreter();
 
-		var res = interpreter.eval("production_recyclate_factor").orElseThrow();
+		var res = interpreter.eval("\"collection_for_recycling/biorecovery\"").orElseThrow();
 		prnt.print(res);
 
+/*
 		res = interpreter.eval(res).orElseThrow();
 		prnt.print(res);
+
+
 		interpreter.context()
-			.getVar(Id.of("production_recyclate_factor"))
+			.getVar(Id.of("\"collection_for_recycling/biorecovery\""))
 			.orElseThrow()
 			.pushValue(res);
 
 		var cell = interpreter.eval("""
-			production_recyclate_factor[EoL_Class,Product_1]
-			+ production_recyclate_factor[EoL_Class,Product_2]""");
+			 "collection_for_recycling/biorecovery"/(
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_1] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_2] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_3] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_4] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_5] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_6] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_7] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_1] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_2] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_3] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_4] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_5] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_6] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_recycling_7] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Byproduct_1] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Byproduct_2] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Byproduct_3] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Byproduct_4] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Byproduct_w_recycling_1] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_1] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_2] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_3] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_4] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_5] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_6] +
+			      "collection_for_recycling/biorecovery"[EoL_Class,Product_w_reuse_7]
+			      )
+
+			""");
 		prnt.print(cell.value());
+
 
 
 		sim.forEach(r -> {
@@ -37,7 +68,7 @@ public class FullExample {
 				System.out.println("error: " + r.error());
 			}
 		});
-
+*/
 
 	}
 }
