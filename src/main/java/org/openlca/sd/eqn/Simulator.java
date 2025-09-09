@@ -42,6 +42,10 @@ public class Simulator {
 		return Res.of(new Simulator(time.value(), order.value()));
 	}
 
+	public List<Var> vars() {
+		return vars;
+	}
+
 	public void forEach(Consumer<Res<SimulationState>> fn) {
 		if (fn == null)
 			return;

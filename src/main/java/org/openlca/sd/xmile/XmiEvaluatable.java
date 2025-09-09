@@ -24,7 +24,7 @@ public sealed abstract class XmiEvaluatable
 	@XmlElement(name ="gf", namespace = Xmile.NS)
 	XmiGf gf;
 
-	@XmlElementWrapper(name = "dims", namespace = Xmile.NS)
+	@XmlElementWrapper(name = "dimensions", namespace = Xmile.NS)
 	@XmlElement(name="dim", namespace = Xmile.NS)
 	List<Dim> dimensions;
 

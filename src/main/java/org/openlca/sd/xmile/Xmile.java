@@ -29,7 +29,7 @@ public class Xmile {
 	@XmlElement(name = "model", namespace = NS)
 	XmiModel model;
 
-	@XmlElementWrapper(name = "dims", namespace = NS)
+	@XmlElementWrapper(name = "dimensions", namespace = NS)
 	@XmlElement(name = "dim", namespace = Xmile.NS)
 	List<XmiDim> dims;
 
