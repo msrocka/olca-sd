@@ -34,6 +34,12 @@ public class Sub implements Func {
 			if (a.isTensorCell() && b.isTensorCell())
 				return sub(a.asTensorCell(), b.asTensorCell());
 
+			if (a.isNumCell() && b.isTensorCell())
+				return scalar(a.asNum(), b.asTensorCell());
+
+			if (a.isTensorCell() && b.isNumCell())
+				return scalar(a.asTensorCell(), b.asNum());
+
 			return Res.error("subtraction is not defined for: " + a + " - " + b);
 		});
 	}
@@ -61,6 +67,36 @@ public class Sub implements Func {
 			diff.set(i, di.value());
 		}
 		return Res.of(Cell.of(diff));
+	}
+
+	private Res<Cell> scalar(double scalar, TensorCell tensorCell) {
+		var tensor = tensorCell.value();
+		var shape = tensor.shape();
+		var result = Tensor.of(tensor.dimensions());
+
+		for (int i = 0; i < shape[0]; i++) {
+			var element = tensor.get(i);
+			var diff = apply(List.of(Cell.of(scalar), element));
+			if (diff.hasError())
+				return diff.wrapError("error subtracting tensor element from scalar at index " + i);
+			result.set(i, diff.value());
+		}
+		return Res.of(Cell.of(result));
+	}
+
+	private Res<Cell> scalar(TensorCell tensorCell, double scalar) {
+		var tensor = tensorCell.value();
+		var shape = tensor.shape();
+		var result = Tensor.of(tensor.dimensions());
+
+		for (int i = 0; i < shape[0]; i++) {
+			var element = tensor.get(i);
+			var diff = apply(List.of(element, Cell.of(scalar)));
+			if (diff.hasError())
+				return diff.wrapError("error subtracting scalar from tensor element at index " + i);
+			result.set(i, diff.value());
+		}
+		return Res.of(Cell.of(result));
 	}
 
 }

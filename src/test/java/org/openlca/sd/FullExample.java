@@ -31,13 +31,13 @@ public class FullExample {
 			+ production_recyclate_factor[EoL_Class,Product_2]""");
 		prnt.print(cell.value());
 
-		/*
-		sim.forEach(res -> {
-			if (res.hasError()) {
-				System.out.println("error: " + res.error());
+
+		sim.forEach(r -> {
+			if (r.hasError()) {
+				System.out.println("error: " + r.error());
 			}
 		});
 
-		 */
+
 	}
 }

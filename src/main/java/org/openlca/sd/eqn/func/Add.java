@@ -29,9 +29,17 @@ public class Add implements Func {
 				double result = a.asNum() + b.asNum();
 				return Res.of(Cell.of(result));
 			}
-			return a.isTensorCell() && b.isTensorCell()
-				? add(a.asTensorCell(), b.asTensorCell())
-				: Res.error("addition is not defined for: " + a + " + " + b);
+
+			if (a.isTensorCell() && b.isTensorCell())
+				return add(a.asTensorCell(), b.asTensorCell());
+
+			if (a.isNumCell() && b.isTensorCell())
+				return add(a.asNum(), b.asTensorCell());
+
+			if (a.isTensorCell() && b.isNumCell())
+				return add(b.asNum(), a.asTensorCell());
+
+			return Res.error("addition is not defined for: " + a + " + " + b);
 		});
 	}
 
@@ -60,4 +68,18 @@ public class Add implements Func {
 		return Res.of(Cell.of(sum));
 	}
 
+	private Res<Cell> add(double scalar, TensorCell cellT) {
+		var tensor = cellT.value();
+		var shape = tensor.shape();
+		var result = Tensor.of(tensor.dimensions());
+
+		for (int i = 0; i < shape[0]; i++) {
+			var element = tensor.get(i);
+			var sum = apply(List.of(Cell.of(scalar), element));
+			if (sum.hasError())
+				return sum.wrapError("error adding scalar to tensor element at index " + i);
+			result.set(i, sum.value());
+		}
+		return Res.of(Cell.of(result));
+	}
 }

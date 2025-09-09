@@ -44,6 +44,11 @@ public class Div implements Func {
 				return scalar(a.asTensorCell(), divisor);
 			}
 
+			// division: number ÷ tensor
+			if (a.isNumCell() && b.isTensorCell()) {
+				return scalar(a.asNum(), b.asTensorCell());
+			}
+
 			return Res.error("division is not defined for: " + a + " / " + b);
 		});
 	}
@@ -55,6 +60,21 @@ public class Div implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var di = apply(List.of(element, Cell.of(divisor)));
+			if (di.hasError()) {
+				return di.wrapError("error in scalar division at index " + i);
+			}
+			result.set(i, di.value());
+		}
+		return Res.of(Cell.of(result));
+	}
+
+	private Res<Cell> scalar(double dividend, TensorCell tensorCell) {
+		var tensor = tensorCell.value();
+		var result = Tensor.of(tensor.dimensions());
+		var shape = tensor.shape();
+		for (int i = 0; i < shape[0]; i++) {
+			var element = tensor.get(i);
+			var di = apply(List.of(Cell.of(dividend), element));
 			if (di.hasError()) {
 				return di.wrapError("error in scalar division at index " + i);
 			}
