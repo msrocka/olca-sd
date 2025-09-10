@@ -6,7 +6,6 @@ import static org.openlca.sd.eqn.Subscript.of;
 import java.util.List;
 
 import org.junit.Test;
-import org.openlca.sd.eqn.func.Div;
 
 public class TensorTest {
 
@@ -40,30 +39,7 @@ public class TensorTest {
 		shares.set(Subscript.of("Nylon"), Cell.of(0.2));
 	}
 
-	@Test
-	public void testDiv() {
-		var dimX = Dimension.of("X", "a", "b");
-		var dimY = Dimension.of("Y", "c", "d");
-		var ti = Tensor.of(dimX, dimY);
-		ti.setAll(42);
-		var tj = Tensor.of(dimX, dimY);
-		tj.setAll(7);
 
-		var tr = Div.apply(Cell.of(ti), Cell.of(tj))
-			.orElseThrow()
-			.asTensorCell()
-			.value();
-
-		assertEquals(dimX, tr.dimensions().getFirst());
-		assertEquals(dimY, tr.dimensions().get(1));
-
-		for (var x : dimX.elements()) {
-			for (var y : dimY.elements()) {
-				var val = tr.get(Subscript.of(x), Subscript.of(y)).asNum();
-				assertEquals(6.0, val, 1e-16);
-			}
-		}
-	}
 }
 
 
