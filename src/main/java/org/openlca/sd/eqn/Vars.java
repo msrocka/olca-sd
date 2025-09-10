@@ -93,7 +93,7 @@ public class Vars {
 			if (v == null)
 				return Res.error("variable is null");
 
-			var eqnCell = eqnCellOf(v.eqn(), v.gf(), v.isNonNegative());
+			var eqnCell = eqnCellOf(v.eqn(), v.gf(), v.isNonNegative(), null);
 			if (v.dimensions().isEmpty() || eqnCell.hasError())
 				return eqnCell;
 
@@ -116,7 +116,8 @@ public class Vars {
 				var cell = eqnCellOf(
 					Id.isNil(elem.eqn()) ? v.eqn() : elem.eqn(),
 					elem.gf(),
-					elem.isNonNegative() || v.isNonNegative());
+					elem.isNonNegative() || v.isNonNegative(),
+					subs);
 				if (cell.hasError())
 					return cell.wrapError(
 						"invalid array element equation in: " + v.name());
@@ -138,7 +139,9 @@ public class Vars {
 			return Res.of(dims);
 		}
 
-		private Res<Cell> eqnCellOf(String eqn, XmiGf gf, boolean isNonNegative) {
+		private Res<Cell> eqnCellOf(
+			String eqn, XmiGf gf, boolean isNonNegative, List<Subscript> subscripts
+		) {
 			if (Id.isNil(eqn))
 				return Res.of(Cell.empty());
 
@@ -151,7 +154,7 @@ public class Vars {
 			}
 
 			var cell = func != null
-				? new LookupCell(eqn, func)
+				? new LookupCell(eqn, func, subscripts)
 				: new EqnCell(eqn);
 
 			return isNonNegative

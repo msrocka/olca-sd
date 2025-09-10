@@ -50,11 +50,15 @@ public class Interpreter {
 			case NumCell num -> Res.of(num);
 			case TensorCell(Tensor t) -> eval(t);
 
-			case LookupCell(String eqn, LookupFunc func) -> {
+			case LookupCell(String eqn, LookupFunc func, List<Subscript> subs) -> {
 				var res = eval(eqn);
 				if (res.hasError())
 					yield res;
-				if (!(res.value() instanceof NumCell(double  x))) {
+				var val = res.value();
+				if (val instanceof TensorCell(Tensor t)	&& subs != null	&& !subs.isEmpty()) {
+					val = t.get(subs);
+				}
+				if (!(val instanceof NumCell(double  x))) {
 					yield Res.error("equation of lookup function " +
 						"does not evaluate to a number");
 				}

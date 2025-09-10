@@ -47,7 +47,8 @@ public class EvaluationOrder {
 			return;
 		}
 
-		if (cell instanceof LookupCell(String eqn, LookupFunc ignored)) {
+		if (cell instanceof LookupCell(
+			String eqn, LookupFunc ignored, List<Subscript> ignore)) {
 			var vars = Interpreter.varsOf(eqn);
 			if (!vars.hasError()) {
 				ids.addAll(vars.value());

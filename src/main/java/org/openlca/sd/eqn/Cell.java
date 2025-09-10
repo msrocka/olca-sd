@@ -1,5 +1,6 @@
 package org.openlca.sd.eqn;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /// The possible types of a tensor cell entry.
@@ -34,7 +35,7 @@ public sealed interface Cell {
 			case BoolCell ignored -> false;
 			case TensorCell(Tensor tensor) -> tensor != null;
 			case EqnCell(String eqn) -> Id.isNil(eqn);
-			case LookupCell(String eqn, LookupFunc func) ->
+			case LookupCell(String eqn, LookupFunc func, List<Subscript> ignore) ->
 				Id.isNil(eqn) || func == null;
 			case NonNegativeCell(Cell value) -> value == null;
 		};
@@ -145,7 +146,9 @@ public sealed interface Cell {
 		}
 	}
 
-	record LookupCell(String eqn, LookupFunc func) implements Cell {
+	record LookupCell(
+		String eqn, LookupFunc func, List<Subscript> subscripts
+	) implements Cell {
 
 		@Override
 		public String toString() {

@@ -6,6 +6,7 @@ import static org.openlca.sd.eqn.Subscript.of;
 import java.util.List;
 
 import org.junit.Test;
+import org.openlca.sd.eqn.func.Div;
 
 public class TensorTest {
 
@@ -26,7 +27,6 @@ public class TensorTest {
 
 		t.set(Subscript.of("b"), Cell.of(21));
 		assertEquals(21, t.get(of("b")).asNumCell().value(), 1e-16);
-
 	}
 
 
@@ -35,13 +35,35 @@ public class TensorTest {
 		var dim1 = Dimension.of("Products", "PET", "PVC", "Nylon");
 		var dim2 = Dimension.of("Location", "GLO", "US", "DE", "FR");
 		var shares = Tensor.of(dim1, dim2);
-
 		shares.set(of("PET, GLO"), Cell.of(0.3));
 		shares.set(of("PVC, *"), Cell.of(0.1));
 		shares.set(Subscript.of("Nylon"), Cell.of(0.2));
-
 	}
 
+	@Test
+	public void testDiv() {
+		var dimX = Dimension.of("X", "a", "b");
+		var dimY = Dimension.of("Y", "c", "d");
+		var ti = Tensor.of(dimX, dimY);
+		ti.setAll(42);
+		var tj = Tensor.of(dimX, dimY);
+		tj.setAll(7);
+
+		var tr = Div.apply(Cell.of(ti), Cell.of(tj))
+			.orElseThrow()
+			.asTensorCell()
+			.value();
+
+		assertEquals(dimX, tr.dimensions().getFirst());
+		assertEquals(dimY, tr.dimensions().get(1));
+
+		for (var x : dimX.elements()) {
+			for (var y : dimY.elements()) {
+				var val = tr.get(Subscript.of(x), Subscript.of(y)).asNum();
+				assertEquals(6.0, val, 1e-16);
+			}
+		}
+	}
 }
 
 
