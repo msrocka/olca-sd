@@ -17,6 +17,8 @@ import org.openlca.sd.eqn.func.Log10;
 import org.openlca.sd.eqn.func.Max;
 import org.openlca.sd.eqn.func.Min;
 import org.openlca.sd.eqn.func.Mod;
+import org.openlca.sd.eqn.func.Normal;
+import org.openlca.sd.eqn.func.Poisson;
 import org.openlca.sd.eqn.func.Sin;
 import org.openlca.sd.eqn.func.Sqrt;
 import org.openlca.sd.eqn.func.Sum;
@@ -42,6 +44,8 @@ public class EvalContext {
 		bind(new Int());
 		bind(new Ln());
 		bind(new Log10());
+		bind(new Poisson());
+		bind(new Normal());
 
 		// we do not bind standard math functions for now
 		// bind(new Add());
