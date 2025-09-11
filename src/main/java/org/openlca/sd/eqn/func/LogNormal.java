@@ -21,11 +21,18 @@ public class LogNormal implements Func {
 	public Res<Cell> apply(List<Cell> args) {
 		if (args == null || args.size() < 2)
 			return Res.error("LOGNORMAL requires 2 arguments");
-		if (!(args.getFirst() instanceof NumCell(double mean)))
+		if (!(args.getFirst() instanceof NumCell(double meanL)))
 			return Res.error("first argument is not a number");
-		if (!(args.get(1) instanceof NumCell(double sd)))
+		if (!(args.get(1) instanceof NumCell(double sdL)))
 			return Res.error("second argument is not a number");
-		var value = new LogNormalDistribution(mean, sd).sample();
+
+		// given is the mean and standard deviation of the log-normal distribution
+		// from this we calculate the standard deviation and mean of the underlying
+		// normal distribution
+		double sdN = Math.sqrt(Math.log(1 + Math.pow(sdL / meanL, 2)));
+		double meanN = Math.log(meanL) - Math.pow(sdN, 2) / 2;
+
+		var value = new LogNormalDistribution(meanN, sdN).sample();
 		return Res.of(Cell.of(value));
 	}
 }
