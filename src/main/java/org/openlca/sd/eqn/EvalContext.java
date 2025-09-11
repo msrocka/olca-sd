@@ -10,15 +10,18 @@ import org.openlca.sd.eqn.func.ArcSin;
 import org.openlca.sd.eqn.func.ArcTan;
 import org.openlca.sd.eqn.func.Cos;
 import org.openlca.sd.eqn.func.Exp;
+import org.openlca.sd.eqn.func.ExpRnd;
 import org.openlca.sd.eqn.func.Func;
 import org.openlca.sd.eqn.func.Int;
 import org.openlca.sd.eqn.func.Ln;
 import org.openlca.sd.eqn.func.Log10;
+import org.openlca.sd.eqn.func.LogNormal;
 import org.openlca.sd.eqn.func.Max;
 import org.openlca.sd.eqn.func.Min;
 import org.openlca.sd.eqn.func.Mod;
 import org.openlca.sd.eqn.func.Normal;
 import org.openlca.sd.eqn.func.Poisson;
+import org.openlca.sd.eqn.func.Random;
 import org.openlca.sd.eqn.func.Sin;
 import org.openlca.sd.eqn.func.Sqrt;
 import org.openlca.sd.eqn.func.Sum;
@@ -46,6 +49,9 @@ public class EvalContext {
 		bind(new Log10());
 		bind(new Poisson());
 		bind(new Normal());
+		bind(new ExpRnd());
+		bind(new LogNormal());
+		bind(new Random());
 
 		// we do not bind standard math functions for now
 		// bind(new Add());
