@@ -10,7 +10,7 @@
 	</properties>
 
 	<groupId>org.openlca</groupId>
-	<artifactId>xmile</artifactId>
+	<artifactId>olca-sd</artifactId>
 	<version>0.0.1</version>
 
 	<dependencies>
