@@ -18,3 +18,13 @@ This (experimental) project links system dynamics (SD) with LCA models. The idea
 ## Notes
 
 + Stella uses `dimensions` instead of `dims` in it's XMILE implementation
+
+
+# Other open points
+
++ When a variable is defined as an array and only the dimensions and an equation is given, when that equation evaluates to an array, we cast it into the provided dimensions?
++ abs values of non-negative stocks after each iteration step
++ bind globally defined lookup functions as functions in the interpreter context
++ dimensions can also be defined without named elements, like `<dim name="N" size="5" />`
++ Id already has a label and a value. For the label we should replace `\n` and `_` with spaces; maybe also convert multiple spaces into a single one
++ check if we should implement global behaviors (like all stocks being non-negative); see the behavior section in the XMILE standard (depends a bit on if it is used in real models)
