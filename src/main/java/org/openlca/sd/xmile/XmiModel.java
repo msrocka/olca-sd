@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.openlca.sd.xmile.view.XmiView;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -21,6 +23,10 @@ public class XmiModel {
 		@XmlElement(name = "aux", namespace = Xmile.NS, type = XmiAux.class)
 	})
 	List<XmiVariable> variables;
+
+	@XmlElementWrapper(name = "views", namespace = Xmile.NS)
+	@XmlElement(name = "view", namespace = Xmile.NS)
+	List<XmiView> views;
 
 	public List<XmiVariable> variables() {
 		return variables == null ? Collections.emptyList() : variables;
@@ -40,6 +46,10 @@ public class XmiModel {
 
 	public List<XmiGf> gfs() {
 		return filter(XmiGf.class);
+	}
+
+	public List<XmiView> views() {
+		return views == null ? Collections.emptyList() : views;
 	}
 
 	private <T> List<T> filter(Class<T> type) {

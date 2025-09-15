@@ -28,3 +28,4 @@ This (experimental) project links system dynamics (SD) with LCA models. The idea
 + dimensions can also be defined without named elements, like `<dim name="N" size="5" />`
 + Id already has a label and a value. For the label we should replace `\n` and `_` with spaces; maybe also convert multiple spaces into a single one
 + check if we should implement global behaviors (like all stocks being non-negative); see the behavior section in the XMILE standard (depends a bit on if it is used in real models)
++ attach units to variables
