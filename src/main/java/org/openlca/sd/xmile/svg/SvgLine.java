@@ -31,7 +31,7 @@ public class SvgLine {
 		this.x2 = x2;
 		this.y2 = y2;
 		this.stroke = stroke;
-		this.strokeWidth = 2.0;
+		this.strokeWidth = 1.0;
 	}
 
 	public SvgLine() {}

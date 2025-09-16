@@ -17,7 +17,7 @@ class Converter {
 		this.view = view;
 		int width = view.pageWidth() != null ? view.pageWidth() : 800;
 		int height = view.pageHeight() != null ? view.pageHeight() : 600;
-		this.doc = new SvgDoc(width, height);
+		this.doc = new SvgDoc();
 	}
 
 	static SvgDoc convert(XmiView view) {
@@ -49,8 +49,28 @@ class Converter {
 		if (stock == null || Id.isNil(stock.name()))
 			return;
 		var box = TextBox.create(stock.x(), stock.y(), stock.name());
-		doc.addText(box.svgText());
-		doc.addRect(box.svgRect());
+		var text = box.svgText();
+		var rect = box.svgRect();
+
+		if (stock.width() != null && stock.height() != null) {
+			double w = stock.width();
+			double h = stock.height();
+			double cx = stock.x() + w / 2;
+			double cy = stock.y() + h / 2;
+			text.x = cx;
+			text.y = cy;
+			for (var span : text.spans) {
+				span.x = cx;
+			}
+
+			rect.x = stock.x();
+			rect.y = stock.y();
+			rect.width = w;
+			rect.height = h;
+		}
+
+		doc.addText(text);
+		doc.addRect(rect);
 	}
 
 	private void aux(XmiAuxView aux) {
@@ -70,13 +90,18 @@ class Converter {
 	}
 
 	private void flow(XmiFlowView flow) {
+		if (flow == null || Id.isNil(flow.name()))
+			return;
+		var box = TextBox.create(flow.x(), flow.y(), flow.name());
+		doc.addText(box.svgText);
+
 		var pts = flow.pts();
 		if (pts.size() >= 2) {
 			// Draw lines between points
 			for (int i = 0; i < pts.size() - 1; i++) {
 				var p1 = pts.get(i);
 				var p2 = pts.get(i + 1);
-				var line = new SvgLine(p1.x(), p1.y(), p2.x(), p2.y(), "black");
+				var line = new SvgLine(p1.x(), p1.y(), p2.x(), p2.y(), "blue");
 				doc.addLine(line);
 			}
 
@@ -105,7 +130,7 @@ class Converter {
 		SvgText svgText
 	) {
 
-		static TextBox create(double rawX, double rawY, String value) {
+		static TextBox create(double x, double y, String value) {
 
 			double fontSize = 10;
 
@@ -117,8 +142,6 @@ class Converter {
 			for (String part : parts) {
 				width = Math.max(width, part.length() * (fontSize / 2 + 1));
 			}
-			double x = rawX + width / 2d;
-			double y = rawY + height / 2d;
 
 			var text = new SvgText(x, y);
 			text.fill = "blue";
@@ -136,8 +159,7 @@ class Converter {
 		}
 
 		SvgRect svgRect() {
-			var rect = new SvgRect(
-				x - width / 2d, y - height / 2d, width, height);
+			var rect = new SvgRect(x - width / 2, y - height / 2, width, height);
 			rect.stroke = "blue";
 			rect.fill = "white";
 			return rect;

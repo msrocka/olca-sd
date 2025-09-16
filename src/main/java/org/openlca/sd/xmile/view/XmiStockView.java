@@ -16,6 +16,12 @@ public class XmiStockView {
 	@XmlAttribute(name = "y")
 	double y;
 
+	@XmlAttribute(name = "width")
+	Double width;
+
+	@XmlAttribute(name = "height")
+	Double height;
+
 	@XmlAttribute(name = "name")
 	String name;
 
@@ -33,5 +39,13 @@ public class XmiStockView {
 
 	public String name() {
 		return name;
+	}
+
+	public Double width() {
+		return width;
+	}
+
+	public Double height() {
+		return height;
 	}
 }
