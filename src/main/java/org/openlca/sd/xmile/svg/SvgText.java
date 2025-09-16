@@ -33,28 +33,10 @@ public class SvgText {
 	@XmlElement(name = "tspan", namespace = Svg.NS)
 	List<Span> spans;
 
-	public SvgText(double x, double y, String fill) {
+	public SvgText(double x, double y) {
 		this.x = x;
 		this.y = y;
-		this.fill = fill;
-		this.fontFamily = "Arial";
-		this.fontSize = 12.0;
-		this.textAnchor = "middle";
 		this.spans = new ArrayList<>();
-	}
-
-	public SvgText(double x, double y, String content, String fill) {
-		this.x = x;
-		this.y = y;
-		this.fill = fill;
-		this.fontFamily = "Arial";
-		this.fontSize = 12.0;
-		this.textAnchor = "middle";
-		this.spans = new ArrayList<>();
-		spans.add(new Span(x, 0, content));
-	}
-
-	public SvgText() {
 	}
 
 	public void addSpan(Span span) {

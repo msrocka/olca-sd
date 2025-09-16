@@ -46,36 +46,27 @@ class Converter {
 	}
 
 	private void stock(XmiStockView stock) {
-
 		if (stock == null || Id.isNil(stock.name()))
 			return;
-
-		var parts = stock.name().split("\\\\n");
-		var text = new SvgText(stock.x(), stock.y(), "blue");
-		int w = 0;
-		int h = 16 * parts.length;
-		for (int i = 0; i < parts.length; i++) {
-			var span = new SvgText.Span(stock.x(), i * 12, parts[i]);
-			text.addSpan(span);
-			w = Math.max(w, parts[i].length() * 8);
-		}
-		doc.addText(text);
-
-		var rect = new SvgRect(stock.x() - w / 2d, stock.y() - h / 2d, w, h);
-		rect.stroke = "blue";
-		rect.fill = "white";
-		doc.addRect(rect);
+		var box = TextBox.create(stock.x(), stock.y(), stock.name());
+		doc.addText(box.svgText());
+		doc.addRect(box.svgRect());
 	}
 
 	private void aux(XmiAuxView aux) {
-		var text = new SvgText(aux.x(), aux.y(), aux.name(), "blue");
-		doc.addText(text);
+		if (aux == null || Id.isNil(aux.name()))
+			return;
+		var box = TextBox.create(aux.x(), aux.y(), aux.name());
+		doc.addText(box.svgText());
 	}
 
-	private void textBox(XmiTextBoxView textBox) {
-		var text = new SvgText(textBox.x() + textBox.width() / 2, textBox.y() + textBox.height() / 2,
-			textBox.text(), "black");
-		doc.addText(text);
+	private void textBox(XmiTextBoxView text) {
+		if (text == null || Id.isNil(text.text()))
+			return;
+		var box = TextBox.create(text.x(), text.y(), text.text());
+		var svgText = box.svgText();
+		svgText.fill = "black";
+		doc.addText(svgText);
 	}
 
 	private void flow(XmiFlowView flow) {
@@ -90,10 +81,10 @@ class Converter {
 			}
 
 			// Add label at flow position
-			var text = new SvgText(flow.x(), flow.y() - 10, flow.name(), "black");
+			// var text = new SvgText(flow.x(), flow.y() - 10, flow.name(), "black");
 
-			text.fontSize = 10.0;
-			doc.addText(text);
+			// text.fontSize = 10.0;
+			// doc.addText(text);
 		}
 	}
 
@@ -104,6 +95,46 @@ class Converter {
 		var pathData = String.format("M 100,100 Q 150,50 200,100");
 		var path = new SvgPath(pathData, "gray");
 		doc.addPath(path);
+	}
+
+	private record TextBox(
+		double x,
+		double y,
+		double width,
+		double height,
+		SvgText svgText
+	) {
+
+		static TextBox create(double x, double y, String value) {
+
+			double fontSize = 10;
+
+			var parts = value.split("\\\\n");
+			var text = new SvgText(x, y);
+			text.fill = "blue";
+			text.fontFamily = "Arial";
+			text.fontSize = fontSize;
+			text.textAnchor = "middle";
+
+			double width = 0;
+			double height = 1.4 * fontSize * parts.length;
+			for (int i = 0; i < parts.length; i++) {
+				var span = new SvgText.Span(x, i == 0 ? 0 : fontSize, parts[i]);
+				text.addSpan(span);
+				width = Math.max(width, parts[i].length() * (fontSize / 2 + 1));
+			}
+			return new TextBox(
+				x, y, width, height, text
+			);
+		}
+
+		SvgRect svgRect() {
+			var rect = new SvgRect(
+				x- width / 2d, y - height / 2d, width, height);
+			rect.stroke = "blue";
+			rect.fill = "white";
+			return rect;
+		}
 	}
 
 }
