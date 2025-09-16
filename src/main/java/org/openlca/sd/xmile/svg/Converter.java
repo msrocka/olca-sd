@@ -105,24 +105,31 @@ class Converter {
 		SvgText svgText
 	) {
 
-		static TextBox create(double x, double y, String value) {
+		static TextBox create(double rawX, double rawY, String value) {
 
 			double fontSize = 10;
 
 			var parts = value.split("\\\\n");
+
+
+			double height = 1.4 * fontSize * parts.length;
+			double width = 0;
+			for (String part : parts) {
+				width = Math.max(width, part.length() * (fontSize / 2 + 1));
+			}
+			double x = rawX + width / 2d;
+			double y = rawY + height / 2d;
+
 			var text = new SvgText(x, y);
 			text.fill = "blue";
 			text.fontFamily = "Arial";
 			text.fontSize = fontSize;
 			text.textAnchor = "middle";
-
-			double width = 0;
-			double height = 1.4 * fontSize * parts.length;
 			for (int i = 0; i < parts.length; i++) {
 				var span = new SvgText.Span(x, i == 0 ? 0 : fontSize, parts[i]);
 				text.addSpan(span);
-				width = Math.max(width, parts[i].length() * (fontSize / 2 + 1));
 			}
+
 			return new TextBox(
 				x, y, width, height, text
 			);
@@ -130,7 +137,7 @@ class Converter {
 
 		SvgRect svgRect() {
 			var rect = new SvgRect(
-				x- width / 2d, y - height / 2d, width, height);
+				x - width / 2d, y - height / 2d, width, height);
 			rect.stroke = "blue";
 			rect.fill = "white";
 			return rect;
