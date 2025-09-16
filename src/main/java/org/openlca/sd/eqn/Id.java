@@ -76,7 +76,7 @@ public class Id {
 		return list;
 	}
 
-	static boolean isNil(String s) {
+	public static boolean isNil(String s) {
 		return s == null || s.isBlank();
 	}
 

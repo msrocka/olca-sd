@@ -1,8 +1,12 @@
 package org.openlca.sd.xmile.svg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -26,18 +30,69 @@ public class SvgText {
 	@XmlAttribute(name = "text-anchor")
 	String textAnchor;
 
-	@XmlValue
-	String content;
+	@XmlElement(name = "tspan", namespace = Svg.NS)
+	List<Span> spans;
 
-	public SvgText(double x, double y, String content, String fill) {
+	public SvgText(double x, double y, String fill) {
 		this.x = x;
 		this.y = y;
-		this.content = content;
 		this.fill = fill;
 		this.fontFamily = "Arial";
 		this.fontSize = 12.0;
 		this.textAnchor = "middle";
+		this.spans = new ArrayList<>();
 	}
 
-	public SvgText() {}
+	public SvgText(double x, double y, String content, String fill) {
+		this.x = x;
+		this.y = y;
+		this.fill = fill;
+		this.fontFamily = "Arial";
+		this.fontSize = 12.0;
+		this.textAnchor = "middle";
+		this.spans = new ArrayList<>();
+		spans.add(new Span(x, 0, content));
+	}
+
+	public SvgText() {
+	}
+
+	public void addSpan(Span span) {
+		if (spans == null) {
+			spans = new ArrayList<>();
+		}
+		spans.add(span);
+	}
+
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class Span {
+
+		@XmlAttribute
+		Double x;
+
+		@XmlAttribute
+		Double y;
+
+		@XmlAttribute
+		Double dx;
+
+		@XmlAttribute
+		Double dy;
+
+		@XmlValue
+		String content;
+
+		public Span(double x, double dy, String content) {
+			this.x = x;
+			this.dy = dy;
+			this.content = content;
+		}
+
+		public Span(String content) {
+			this.content = content;
+		}
+
+		public Span() {
+		}
+	}
 }
