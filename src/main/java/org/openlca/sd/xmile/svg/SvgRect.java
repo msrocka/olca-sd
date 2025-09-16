@@ -28,12 +28,11 @@ public class SvgRect {
 	@XmlAttribute(name = "stroke-width")
 	double strokeWidth;
 
-	public SvgRect(double x, double y, double width, double height, String fill) {
+	public SvgRect(double x, double y, double width, double height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.fill = fill;
 		this.stroke = "black";
 		this.strokeWidth = 1.0;
 	}

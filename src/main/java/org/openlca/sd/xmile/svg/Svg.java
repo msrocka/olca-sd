@@ -1,94 +1,52 @@
 package org.openlca.sd.xmile.svg;
 
-import org.openlca.sd.xmile.view.XmiAuxView;
-import org.openlca.sd.xmile.view.XmiConnectorView;
-import org.openlca.sd.xmile.view.XmiFlowView;
-import org.openlca.sd.xmile.view.XmiStockView;
-import org.openlca.sd.xmile.view.XmiTextBoxView;
+import java.io.StringWriter;
+
+import org.openlca.sd.util.Res;
+import org.openlca.sd.xmile.Xmile;
 import org.openlca.sd.xmile.view.XmiView;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
 public class Svg {
 
-	public static SvgDoc convert(XmiView view) {
-		var svg = new SvgDoc();
+	static final String NS = "http://www.w3.org/2000/svg";
 
-		// Convert stocks to blue rectangles with labels
-		for (var stock : view.stocks()) {
-			convertStock(svg, stock);
-		}
-
-		// Convert auxiliaries to blue text labels
-		for (var aux : view.auxiliaries()) {
-			convertAux(svg, aux);
-		}
-
-		// Convert text boxes to black text labels
-		for (var textBox : view.textBoxes()) {
-			convertTextBox(svg, textBox);
-		}
-
-		// Convert flows to lines with labels
-		for (var flow : view.flows()) {
-			convertFlow(svg, flow);
-		}
-
-		// Convert connectors to curves
-		for (var connector : view.connectors()) {
-			convertConnector(svg, connector);
-		}
-
-		return svg;
+	public static SvgDoc docOf(Xmile xmile) {
+		if (xmile == null || xmile.model() == null)
+			return new SvgDoc();
+		var views = xmile.model().views();
+		return views.isEmpty()
+			? new SvgDoc()
+			: docOf(views.getFirst());
 	}
 
-	private static void convertStock(SvgDoc svg, XmiStockView stock) {
-		// Default stock size if not specified
-		double width = 60;
-		double height = 30;
-
-		// Create blue rectangle
-		var rect = new SvgRect(stock.x() - width/2, stock.y() - height/2, width, height, "lightblue");
-		svg.addRect(rect);
-
-		// Add label
-		var text = new SvgText(stock.x(), stock.y() + 5, stock.name(), "black");
-		svg.addText(text);
+	public static SvgDoc docOf(XmiView view) {
+		return Converter.convert(view);
 	}
 
-	private static void convertAux(SvgDoc svg, XmiAuxView aux) {
-		var text = new SvgText(aux.x(), aux.y(), aux.name(), "blue");
-		svg.addText(text);
+	public static Res<String> xmlOf(Xmile xmile) {
+		if (xmile == null || xmile.model() == null)
+			return Res.error("No XMILE model available");
+		var views = xmile.model().views();
+		if (views.isEmpty())
+			return Res.error("No views available in XMILE model");
+		var doc = docOf(views.getFirst());
+		return xmlOf(doc);
 	}
 
-	private static void convertTextBox(SvgDoc svg, XmiTextBoxView textBox) {
-		var text = new SvgText(textBox.x() + textBox.width()/2, textBox.y() + textBox.height()/2,
-			textBox.text(), "black");
-		svg.addText(text);
-	}
-
-	private static void convertFlow(SvgDoc svg, XmiFlowView flow) {
-		var pts = flow.pts();
-		if (pts.size() >= 2) {
-			// Draw lines between points
-			for (int i = 0; i < pts.size() - 1; i++) {
-				var p1 = pts.get(i);
-				var p2 = pts.get(i + 1);
-				var line = new SvgLine(p1.x(), p1.y(), p2.x(), p2.y(), "black");
-				svg.addLine(line);
-			}
-
-			// Add label at flow position
-			var text = new SvgText(flow.x(), flow.y() - 10, flow.name(), "black");
-			text.fontSize = 10.0;
-			svg.addText(text);
+	public static Res<String> xmlOf(SvgDoc svg) {
+		try {
+			var context = JAXBContext.newInstance(SvgDoc.class);
+			var marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			var writer = new StringWriter();
+			marshaller.marshal(svg, writer);
+			return Res.of(writer.toString());
+		} catch (JAXBException e) {
+			return Res.error("Failed to marshal SVG to XML", e);
 		}
-	}
-
-	private static void convertConnector(SvgDoc svg, XmiConnectorView connector) {
-		// For now, create a simple curved path (this could be enhanced)
-		// This is a placeholder - you might want to implement proper curve logic
-		// based on the from/to elements and angle
-		var pathData = String.format("M 100,100 Q 150,50 200,100");
-		var path = new SvgPath(pathData, "gray");
-		svg.addPath(path);
 	}
 }

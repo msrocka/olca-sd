@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "svg", namespace = "http://www.w3.org/2000/svg")
+@XmlRootElement(name = "svg", namespace = Svg.NS)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvgDoc {
 
@@ -19,16 +19,16 @@ public class SvgDoc {
 	@XmlAttribute
 	double height;
 
-	@XmlElement(name = "rect", namespace = "http://www.w3.org/2000/svg")
+	@XmlElement(name = "rect", namespace = Svg.NS)
 	List<SvgRect> rectangles;
 
-	@XmlElement(name = "text", namespace = "http://www.w3.org/2000/svg")
+	@XmlElement(name = "text", namespace = Svg.NS)
 	List<SvgText> texts;
 
-	@XmlElement(name = "line", namespace = "http://www.w3.org/2000/svg")
+	@XmlElement(name = "line", namespace = Svg.NS)
 	List<SvgLine> lines;
 
-	@XmlElement(name = "path", namespace = "http://www.w3.org/2000/svg")
+	@XmlElement(name = "path", namespace = Svg.NS)
 	List<SvgPath> paths;
 
 	public SvgDoc(double width, double height) {
