@@ -3,6 +3,8 @@ package org.openlca.sd.xmile.view;
 import java.util.Collections;
 import java.util.List;
 
+import org.openlca.sd.xmile.Xmile;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -21,8 +23,8 @@ public class XmiFlowView {
 	@XmlAttribute(name = "name")
 	String name;
 
-	@XmlElementWrapper(name = "pts")
-	@XmlElement(name = "pt")
+	@XmlElementWrapper(name = "pts", namespace = Xmile.NS)
+	@XmlElement(name = "pt", namespace = Xmile.NS)
 	List<Pt> pts;
 
 	public double x() {

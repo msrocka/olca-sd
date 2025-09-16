@@ -1,5 +1,7 @@
 package org.openlca.sd.xmile.view;
 
+import org.openlca.sd.xmile.Xmile;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -14,10 +16,10 @@ public class XmiConnectorView {
 	@XmlAttribute(name = "angle")
 	double angle;
 
-	@XmlElement(name = "from")
+	@XmlElement(name = "from", namespace = Xmile.NS)
 	String from;
 
-	@XmlElement(name = "to")
+	@XmlElement(name = "to", namespace = Xmile.NS)
 	String to;
 
 	public String uid() {
