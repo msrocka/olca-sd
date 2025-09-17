@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmiTextBoxView {
+public class XmiTextBoxView implements XmiViewPoint {
 
 	@XmlAttribute(name = "uid")
 	String uid;

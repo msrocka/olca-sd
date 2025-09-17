@@ -36,6 +36,9 @@ public class XmiView {
 	@XmlElement(name = "connector", namespace = Xmile.NS)
 	List<XmiConnectorView> connectors;
 
+	@XmlElement(name = "style", namespace = Xmile.NS)
+	XmiViewStyle style;
+
 	public List<XmiStockView> stocks() {
 		return stocks == null ? List.of() : stocks;
 	}
@@ -66,6 +69,10 @@ public class XmiView {
 
 	public Integer zoom() {
 		return zoom;
+	}
+
+	public XmiViewStyle style() {
+		return style;
 	}
 
 }

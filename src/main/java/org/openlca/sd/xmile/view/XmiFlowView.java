@@ -12,39 +12,18 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmiFlowView {
-
-	@XmlAttribute(name = "x")
-	double x;
-
-	@XmlAttribute(name = "y")
-	double y;
-
-	@XmlAttribute(name = "name")
-	String name;
+public class XmiFlowView extends XmiVariableView {
 
 	@XmlElementWrapper(name = "pts", namespace = Xmile.NS)
 	@XmlElement(name = "pt", namespace = Xmile.NS)
 	List<Pt> pts;
-
-	public double x() {
-		return x;
-	}
-
-	public double y() {
-		return y;
-	}
-
-	public String name() {
-		return name;
-	}
 
 	public List<Pt> pts() {
 		return pts != null ? pts : Collections.emptyList();
 	}
 
 	@XmlAccessorType(XmlAccessType.FIELD)
-	public static class Pt {
+	public static class Pt implements XmiViewPoint {
 
 		@XmlAttribute(name = "x")
 		double x;
