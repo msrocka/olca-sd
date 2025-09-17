@@ -1,6 +1,7 @@
 package org.openlca.sd;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,24 +38,54 @@ public class ModelRenderer {
 			size.x, size.y, BufferedImage.TYPE_INT_ARGB);
 		var g = image.createGraphics();
 
+		var font = new Font("Arial", Font.PLAIN, 12);
+		g.setFont(font);
+
 		g.setBackground(Color.WHITE);
 		g.clearRect(0, 0, size.x, size.y);
 
 		for (var f : view.flows()) {
+
+			var p = pointOf(f);
+			g.setColor(Color.BLUE);
+			g.fillOval(p.x, p.y - 5, 10, 10);
+
+			g.drawString(f.name(), p.x, p.y - 10);
+
 			if (f.pts().size() < 2)
 				continue;
 			for (int i = 1; i < f.pts().size(); i++) {
-				XmiViewPoint p0 = f.pts().get(i - 1);
-				XmiViewPoint p1 = f.pts().get(i);
+				var start = pointOf(f.pts().get(i - 1));
+				var end = pointOf(f.pts().get(i));
 				g.setColor(Color.BLUE);
-				g.drawLine((int) p0.x(), (int) p0.y(), (int) p1.x(), (int) p1.y());
+				g.drawLine(start.x, start.y, end.x, end.y);
 			}
 		}
 
+		for (var s : view.stocks()) {
+			var p = pointOf(s);
+			g.setColor(Color.GREEN);
+			g.fillRect(p.x - 20, p.y - 10, 40, 20);
+			g.setColor(Color.BLACK);
+			g.drawString(s.name(), p.x - 20, p.y - 15);
+		}
 
+		for (var a : view.auxiliaries()) {
+			var p = pointOf(a);
+			g.setColor(Color.ORANGE);
+			g.fillRect(p.x - 20, p.y - 10, 40, 20);
+			g.setColor(Color.BLACK);
+			g.drawString(a.name(), p.x - 20, p.y - 15);
+		}
+
+		g.dispose();
 		return Res.of(image);
 	}
 
+
+	private Point pointOf(XmiViewPoint p) {
+		return new Point((int) Math.round(p.x()), (int) Math.round(p.y()));
+	}
 
 	private Point estimateSizeOf(XmiView view) {
 		class MaxDim {
@@ -95,7 +126,7 @@ public class ModelRenderer {
 
 
 	public static void main(String[] args) throws Exception {
-		var xmile = Xmile.readFrom(new File("examples/environment.stmx"));
+		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
 		var image = new ModelRenderer(xmile).render().orElseThrow();
 		ImageIO.write(image, "PNG", new File("target/model.png"));
 
