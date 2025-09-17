@@ -2,7 +2,7 @@ package org.openlca.sd.xmile.view;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 
-abstract class XmiStyleInfo {
+public abstract class XmiStyleInfo {
 
 	@XmlAttribute(name = "color")
 	String color;
@@ -16,8 +16,14 @@ abstract class XmiStyleInfo {
 	@XmlAttribute(name = "font_size")
 	String fontSize;
 
+	@XmlAttribute(name = "font_color")
+	String fontColor;
+
 	@XmlAttribute(name = "padding")
 	Integer padding;
+
+	@XmlAttribute(name = "label_side")
+	String labelSide;
 
 	public String color() {
 		return color;
@@ -35,8 +41,16 @@ abstract class XmiStyleInfo {
 		return fontFamily;
 	}
 
+	public String fontColor() {
+		return fontColor;
+	}
+
 	public Integer padding() {
 		return padding;
+	}
+
+	public String labelSide() {
+		return labelSide;
 	}
 
 }
