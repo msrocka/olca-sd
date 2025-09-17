@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
@@ -30,6 +32,9 @@ public class ModelImage {
 		this.view = view;
 		this.image = image;
 		this.g = image.createGraphics();
+		g.setRenderingHint(
+			RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setBackground(Color.WHITE);
 		g.clearRect(0, 0, image.getWidth(), image.getHeight());
 		this.ctx = RenderContext.create(g, xmile);
@@ -63,17 +68,18 @@ public class ModelImage {
 
 			var p = pointOf(f);
 			positions.put(Id.of(f.name()), p);
-			g.setColor(Color.GRAY);
+			g.setColor(Color.BLUE);
 			g.fillOval(p.x, p.y - 5, 10, 10);
 
-			// g.drawString(f.name(), p.x, p.y - 10);
+			g.setColor(Color.GRAY);
+			g.drawString(f.name(), p.x, p.y - 10);
 
 			if (f.pts().size() < 2)
 				continue;
 			for (int i = 1; i < f.pts().size(); i++) {
 				var start = pointOf(f.pts().get(i - 1));
 				var end = pointOf(f.pts().get(i));
-				g.setColor(Color.GRAY);
+				g.setColor(Color.BLUE);
 				g.drawLine(start.x, start.y, end.x, end.y);
 			}
 		}
@@ -84,12 +90,14 @@ public class ModelImage {
 			if (s.width() == null || s.height() == null) {
 				pos = new Point(pos.x - size.x / 2, pos.y - size.y / 2);
 			}
-			positions.put(Id.of(s.name()), pos);
-			g.setColor(Color.GRAY);
+			positions.put(
+				Id.of(s.name()),
+				new Point(pos.x + size.x / 2, pos.y + size.y / 2));
+			g.setColor(Color.BLUE);
 			g.drawRect(pos.x, pos.y, size.x, size.y);
 
-			g.setColor(Color.BLACK);
-			// g.drawString(s.name(), pos.x - 20, pos.y - 15);
+			g.setColor(Color.GRAY);
+			g.drawString(s.name(), pos.x - 20, pos.y - 15);
 		}
 
 
@@ -98,8 +106,8 @@ public class ModelImage {
 			positions.put(Id.of(a.name()), p);
 			g.setColor(Color.GRAY);
 			g.fillRect(p.x - 2, p.y - 2, 4, 4);
-			g.setColor(Color.BLACK);
-			// g.drawString(a.name(), p.x - 20, p.y - 15);
+			g.setColor(Color.GRAY);
+			g.drawString(a.name(), p.x - 20, p.y - 15);
 		}
 
 		for (var con : view.connectors()) {
@@ -107,8 +115,24 @@ public class ModelImage {
 			var to = positions.get(Id.of(con.to()));
 			if (from == null || to == null)
 				continue;
-			g.setColor(Color.LIGHT_GRAY);
-			g.drawLine(from.x, from.y, to.x, to.y);
+
+			int mx = (from.x + to.x) / 2;
+			int my = (from.y + to.y) / 2;
+
+			int px = to.x - from.x;
+			int py = to.y - from.y;
+
+			int cx = mx + (int) (0.5 * py);
+			int cy = my + (int) (0.5 * px);
+
+			var curve = new QuadCurve2D.Double(
+				from.x, from.y,
+				cx, cy,
+				to.x, to.y
+			);
+
+			g.setColor(Color.MAGENTA);
+			g.draw(curve);
 		}
 
 		g.dispose();
