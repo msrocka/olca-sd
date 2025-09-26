@@ -7,10 +7,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
 
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.util.Res;
@@ -20,7 +17,6 @@ import org.openlca.sd.xmile.view.XmiViewPoint;
 
 public class ModelImage {
 
-	private final Xmile xmile;
 	private final XmiView view;
 	private final BufferedImage image;
 	private final Graphics2D g;
@@ -28,7 +24,6 @@ public class ModelImage {
 	private final HashMap<Id, Point> positions = new HashMap<>();
 
 	private ModelImage(Xmile xmile, XmiView view, BufferedImage image) {
-		this.xmile = xmile;
 		this.view = view;
 		this.image = image;
 		this.g = image.createGraphics();
@@ -61,7 +56,7 @@ public class ModelImage {
 
 	public Res<BufferedImage> render() {
 
-		var font = new Font("Arial", Font.PLAIN, 12);
+		var font = new Font("Arial", Font.PLAIN, 8);
 		g.setFont(font);
 
 		for (var f : view.flows()) {
@@ -69,10 +64,10 @@ public class ModelImage {
 			var p = pointOf(f);
 			positions.put(Id.of(f.name()), p);
 			g.setColor(Color.BLUE);
-			g.fillOval(p.x, p.y - 5, 10, 10);
+			g.fillOval(p.x - 3, p.y - 3, 6, 6);
 
 			g.setColor(Color.GRAY);
-			g.drawString(f.name(), p.x, p.y - 10);
+			renderText(f.name(), new Point(p.x, (p.y - font.getSize() - 3)));
 
 			if (f.pts().size() < 2)
 				continue;
@@ -90,14 +85,13 @@ public class ModelImage {
 			if (s.width() == null || s.height() == null) {
 				pos = new Point(pos.x - size.x / 2, pos.y - size.y / 2);
 			}
-			positions.put(
-				Id.of(s.name()),
-				new Point(pos.x + size.x / 2, pos.y + size.y / 2));
+			var center = new Point(pos.x + size.x / 2, pos.y + size.y / 2);
+			positions.put(Id.of(s.name()), center);
 			g.setColor(Color.BLUE);
 			g.drawRect(pos.x, pos.y, size.x, size.y);
 
 			g.setColor(Color.GRAY);
-			g.drawString(s.name(), pos.x - 20, pos.y - 15);
+			renderText(s.name(), new Point(center.x, center.y + font.getSize()));
 		}
 
 
@@ -107,7 +101,7 @@ public class ModelImage {
 			g.setColor(Color.GRAY);
 			g.fillRect(p.x - 2, p.y - 2, 4, 4);
 			g.setColor(Color.GRAY);
-			g.drawString(a.name(), p.x - 20, p.y - 15);
+			renderText(a.name(), new Point(p.x, p.y - font.getSize()));
 		}
 
 		for (var con : view.connectors()) {
@@ -144,10 +138,17 @@ public class ModelImage {
 		return new Point((int) Math.round(p.x()), (int) Math.round(p.y()));
 	}
 
-	public static void main(String[] args) throws Exception {
-		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
-		var image = ModelImage.createFrom(xmile).orElseThrow();
-		ImageIO.write(image, "PNG", new File("target/model.png"));
+	private void renderText(String label, Point center) {
+		var lines = label.strip().split("\\\\n");
+		var ms = g.getFontMetrics();
+		int height = ms.getHeight() * lines.length;
+		int y = center.y - (1 + height / 2);
+		for (var line : lines) {
+			int width = ms.stringWidth(line);
+			int x = center.x - (1 + width / 2);
+			g.drawString(line, x, y);
+			y += ms.getHeight() + 1;
+		}
 	}
 
 }
