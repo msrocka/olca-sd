@@ -11,8 +11,8 @@ import org.openlca.sd.eqn.Var.Stock;
 import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.func.Mul;
 import org.openlca.sd.eqn.func.Sub;
-import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.Xmile;
+import org.openlca.util.Res;
 
 public class Simulator {
 

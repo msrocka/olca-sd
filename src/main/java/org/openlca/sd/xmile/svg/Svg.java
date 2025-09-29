@@ -2,9 +2,9 @@ package org.openlca.sd.xmile.svg;
 
 import java.io.StringWriter;
 
-import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.Xmile;
 import org.openlca.sd.xmile.view.XmiView;
+import org.openlca.util.Res;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

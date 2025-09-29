@@ -6,7 +6,7 @@ import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.Id;
-import org.openlca.sd.util.Res;
+import org.openlca.util.Res;
 
 public class Poisson implements Func {
 

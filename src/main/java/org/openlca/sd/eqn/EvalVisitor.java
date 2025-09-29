@@ -28,7 +28,7 @@ import org.openlca.sd.eqn.generated.EqnParser.ParensContext;
 import org.openlca.sd.eqn.generated.EqnParser.PowerContext;
 import org.openlca.sd.eqn.generated.EqnParser.UnarySignContext;
 import org.openlca.sd.eqn.generated.EqnParser.VarContext;
-import org.openlca.sd.util.Res;
+import org.openlca.util.Res;
 
 class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 

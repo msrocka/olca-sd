@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.Id;
-import org.openlca.sd.util.Res;
+import org.openlca.util.Res;
 
 public class Random implements Func {
 

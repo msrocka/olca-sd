@@ -10,10 +10,10 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import org.openlca.sd.eqn.Id;
-import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.Xmile;
 import org.openlca.sd.xmile.view.XmiView;
 import org.openlca.sd.xmile.view.XmiViewPoint;
+import org.openlca.util.Res;
 
 public class ModelImage {
 

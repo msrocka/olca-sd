@@ -8,7 +8,6 @@ import org.openlca.sd.eqn.Cell.EqnCell;
 import org.openlca.sd.eqn.Cell.LookupCell;
 import org.openlca.sd.eqn.Cell.NonNegativeCell;
 import org.openlca.sd.eqn.LookupFunc.Type;
-import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
 import org.openlca.sd.xmile.XmiEvaluatable;
@@ -16,6 +15,7 @@ import org.openlca.sd.xmile.XmiFlow;
 import org.openlca.sd.xmile.XmiGf;
 import org.openlca.sd.xmile.XmiStock;
 import org.openlca.sd.xmile.Xmile;
+import org.openlca.util.Res;
 
 public class Vars {
 

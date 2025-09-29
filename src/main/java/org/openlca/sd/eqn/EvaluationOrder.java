@@ -12,7 +12,7 @@ import org.openlca.sd.eqn.Cell.EqnCell;
 import org.openlca.sd.eqn.Cell.LookupCell;
 import org.openlca.sd.eqn.Cell.NonNegativeCell;
 import org.openlca.sd.eqn.Cell.TensorCell;
-import org.openlca.sd.util.Res;
+import org.openlca.util.Res;
 
 public class EvaluationOrder {
 

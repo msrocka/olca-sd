@@ -5,7 +5,7 @@ import java.util.List;
 import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.eqn.Id;
-import org.openlca.sd.util.Res;
+import org.openlca.util.Res;
 
 public class Eq implements Func {
 

@@ -1,7 +1,7 @@
 package org.openlca.sd.eqn;
 
-import org.openlca.sd.util.Res;
 import org.openlca.sd.xmile.Xmile;
+import org.openlca.util.Res;
 
 public class TimeSeq {
 

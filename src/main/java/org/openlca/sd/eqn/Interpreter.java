@@ -22,7 +22,7 @@ import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.ArrayAccessContext;
 import org.openlca.sd.eqn.generated.EqnParser.VarContext;
-import org.openlca.sd.util.Res;
+import org.openlca.util.Res;
 
 public class Interpreter {
 
