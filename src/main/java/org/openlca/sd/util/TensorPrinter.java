@@ -9,7 +9,7 @@ import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.sd.eqn.cells.Cell.TensorCell;
+import org.openlca.sd.eqn.cells.TensorCell;
 
 public class TensorPrinter {
 

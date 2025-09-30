@@ -10,8 +10,8 @@ import org.openlca.sd.eqn.Subscript.Identifier;
 import org.openlca.sd.eqn.Subscript.Index;
 import org.openlca.sd.eqn.Subscript.Wildcard;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.sd.eqn.cells.Cell.NumCell;
-import org.openlca.sd.eqn.cells.Cell.TensorCell;
+import org.openlca.sd.eqn.cells.NumCell;
+import org.openlca.sd.eqn.cells.TensorCell;
 
 public class Tensor {
 

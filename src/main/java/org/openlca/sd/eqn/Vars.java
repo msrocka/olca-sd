@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.openlca.sd.eqn.LookupFunc.Type;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.sd.eqn.cells.Cell.EqnCell;
-import org.openlca.sd.eqn.cells.Cell.LookupCell;
-import org.openlca.sd.eqn.cells.Cell.NonNegativeCell;
+import org.openlca.sd.eqn.cells.EqnCell;
+import org.openlca.sd.eqn.cells.LookupCell;
+import org.openlca.sd.eqn.cells.NonNegativeCell;
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
 import org.openlca.sd.xmile.XmiEvaluatable;

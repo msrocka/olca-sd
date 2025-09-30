@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.sd.eqn.cells.Cell.TensorCell;
+import org.openlca.sd.eqn.cells.TensorCell;
 import org.openlca.util.Res;
 
 class Fn {

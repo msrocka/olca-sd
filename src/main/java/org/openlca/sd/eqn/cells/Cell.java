@@ -1,7 +1,6 @@
 package org.openlca.sd.eqn.cells;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.LookupFunc;
@@ -9,7 +8,8 @@ import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
 
 /// The possible types of a tensor cell entry.
-public sealed interface Cell {
+public sealed interface Cell
+	permits EmptyCell, TensorCell, NumCell, BoolCell, EqnCell, LookupCell, TensorEqnCell, NonNegativeCell {
 
 	static Cell of(Tensor tensor) {
 		return tensor != null
@@ -77,7 +77,7 @@ public sealed interface Cell {
 	}
 
 	default double asNum() {
-		return asNumCell().value;
+		return asNumCell().value();
 	}
 
 	default BoolCell asBoolCell() {
@@ -87,7 +87,7 @@ public sealed interface Cell {
 	}
 
 	default boolean asBool() {
-		return asBoolCell().value;
+		return asBoolCell().value();
 	}
 
 	default EqnCell asEqnCell() {
@@ -96,95 +96,5 @@ public sealed interface Cell {
 		throw new IllegalStateException("is not a EqnCell");
 	}
 
-	record EmptyCell() implements Cell {
-		private static final EmptyCell _instance = new EmptyCell();
 
-		private static EmptyCell get() {
-			return _instance;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			return other == this
-				|| other instanceof Cell cell && cell.isEmpty();
-		}
-
-		@Override
-		public String toString() {
-			return "{}";
-		}
-	}
-
-	record TensorCell(Tensor value) implements Cell {
-
-		@Override
-		public String toString() {
-			if (value == null)
-				return "tensor{}";
-			var dims = value.dimensions()
-				.stream()
-				.map(d -> d.name().label())
-				.collect(Collectors.joining(" × "));
-			return "tensor{" + dims + "}";
-		}
-
-	}
-
-	record NumCell(double value) implements Cell {
-
-		@Override
-		public String toString() {
-			return "{" + value + "}";
-		}
-	}
-
-	record BoolCell(boolean value) implements Cell {
-
-		@Override
-		public String toString() {
-			return "{" + value + "}";
-		}
-	}
-
-	record EqnCell(String value) implements Cell {
-
-		@Override
-		public String toString() {
-			return "{'" + value + "'}";
-		}
-	}
-
-	record LookupCell(
-		String eqn, LookupFunc func, List<Subscript> subscripts
-	) implements Cell {
-
-		@Override
-		public String toString() {
-			return "lookup{'" + eqn + "'}";
-		}
-	}
-
-	record TensorEqnCell(Tensor tensor, String eqn) implements Cell {
-
-		@Override
-		public String toString() {
-			var dims = tensor.dimensions()
-				.stream()
-				.map(d -> d.name().label())
-				.collect(Collectors.joining(" × "));
-			return "tensorEqn{" + dims + ",'" + eqn + "'}";
-		}
-
-	}
-
-	record NonNegativeCell(Cell value) implements Cell {
-
-		@Override
-		public String toString() {
-			return value == null
-				? "nonNeg{}"
-				: "nonNeg{" + value + "}";
-		}
-
-	}
 }
