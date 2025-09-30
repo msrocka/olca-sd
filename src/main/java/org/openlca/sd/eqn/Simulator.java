@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import org.openlca.sd.eqn.Var.Aux;
 import org.openlca.sd.eqn.Var.Stock;
+import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.func.Mul;
 import org.openlca.sd.eqn.func.Sub;

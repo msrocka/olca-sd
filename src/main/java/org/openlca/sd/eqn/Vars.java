@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openlca.sd.eqn.Cell.EqnCell;
-import org.openlca.sd.eqn.Cell.LookupCell;
-import org.openlca.sd.eqn.Cell.NonNegativeCell;
 import org.openlca.sd.eqn.LookupFunc.Type;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.EqnCell;
+import org.openlca.sd.eqn.cells.Cell.LookupCell;
+import org.openlca.sd.eqn.cells.Cell.NonNegativeCell;
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
 import org.openlca.sd.xmile.XmiEvaluatable;

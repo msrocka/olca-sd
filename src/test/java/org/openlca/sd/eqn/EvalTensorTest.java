@@ -1,8 +1,9 @@
 package org.openlca.sd.eqn;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.openlca.sd.eqn.cells.Cell;
 
 public class EvalTensorTest {
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.openlca.sd.eqn.cells.Cell;
+
 public sealed interface Var {
 
 	Id name();

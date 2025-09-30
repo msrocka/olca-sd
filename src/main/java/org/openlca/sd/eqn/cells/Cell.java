@@ -1,7 +1,12 @@
-package org.openlca.sd.eqn;
+package org.openlca.sd.eqn.cells;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.openlca.sd.eqn.Id;
+import org.openlca.sd.eqn.LookupFunc;
+import org.openlca.sd.eqn.Subscript;
+import org.openlca.sd.eqn.Tensor;
 
 /// The possible types of a tensor cell entry.
 public sealed interface Cell {
@@ -38,6 +43,8 @@ public sealed interface Cell {
 			case LookupCell(String eqn, LookupFunc func, List<Subscript> ignore) ->
 				Id.isNil(eqn) || func == null;
 			case NonNegativeCell(Cell value) -> value == null;
+			case TensorEqnCell(Tensor tensor, String eqn) ->
+				tensor == null || Id.isNil(eqn);
 		};
 	}
 
@@ -120,6 +127,7 @@ public sealed interface Cell {
 				.collect(Collectors.joining(" × "));
 			return "tensor{" + dims + "}";
 		}
+
 	}
 
 	record NumCell(double value) implements Cell {
@@ -154,6 +162,19 @@ public sealed interface Cell {
 		public String toString() {
 			return "lookup{'" + eqn + "'}";
 		}
+	}
+
+	record TensorEqnCell(Tensor tensor, String eqn) implements Cell {
+
+		@Override
+		public String toString() {
+			var dims = tensor.dimensions()
+				.stream()
+				.map(d -> d.name().label())
+				.collect(Collectors.joining(" × "));
+			return "tensorEqn{" + dims + ",'" + eqn + "'}";
+		}
+
 	}
 
 	record NonNegativeCell(Cell value) implements Cell {

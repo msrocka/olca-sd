@@ -9,10 +9,10 @@ import org.openlca.sd.xmile.Xmile;
 public class SimulatorExample {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/water.stmx"));
+		var xmile = Xmile.readFrom(new File("examples/testing.stmx"));
 		var sim = Simulator.of(xmile).orElseThrow();
 
-		var stock = Id.of("water in soil");
+		var stock = Id.of("Population");
 		sim.forEach(res -> {
 			if (res.hasError()) {
 				System.out.println("error: " + res.error());

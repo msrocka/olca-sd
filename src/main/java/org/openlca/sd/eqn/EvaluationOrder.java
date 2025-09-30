@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.openlca.sd.eqn.Cell.EqnCell;
-import org.openlca.sd.eqn.Cell.LookupCell;
-import org.openlca.sd.eqn.Cell.NonNegativeCell;
-import org.openlca.sd.eqn.Cell.TensorCell;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.EqnCell;
+import org.openlca.sd.eqn.cells.Cell.LookupCell;
+import org.openlca.sd.eqn.cells.Cell.NonNegativeCell;
+import org.openlca.sd.eqn.cells.Cell.TensorCell;
 import org.openlca.util.Res;
 
 public class EvaluationOrder {

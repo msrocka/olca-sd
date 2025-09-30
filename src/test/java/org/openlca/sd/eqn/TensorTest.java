@@ -1,11 +1,12 @@
 package org.openlca.sd.eqn;
 
 import static org.junit.Assert.*;
-import static org.openlca.sd.eqn.Subscript.of;
+import static org.openlca.sd.eqn.Subscript.*;
 
 import java.util.List;
 
 import org.junit.Test;
+import org.openlca.sd.eqn.cells.Cell;
 
 public class TensorTest {
 

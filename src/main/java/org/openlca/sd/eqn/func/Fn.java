@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.openlca.sd.eqn.Cell;
-import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.TensorCell;
 import org.openlca.util.Res;
 
 class Fn {

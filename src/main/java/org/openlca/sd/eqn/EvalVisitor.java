@@ -3,6 +3,7 @@ package org.openlca.sd.eqn;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.func.Div;
 import org.openlca.sd.eqn.func.Eq;

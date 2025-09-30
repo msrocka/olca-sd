@@ -1,11 +1,11 @@
 package org.openlca.sd;
 
-import static org.openlca.sd.eqn.Subscript.of;
+import static org.openlca.sd.eqn.Subscript.*;
 
-import org.openlca.sd.eqn.Cell;
 import org.openlca.sd.eqn.Dimension;
 import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.util.TensorPrinter;
 

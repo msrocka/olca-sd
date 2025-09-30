@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.func.Abs;
 import org.openlca.sd.eqn.func.ArcCos;
 import org.openlca.sd.eqn.func.ArcSin;

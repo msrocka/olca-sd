@@ -9,13 +9,15 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.openlca.sd.eqn.Cell.BoolCell;
-import org.openlca.sd.eqn.Cell.EmptyCell;
-import org.openlca.sd.eqn.Cell.EqnCell;
-import org.openlca.sd.eqn.Cell.LookupCell;
-import org.openlca.sd.eqn.Cell.NonNegativeCell;
-import org.openlca.sd.eqn.Cell.NumCell;
-import org.openlca.sd.eqn.Cell.TensorCell;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.BoolCell;
+import org.openlca.sd.eqn.cells.Cell.EmptyCell;
+import org.openlca.sd.eqn.cells.Cell.EqnCell;
+import org.openlca.sd.eqn.cells.Cell.LookupCell;
+import org.openlca.sd.eqn.cells.Cell.NonNegativeCell;
+import org.openlca.sd.eqn.cells.Cell.NumCell;
+import org.openlca.sd.eqn.cells.Cell.TensorCell;
+import org.openlca.sd.eqn.cells.Cell.TensorEqnCell;
 import org.openlca.sd.eqn.func.Abs;
 import org.openlca.sd.eqn.generated.EqnBaseListener;
 import org.openlca.sd.eqn.generated.EqnLexer;
@@ -49,6 +51,26 @@ public class Interpreter {
 			case EqnCell(String eqn) -> eval(eqn);
 			case NumCell num -> Res.of(num);
 			case TensorCell(Tensor t) -> eval(t);
+
+			case TensorEqnCell(Tensor t, String eqn) -> {
+				if (t == null)
+					yield Res.error("no tensor provided");
+				var res = eval(eqn);
+				if (res.hasError())
+					yield res;
+				var val = res.value();
+				var result = t.copy();
+				if (val instanceof TensorCell(Tensor r)) {
+					for (int i = 0; i < Math.min(t.size(), r.size()); i++) {
+						result.set(i, r.get(i));
+					}
+				} else {
+					for (int i = 0; i < result.size(); i++) {
+						result.set(i, val);
+					}
+				}
+				yield Res.of(Cell.of(result));
+			}
 
 			case LookupCell(String eqn, LookupFunc func, List<Subscript> subs) -> {
 				var res = eval(eqn);

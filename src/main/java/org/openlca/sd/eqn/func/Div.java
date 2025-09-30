@@ -3,10 +3,10 @@ package org.openlca.sd.eqn.func;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openlca.sd.eqn.Cell;
-import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.TensorCell;
 import org.openlca.util.Res;
 
 public class Div implements Func {

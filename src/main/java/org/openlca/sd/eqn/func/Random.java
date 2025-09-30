@@ -3,9 +3,9 @@ package org.openlca.sd.eqn.func;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.openlca.sd.eqn.Cell;
-import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.Id;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.NumCell;
 import org.openlca.util.Res;
 
 public class Random implements Func {

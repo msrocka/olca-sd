@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import org.openlca.sd.eqn.Cell.NumCell;
-import org.openlca.sd.eqn.Cell.TensorCell;
 import org.openlca.sd.eqn.Subscript.Empty;
 import org.openlca.sd.eqn.Subscript.Identifier;
 import org.openlca.sd.eqn.Subscript.Index;
 import org.openlca.sd.eqn.Subscript.Wildcard;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.NumCell;
+import org.openlca.sd.eqn.cells.Cell.TensorCell;
 
 public class Tensor {
 

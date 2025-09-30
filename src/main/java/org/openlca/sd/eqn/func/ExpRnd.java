@@ -3,9 +3,9 @@ package org.openlca.sd.eqn.func;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.ExponentialDistribution;
-import org.openlca.sd.eqn.Cell;
-import org.openlca.sd.eqn.Cell.NumCell;
 import org.openlca.sd.eqn.Id;
+import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.Cell.NumCell;
 import org.openlca.util.Res;
 
 public class ExpRnd implements Func {

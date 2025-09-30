@@ -3,6 +3,8 @@ package org.openlca.sd.eqn;
 import java.util.Map;
 import java.util.Optional;
 
+import org.openlca.sd.eqn.cells.Cell;
+
 public record SimulationState(
 	int iteration, double time, Map<Id, Var> vars
 ) {
