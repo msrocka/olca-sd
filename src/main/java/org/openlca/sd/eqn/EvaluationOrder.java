@@ -70,7 +70,6 @@ public class EvaluationOrder {
 
 			case NonNegativeCell(Cell inner) -> fillDeps(inner, ids);
 
-
 			case BoolCell(boolean ignore) -> {
 			}
 			case NumCell(double ignore) -> {
