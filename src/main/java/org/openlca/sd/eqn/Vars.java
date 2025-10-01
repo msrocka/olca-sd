@@ -3,12 +3,16 @@ package org.openlca.sd.eqn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.openlca.sd.eqn.LookupFunc.Type;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.EqnCell;
+import org.openlca.sd.eqn.cells.LookupCell;
 import org.openlca.sd.eqn.cells.LookupEqnCell;
 import org.openlca.sd.eqn.cells.NonNegativeCell;
+import org.openlca.sd.eqn.cells.TensorCell;
+import org.openlca.sd.eqn.cells.TensorEqnCell;
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
 import org.openlca.sd.xmile.XmiEvaluatable;
@@ -94,39 +98,85 @@ public class Vars {
 			if (v == null)
 				return Res.error("variable is null");
 
-			var eqnCell = eqnCellOf(v.eqn(), v.gf(), v.isNonNegative(), null);
-			if (v.dimensions().isEmpty() || eqnCell.hasError())
-				return eqnCell;
+			var eqnRes = cellOf(v.gf(), v.eqn());
+			if (eqnRes.hasError()) {
+				return eqnRes.wrapError("Failed to create cell for variable: "
+					+ v.name());
+			}
 
-			var dims = dimsOf(v);
+			var tensRes = tensorOf(v);
+			if (tensRes.hasError()) {
+				return tensRes.wrapError("Failed to create tensor for variable: "
+					+ v.name());
+			}
+
+			var eqn = eqnRes.value().orElse(null);
+			var tensor = tensRes.value().orElse(null);
+
+			if (eqn == null && tensor == null) {
+				return Res.error("No equation or tensor defined for variable: "
+					+ v.name());
+			}
+
+			Cell cell;
+			if (eqn != null && tensor != null) {
+				cell = new TensorEqnCell(eqn, tensor);
+			} else if (tensor != null) {
+				cell = new TensorCell(tensor);
+			} else {
+				cell = eqn;
+			}
+
+			return v.isNonNegative()
+				? Res.of(new NonNegativeCell(cell))
+				: Res.of(cell);
+		}
+
+		private Res<Optional<Cell>> cellOf(XmiGf xmiGf, String eqn) {
+			if (xmiGf != null) {
+				var gf = funcOf(xmiGf);
+				if (gf.hasError())
+					return gf.castError();
+				var cell = Id.isNil(eqn)
+					? new LookupCell(gf.value())
+					: new LookupEqnCell(eqn, gf.value());
+				return Res.of(Optional.of(cell));
+			}
+			return Id.isNil(eqn)
+				? Res.of(Optional.empty())
+				: Res.of(Optional.of(new EqnCell(eqn)));
+		}
+
+		private Res<Optional<Tensor>> tensorOf(XmiEvaluatable x) {
+			if (x.dimensions().isEmpty())
+				return Res.of(Optional.empty());
+			var dims = dimsOf(x);
 			if (dims.hasError())
-				return dims.wrapError("could not read dimensions of: " + v);
+				return dims.castError();
 
-			// create the array and initialize it with the outer equation by default
-			var array = Tensor.of(dims.value());
-			array.setAll(eqnCell.value());
-			if (v.elements().isEmpty())
-				return Res.of(Cell.of(array));
+			var tensor = Tensor.of(dims.value());
+			if (x.elements().isEmpty())
+				return Res.of(Optional.of(tensor));
 
-			for (var elem : v.elements()) {
+			for (var elem : x.elements()) {
 				var subs = Subscript.parseAllFrom(elem.subscript());
 				if (subs.isEmpty())
 					return Res.error(
-						"array elements defined without subscripts in: " + v.name());
+						"array elements defined without subscripts in: " + x.name());
+				var cellRes = cellOf(elem.gf(), elem.eqn());
+				if (cellRes.hasError())
+					return Res.error("Failed to parse element '"
+						+ elem.subscript() + "' in var " + x.name());
 
-				var cell = eqnCellOf(
-					Id.isNil(elem.eqn()) ? v.eqn() : elem.eqn(),
-					elem.gf(),
-					elem.isNonNegative() || v.isNonNegative(),
-					subs);
-				if (cell.hasError())
-					return cell.wrapError(
-						"invalid array element equation in: " + v.name());
-
-				array.set(subs, cell.value());
+				var elemCell = cellRes.value().orElse(null);
+				if (elemCell == null)
+					continue;
+				if (elem.isNonNegative()) {
+					elemCell = new NonNegativeCell(elemCell);
+				}
+				tensor.set(subs, elemCell);
 			}
-
-			return Res.of(Cell.of(array));
+			return Res.of(Optional.of(tensor));
 		}
 
 		private Res<List<Dimension>> dimsOf(XmiEvaluatable v) {
@@ -138,29 +188,6 @@ public class Vars {
 				dims.add(dim);
 			}
 			return Res.of(dims);
-		}
-
-		private Res<Cell> eqnCellOf(
-			String eqn, XmiGf gf, boolean isNonNegative, List<Subscript> subscripts
-		) {
-			if (Id.isNil(eqn))
-				return Res.of(Cell.empty());
-
-			LookupFunc func = null;
-			if (gf != null) {
-				var funcRes = funcOf(gf);
-				if (funcRes.hasError())
-					return funcRes.wrapError("invalid lookup function");
-				func = funcRes.value();
-			}
-
-			var cell = func != null
-				? new LookupEqnCell(eqn, func)
-				: new EqnCell(eqn);
-
-			return isNonNegative
-				? Res.of(new NonNegativeCell(cell))
-				: Res.of(cell);
 		}
 
 		private Res<LookupFunc> funcOf(XmiGf gf) {
