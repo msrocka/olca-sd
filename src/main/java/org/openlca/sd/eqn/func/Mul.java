@@ -25,6 +25,10 @@ public class Mul implements Func {
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withTwoArgs(args, (a, b) -> {
+			if (a.isEmpty())
+				return Res.of(b);
+			if (b.isEmpty())
+				return Res.of(a);
 
 			// multiplication of numbers
 			if (a.isNumCell() && b.isNumCell()) {

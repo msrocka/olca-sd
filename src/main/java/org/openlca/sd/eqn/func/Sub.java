@@ -25,6 +25,8 @@ public class Sub implements Func {
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withTwoArgs(args, (a, b) -> {
+			if (b.isEmpty())
+				return Res.of(a);
 
 			if (a.isNumCell() && b.isNumCell()) {
 				double result = a.asNum() - b.asNum();

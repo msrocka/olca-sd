@@ -18,6 +18,9 @@ public class Abs implements Func {
 	@Override
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withOneArg(args, arg -> {
+			if (arg.isEmpty())
+				return Res.of(arg);
+
 			if (arg.isNumCell()) {
 				double result = Math.abs(arg.asNum());
 				return Res.of(Cell.of(result));
