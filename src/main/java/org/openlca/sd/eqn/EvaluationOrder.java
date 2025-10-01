@@ -8,11 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openlca.sd.eqn.cells.BoolCell;
 import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.EmptyCell;
 import org.openlca.sd.eqn.cells.EqnCell;
+import org.openlca.sd.eqn.cells.LookupCell;
 import org.openlca.sd.eqn.cells.LookupEqnCell;
 import org.openlca.sd.eqn.cells.NonNegativeCell;
+import org.openlca.sd.eqn.cells.NumCell;
 import org.openlca.sd.eqn.cells.TensorCell;
+import org.openlca.sd.eqn.cells.TensorEqnCell;
 import org.openlca.util.Res;
 
 public class EvaluationOrder {
@@ -34,31 +39,45 @@ public class EvaluationOrder {
 	}
 
 	private static void fillDeps(Cell cell, Set<Id> ids) {
+		switch (cell) {
 
-		if (cell instanceof EqnCell(String eqn)) {
-			var vars = Interpreter.varsOf(eqn);
-			if (!vars.hasError()) {
-				ids.addAll(vars.value());
+			case EqnCell(String eqn) -> {
+				var vars = Interpreter.varsOf(eqn);
+				if (!vars.hasError()) {
+					ids.addAll(vars.value());
+				}
 			}
-			return;
-		}
 
-		if (cell instanceof NonNegativeCell(Cell inner)) {
-			fillDeps(inner, ids);
-			return;
-		}
-
-		if (cell instanceof LookupEqnCell(String eqn, LookupFunc ignored)) {
-			var vars = Interpreter.varsOf(eqn);
-			if (!vars.hasError()) {
-				ids.addAll(vars.value());
+			case LookupEqnCell(String eqn, LookupFunc ignored) -> {
+				var vars = Interpreter.varsOf(eqn);
+				if (!vars.hasError()) {
+					ids.addAll(vars.value());
+				}
 			}
-			return;
-		}
 
-		if (cell instanceof TensorCell(Tensor t)) {
-			for (int i = 0; i < t.size(); i++) {
-				fillDeps(t.get(i), ids);
+			case TensorCell(Tensor tensor) -> {
+				for (int i = 0; i < tensor.size(); i++) {
+					fillDeps(tensor.get(i), ids);
+				}
+			}
+
+			case TensorEqnCell(Cell eqn, Tensor tensor) -> {
+				fillDeps(eqn, ids);
+				for (int i = 0; i < tensor.size(); i++) {
+					fillDeps(tensor.get(i), ids);
+				}
+			}
+
+			case NonNegativeCell(Cell inner) -> fillDeps(inner, ids);
+
+
+			case BoolCell(boolean ignore) -> {
+			}
+			case NumCell(double ignore) -> {
+			}
+			case LookupCell(LookupFunc ignore) -> {
+			}
+			case EmptyCell() -> {
 			}
 		}
 	}
