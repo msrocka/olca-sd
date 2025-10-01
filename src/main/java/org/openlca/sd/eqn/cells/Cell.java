@@ -1,11 +1,7 @@
 package org.openlca.sd.eqn.cells;
 
-import java.util.List;
-
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Interpreter;
-import org.openlca.sd.eqn.LookupFunc;
-import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.util.Res;
 
@@ -22,6 +18,10 @@ public sealed interface Cell permits
 	NonNegativeCell {
 
 	Res<Cell> eval(Interpreter interpreter);
+
+	static Cell of(double num) {
+		return new NumCell(num);
+	}
 
 	static Cell of(Tensor tensor) {
 		return tensor != null
@@ -42,18 +42,7 @@ public sealed interface Cell permits
 	}
 
 	default boolean isEmpty() {
-		return switch (this) {
-			case EmptyCell ignored -> true;
-			case NumCell ignored -> false;
-			case BoolCell ignored -> false;
-			case TensorCell(Tensor tensor) -> tensor != null;
-			case EqnCell(String eqn) -> Id.isNil(eqn);
-			case LookupEqnCell(String eqn, LookupFunc func, List<Subscript> ignore) ->
-				Id.isNil(eqn) || func == null;
-			case NonNegativeCell(Cell value) -> value == null;
-			case TensorEqnCell(Tensor tensor, String eqn) ->
-				tensor == null || Id.isNil(eqn);
-		};
+		return this instanceof EmptyCell;
 	}
 
 	default boolean isTensorCell() {
@@ -78,14 +67,10 @@ public sealed interface Cell permits
 		throw new IllegalStateException("is not a TensorCell");
 	}
 
-	default NumCell asNumCell() {
-		if (this instanceof NumCell cell)
-			return cell;
-		throw new IllegalStateException("is not a NumCell");
-	}
-
 	default double asNum() {
-		return asNumCell().value();
+		if (!(this instanceof NumCell(double  num)))
+			throw new IllegalStateException("Not a numeric cell: " + this);
+		return num;
 	}
 
 	default BoolCell asBoolCell() {
@@ -96,11 +81,5 @@ public sealed interface Cell permits
 
 	default boolean asBool() {
 		return asBoolCell().value();
-	}
-
-	default EqnCell asEqnCell() {
-		if (this instanceof EqnCell cell)
-			return cell;
-		throw new IllegalStateException("is not a EqnCell");
 	}
 }

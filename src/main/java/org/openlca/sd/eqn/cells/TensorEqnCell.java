@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.openlca.sd.Tensors;
 import org.openlca.sd.eqn.Interpreter;
+import org.openlca.sd.eqn.LookupFunc;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.util.Res;
 
@@ -25,9 +26,11 @@ public record TensorEqnCell(Cell eqn, Tensor tensor) implements Cell {
 		if (val instanceof TensorCell(Tensor t))
 			return castTensor(t);
 
+		if (!(val instanceof NumCell(double num)))
+			return Res.error(
+				"Equation does not evaluate to a tensor or number: " + eqn);
 
-
-		return null;
+		return apply(num, tensor);
 	}
 
 	private Res<Cell> castTensor(Tensor result) {
@@ -35,6 +38,31 @@ public record TensorEqnCell(Cell eqn, Tensor tensor) implements Cell {
 			? Res.of(new TensorCell(result))
 			: Res.error("Equation result and tensor definition have " +
 			"different dimensions; cast not supported");
+	}
+
+	private Res<Cell> apply(double value, Tensor tensor) {
+		var t = Tensor.of(tensor.dimensions());
+		for (int i = 0; i < tensor().size(); i++) {
+			var entry = apply(value, tensor.get(i));
+			if (entry.hasError())
+				return entry;
+			t.set(i, entry.value());
+		}
+		return Res.of(new TensorCell(t));
+	}
+
+	private Res<Cell> apply(double value, Cell cell) {
+		return switch (cell) {
+			case LookupCell(LookupFunc func) -> apply(value, func);
+			case LookupEqnCell(String ignore, LookupFunc func) -> apply(value, func);
+			case TensorCell(Tensor t) -> apply(value, t);
+			case null, default -> Res.of(new NumCell(value));
+		};
+	}
+
+	private Res<Cell> apply(double value, LookupFunc func) {
+		double y = func.get(value);
+		return Res.of(new NumCell(y));
 	}
 
 	@Override

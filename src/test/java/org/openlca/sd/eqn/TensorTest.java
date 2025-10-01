@@ -1,7 +1,7 @@
 package org.openlca.sd.eqn;
 
 import static org.junit.Assert.*;
-import static org.openlca.sd.eqn.Subscript.*;
+import static org.openlca.sd.eqn.Subscript.of;
 
 import java.util.List;
 
@@ -22,11 +22,11 @@ public class TensorTest {
 		assertEquals(t, t.get(of("dim")).asTensorCell().value());
 
 		for (var sub : List.of(of("a"), of("b"), of("c"))) {
-			assertEquals(42, t.get(sub).asNumCell().value(), 1e-16);
+			assertEquals(42, t.get(sub).asNum(), 1e-16);
 		}
 
 		t.set(Subscript.of("b"), Cell.of(21));
-		assertEquals(21, t.get(of("b")).asNumCell().value(), 1e-16);
+		assertEquals(21, t.get(of("b")).asNum(), 1e-16);
 	}
 
 

@@ -155,7 +155,7 @@ public class Vars {
 			}
 
 			var cell = func != null
-				? new LookupEqnCell(eqn, func, subscripts)
+				? new LookupEqnCell(eqn, func)
 				: new EqnCell(eqn);
 
 			return isNonNegative

@@ -1,6 +1,6 @@
 package org.openlca.sd.eqn;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openlca.sd.eqn.cells.Cell;
@@ -15,7 +15,7 @@ public class EvalTensorTest {
 		t.setAll(Cell.of("1"));
 
 		var interpreter = Interpreter.of(new EvalContext());
-		var res = interpreter.eval(Cell.of(t)).orElseThrow();
+		var res = Cell.of(t).eval(interpreter).orElseThrow();
 
 		var resT = res.asTensorCell().value();
 		for (var x : dimX.elements()) {

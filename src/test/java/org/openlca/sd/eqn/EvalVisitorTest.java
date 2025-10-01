@@ -349,7 +349,7 @@ public class EvalVisitorTest {
 		var shadowCtx = new EvalContext()
 			.bind("x", 10)
 			.bind("x", 20); // override the previous value
-		assertEquals(20.0, eval("x", shadowCtx).asNumCell().value(), 1e-10);
+		assertEquals(20.0, eval("x", shadowCtx).asNum(), 1e-10);
 
 		// variables with underscores and numbers
 		var namingCtx = new EvalContext()
@@ -635,7 +635,7 @@ public class EvalVisitorTest {
 	}
 
 	private double ev(String eqn) {
-		return eval(eqn, new EvalContext()).asNumCell().value();
+		return eval(eqn, new EvalContext()).asNum();
 	}
 
 	private boolean evb(String eqn) {

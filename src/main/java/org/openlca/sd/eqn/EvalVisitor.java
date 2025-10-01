@@ -116,8 +116,8 @@ class EvalVisitor extends EqnBaseVisitor<Res<Cell>> {
 			return Res.error("operator not supported: "
 				+ cellA + ctx.op.getText() + cellB);
 
-		double x = cellA.asNumCell().value();
-		double y = cellB.asNumCell().value();
+		double x = cellA.asNum();
+		double y = cellB.asNum();
 		return switch (ctx.op.getType()) {
 			case EqnParser.GE -> Res.of(Cell.of(x >= y));
 			case EqnParser.GT -> Res.of(Cell.of(x > y));

@@ -9,7 +9,7 @@ import org.openlca.sd.xmile.Xmile;
 public class SimulatorExample {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/testing.stmx"));
+		var xmile = Xmile.readFrom(new File("examples/simple.stmx"));
 		var sim = Simulator.of(xmile).orElseThrow();
 
 		var stock = Id.of("Population");
