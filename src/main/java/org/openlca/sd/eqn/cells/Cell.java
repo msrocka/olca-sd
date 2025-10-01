@@ -3,22 +3,30 @@ package org.openlca.sd.eqn.cells;
 import java.util.List;
 
 import org.openlca.sd.eqn.Id;
+import org.openlca.sd.eqn.Interpreter;
 import org.openlca.sd.eqn.LookupFunc;
 import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.util.Res;
 
 /// The possible types of a tensor cell entry.
-public sealed interface Cell
-	permits EmptyCell, TensorCell, NumCell, BoolCell, EqnCell, LookupCell, TensorEqnCell, NonNegativeCell {
+public sealed interface Cell permits
+	EmptyCell,
+	TensorCell,
+	NumCell,
+	BoolCell,
+	EqnCell,
+	LookupCell,
+	LookupEqnCell,
+	TensorEqnCell,
+	NonNegativeCell {
+
+	Res<Cell> eval(Interpreter interpreter);
 
 	static Cell of(Tensor tensor) {
 		return tensor != null
 			? new TensorCell(tensor)
 			: empty();
-	}
-
-	static Cell of(double number) {
-		return new NumCell(number);
 	}
 
 	static Cell of(boolean b) {
@@ -40,7 +48,7 @@ public sealed interface Cell
 			case BoolCell ignored -> false;
 			case TensorCell(Tensor tensor) -> tensor != null;
 			case EqnCell(String eqn) -> Id.isNil(eqn);
-			case LookupCell(String eqn, LookupFunc func, List<Subscript> ignore) ->
+			case LookupEqnCell(String eqn, LookupFunc func, List<Subscript> ignore) ->
 				Id.isNil(eqn) || func == null;
 			case NonNegativeCell(Cell value) -> value == null;
 			case TensorEqnCell(Tensor tensor, String eqn) ->
@@ -95,6 +103,4 @@ public sealed interface Cell
 			return cell;
 		throw new IllegalStateException("is not a EqnCell");
 	}
-
-
 }

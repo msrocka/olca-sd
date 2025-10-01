@@ -9,16 +9,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.openlca.sd.eqn.cells.BoolCell;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.sd.eqn.cells.EmptyCell;
-import org.openlca.sd.eqn.cells.EqnCell;
-import org.openlca.sd.eqn.cells.LookupCell;
-import org.openlca.sd.eqn.cells.NonNegativeCell;
-import org.openlca.sd.eqn.cells.NumCell;
-import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.sd.eqn.cells.TensorEqnCell;
-import org.openlca.sd.eqn.func.Abs;
 import org.openlca.sd.eqn.generated.EqnBaseListener;
 import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
@@ -42,73 +33,6 @@ public class Interpreter {
 
 	public EvalContext context() {
 		return ctx;
-	}
-
-	public Res<Cell> eval(Cell cell) {
-		return switch (cell) {
-			case BoolCell bool -> Res.of(bool);
-			case EmptyCell empty -> Res.of(empty);
-			case EqnCell(String eqn) -> eval(eqn);
-			case NumCell num -> Res.of(num);
-			case TensorCell(Tensor t) -> eval(t);
-
-			case TensorEqnCell(Tensor t, String eqn) -> {
-				if (t == null)
-					yield Res.error("no tensor provided");
-				var res = eval(eqn);
-				if (res.hasError())
-					yield res;
-				var val = res.value();
-				var result = t.copy();
-				if (val instanceof TensorCell(Tensor r)) {
-					for (int i = 0; i < Math.min(t.size(), r.size()); i++) {
-						result.set(i, r.get(i));
-					}
-				} else {
-					for (int i = 0; i < result.size(); i++) {
-						result.set(i, val);
-					}
-				}
-				yield Res.of(Cell.of(result));
-			}
-
-			case LookupCell(String eqn, LookupFunc func, List<Subscript> subs) -> {
-				var res = eval(eqn);
-				if (res.hasError())
-					yield res;
-				var val = res.value();
-				if (val instanceof TensorCell(Tensor t)	&& subs != null	&& !subs.isEmpty()) {
-					val = t.get(subs);
-				}
-				if (!(val instanceof NumCell(double  x))) {
-					yield Res.error("equation of lookup function " +
-						"does not evaluate to a number");
-				}
-				yield Res.of(Cell.of(func.get(x)));
-			}
-
-			case NonNegativeCell(Cell sub) -> {
-				var res = eval(sub);
-				yield res.hasError()
-					? res
-					: new Abs().apply(List.of(res.value()));
-			}
-
-			case null -> Res.error("no cell provided");
-		};
-	}
-
-	private Res<Cell> eval(Tensor tensor) {
-		if (tensor == null)
-			return Res.error("no tensor provided");
-		var res = Tensor.of(tensor.dimensions());
-		for (int i = 0; i < tensor.size(); i++) {
-			var cell = eval(tensor.get(i));
-			if (cell.hasError())
-				return cell;
-			res.set(i, cell.value());
-		}
-		return Res.of(Cell.of(res));
 	}
 
 	public Res<Cell> eval(String expression) {

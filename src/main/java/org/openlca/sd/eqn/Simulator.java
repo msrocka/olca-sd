@@ -83,7 +83,7 @@ public class Simulator {
 		var stocks = new ArrayList<Stock>();
 		var evalVars = new ArrayList<Var>();
 		for (var v : vars) {
-			var res = interpreter.eval(v.def());
+			var res = v.def().eval(interpreter);
 			if (res.hasError()) {
 				fn.accept(res.wrapError("initialization of variable '"
 					+ v.name().label() + "' failed"));
@@ -107,7 +107,7 @@ public class Simulator {
 
 			// evaluate the variables
 			for (var v : evalVars) {
-				var res = interpreter.eval(v.def());
+				var res = v.def().eval(interpreter);
 				if (res.hasError()) {
 					fn.accept(res.wrapError("evaluation error at t=" + time.current()));
 					return;

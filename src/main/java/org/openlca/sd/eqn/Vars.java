@@ -7,7 +7,7 @@ import java.util.List;
 import org.openlca.sd.eqn.LookupFunc.Type;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.EqnCell;
-import org.openlca.sd.eqn.cells.LookupCell;
+import org.openlca.sd.eqn.cells.LookupEqnCell;
 import org.openlca.sd.eqn.cells.NonNegativeCell;
 import org.openlca.sd.xmile.XmiAux;
 import org.openlca.sd.xmile.XmiDim;
@@ -155,7 +155,7 @@ public class Vars {
 			}
 
 			var cell = func != null
-				? new LookupCell(eqn, func, subscripts)
+				? new LookupEqnCell(eqn, func, subscripts)
 				: new EqnCell(eqn);
 
 			return isNonNegative

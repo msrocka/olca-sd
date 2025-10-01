@@ -1,15 +1,32 @@
 package org.openlca.sd.eqn.cells;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.openlca.sd.eqn.Interpreter;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.util.Res;
 
 public record TensorCell(Tensor value) implements Cell {
 
+	public TensorCell {
+		Objects.requireNonNull(value);
+	}
+
+	@Override
+	public Res<Cell> eval(Interpreter interpreter) {
+		var t = Tensor.of(value.dimensions());
+		for (int i = 0; i < value.size(); i++) {
+			var res = value.get(i).eval(interpreter);
+			if (res.hasError())
+				return res;
+			t.set(i, res.value());
+		}
+		return Res.of(new TensorCell(t));
+	}
+
 	@Override
 	public String toString() {
-		if (value == null)
-			return "tensor{}";
 		var dims = value.dimensions()
 			.stream()
 			.map(d -> d.name().label())

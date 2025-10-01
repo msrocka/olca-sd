@@ -1,16 +1,28 @@
 package org.openlca.sd.eqn.cells;
 
-import java.util.List;
+import java.util.Objects;
 
+import org.openlca.sd.eqn.Interpreter;
 import org.openlca.sd.eqn.LookupFunc;
-import org.openlca.sd.eqn.Subscript;
+import org.openlca.util.Res;
 
-public record LookupCell(
-	String eqn, LookupFunc func, List<Subscript> subscripts
-) implements Cell {
+/// A cell that just contains a lookup function. Such a cell needs an outer
+/// context that provides the input value of the lookup function. For example,
+/// the elements of a tensor could contain a lookup function and an outer
+/// equation provides the values passed into the respective elements.
+public record LookupCell(LookupFunc func) implements Cell {
+
+	public LookupCell {
+		Objects.requireNonNull(func);
+	}
+
+	@Override
+	public Res<Cell> eval(Interpreter interpreter) {
+		return Res.of(this);
+	}
 
 	@Override
 	public String toString() {
-		return "lookup{'" + eqn + "'}";
+		return "Lookup{f(x) -> y}";
 	}
 }
