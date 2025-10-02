@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.openlca.sd.eqn.Interpreter;
-import org.openlca.sd.eqn.func.Abs;
+import org.openlca.sd.eqn.func.NonNeg;
 import org.openlca.util.Res;
 
 public record NonNegativeCell(Cell value) implements Cell {
@@ -18,7 +18,7 @@ public record NonNegativeCell(Cell value) implements Cell {
 		var res = value.eval(interpreter);
 		return res.hasError()
 			? res
-			: new Abs().apply(List.of(res.value()));
+			: new NonNeg().apply(List.of(res.value()));
 	}
 
 	@Override
