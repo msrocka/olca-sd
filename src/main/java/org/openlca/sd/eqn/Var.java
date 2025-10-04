@@ -14,6 +14,10 @@ public sealed interface Var {
 
 	List<Cell> values();
 
+	/// Creates a fresh copy of the variable. This will not copy
+	/// the values from the evaluation history.
+	Var freshCopy();
+
 	default void pushValue(Cell cell) {
 		values().add(cell);
 	}
@@ -36,6 +40,10 @@ public sealed interface Var {
 			this(name, cell, new ArrayList<>());
 		}
 
+		@Override
+		public Aux freshCopy() {
+			return new Aux(name, def);
+		}
 	}
 
 	record Rate(Id name, Cell def, List<Cell> values) implements Var {
@@ -50,6 +58,10 @@ public sealed interface Var {
 			this(name, cell, new ArrayList<>());
 		}
 
+		@Override
+		public Rate freshCopy() {
+			return new Rate(name, def);
+		}
 	}
 
 	record Stock(
@@ -68,5 +80,10 @@ public sealed interface Var {
 			this(name, cell, inFlows, outFlows, new ArrayList<>());
 		}
 
+		@Override
+		public Var freshCopy() {
+			return new Stock(
+				name, def, new ArrayList<>(inFlows), new ArrayList<>(outFlows));
+		}
 	}
 }

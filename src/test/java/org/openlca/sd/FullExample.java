@@ -13,7 +13,7 @@ public class FullExample {
 		var sim = Simulator.of(xmile).orElseThrow();
 
 		var prnt = new TensorPrinter();
-		var interpreter = sim.interpreter();
+		var interpreter = sim.iterator().interpreter();
 
 		var res = interpreter.eval("\"collection_for_recycling/biorecovery\"").orElseThrow();
 		prnt.print(res);

@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.openlca.sd.eqn.cells.Cell;
 
 public record SimulationState(
-	int iteration, double time, Map<Id, Var> vars
+	int iteration,
+	double time,
+
+	Map<Id, Var> vars
 ) {
 
 	public Optional<Cell> valueOf(Id id) {
