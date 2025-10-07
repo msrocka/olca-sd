@@ -132,20 +132,9 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 		}
 
 		private Res<SimulationState> nextState() {
-			iteration++;
-			timeVar.pushValue(Cell.of(time.next()));
-
-			// evaluate the variables
-			for (var v : evalVars) {
-				var res = v.def().eval(interpreter);
-				if (res.hasError())
-					return res.wrapError("Evaluation error for variable: " + v.name());
-				v.pushValue(res.value());
-			}
 
 			// update the stocks
 			// TODO: array projections
-
 			for (var stock : stocks) {
 				var val = stock.value();
 
@@ -192,13 +181,17 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 				stock.pushValue(val);
 			}
 
+			// evaluate the variables
+			for (var v : evalVars) {
+				var res = v.def().eval(interpreter);
+				if (res.hasError())
+					return res.wrapError("Evaluation error for variable: " + v.name());
+				v.pushValue(res.value());
+			}
+
+			iteration++;
+			timeVar.pushValue(Cell.of(time.next()));
 			return Res.of(new SimulationState(iteration, time.current(), state));
 		}
-
 	}
-
 }
-
-
-
-
