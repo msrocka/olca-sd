@@ -14,7 +14,7 @@ public class XmileArraysTest {
 	@Before
 	public void setup() throws IOException {
 		try (var stream = getClass().getResourceAsStream("arrays.xml")) {
-			xmile = Xmile.readFrom(stream);
+			xmile = Xmile.readFrom(stream).orElseThrow();
 		}
 	}
 

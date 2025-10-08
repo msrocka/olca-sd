@@ -15,7 +15,7 @@ public class SheepTest {
 	@Before
 	public void setup() throws Exception {
 		try (var stream = getClass().getResourceAsStream("sheep.xml")) {
-			xmile = Xmile.readFrom(stream);
+			xmile = Xmile.readFrom(stream).orElseThrow();
 		}
 	}
 
@@ -38,7 +38,7 @@ public class SheepTest {
 
 		var actual = new ArrayList<double[]>();
 		sim.forEach(res -> {
-			if (res.hasError()) {
+			if (res.isError()) {
 				fail(res.error());
 			} else {
 				var state = res.value();

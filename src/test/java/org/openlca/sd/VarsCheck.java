@@ -13,7 +13,9 @@ public class VarsCheck {
 
 	public static void main(String[] args) {
 
-		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
+		var xmile = Xmile
+			.readFrom(new File("examples/treasource-model.stmx"))
+			.orElseThrow();
 		var vars = Vars.readFrom(xmile).orElseThrow();
 
 		var ids = new HashSet<Id>();

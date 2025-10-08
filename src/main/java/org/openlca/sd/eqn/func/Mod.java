@@ -2,11 +2,11 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Mod implements Func {
 
@@ -31,7 +31,7 @@ public class Mod implements Func {
 				if (divisor == 0.0)
 					return Res.error("modulo by zero");
 				double result = a.asNum() % divisor;
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			// modulo: tensor % number
@@ -53,11 +53,11 @@ public class Mod implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var mi = apply(List.of(element, Cell.of(divisor)));
-			if (mi.hasError())
+			if (mi.isError())
 				return mi.wrapError("error in scalar modulo at index " + i);
 			result.set(i, mi.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 }

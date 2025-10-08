@@ -2,10 +2,10 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.NumCell;
-import org.openlca.util.Res;
 
 public class NonNeg implements Func {
 
@@ -20,12 +20,12 @@ public class NonNeg implements Func {
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withOneArg(args, arg -> {
 			if (arg.isEmpty())
-				return Res.of(arg);
+				return Res.ok(arg);
 
 			if (arg instanceof NumCell(double num)) {
 				return num >= 0
-					? Res.of(arg)
-					: Res.of(new NumCell(0));
+					? Res.ok(arg)
+					: Res.ok(new NumCell(0));
 			}
 
 			return arg.isTensorCell()

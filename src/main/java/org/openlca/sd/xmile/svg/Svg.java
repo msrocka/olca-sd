@@ -2,9 +2,9 @@ package org.openlca.sd.xmile.svg;
 
 import java.io.StringWriter;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.xmile.Xmile;
 import org.openlca.sd.xmile.view.XmiView;
-import org.openlca.util.Res;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -44,7 +44,7 @@ public class Svg {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			var writer = new StringWriter();
 			marshaller.marshal(svg, writer);
-			return Res.of(writer.toString());
+			return Res.ok(writer.toString());
 		} catch (JAXBException e) {
 			return Res.error("Failed to marshal SVG to XML", e);
 		}

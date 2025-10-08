@@ -14,7 +14,7 @@ public class XmileReaderTest {
 	@Before
 	public void setup() throws IOException {
 		try (var stream = getClass().getResourceAsStream("example.xml")) {
-			xmile = Xmile.readFrom(stream);
+			xmile = Xmile.readFrom(stream).orElseThrow();
 		}
 	}
 

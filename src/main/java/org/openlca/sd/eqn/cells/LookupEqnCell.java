@@ -2,10 +2,10 @@ package org.openlca.sd.eqn.cells;
 
 import java.util.Objects;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Interpreter;
 import org.openlca.sd.eqn.LookupFunc;
 import org.openlca.sd.eqn.Tensor;
-import org.openlca.util.Res;
 
 /// A cell with a lookup function and an equation where the equation
 /// evaluates to a value that is then passed into the lookup function.
@@ -21,13 +21,13 @@ public record LookupEqnCell(
 	@Override
 	public Res<Cell> eval(Interpreter interpreter) {
 		var res = interpreter.eval(eqn);
-		if (res.hasError())
+		if (res.isError())
 			return res;
 		var val = res.value();
 
 		if (val instanceof NumCell(double x)) {
 			double y = func.get(x);
-			return Res.of(new NumCell(y));
+			return Res.ok(new NumCell(y));
 		}
 
 		// when the equation evaluates to a tensor, we apply the
@@ -52,7 +52,7 @@ public record LookupEqnCell(
 
 			if (val instanceof TensorCell(Tensor row)) {
 				var rowRes = applyOn(row);
-				if (rowRes.hasError())
+				if (rowRes.isError())
 					return rowRes;
 				t.set(i, rowRes.value());
 				continue;
@@ -61,7 +61,7 @@ public record LookupEqnCell(
 			return Res.error("Tensor cell value cannot be applied " +
 				"on a lookup function: " + val);
 		}
-		return Res.of(new TensorCell(t));
+		return Res.ok(new TensorCell(t));
 	}
 
 	@Override

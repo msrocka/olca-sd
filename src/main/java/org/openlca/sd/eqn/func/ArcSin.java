@@ -2,9 +2,9 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.util.Res;
 
 public class ArcSin implements Func {
 
@@ -26,7 +26,7 @@ public class ArcSin implements Func {
 						"ARCSIN domain error: input must be in range [-1, 1], got " + v);
 				}
 				double result = Math.asin(v);
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			return arg.isTensorCell()

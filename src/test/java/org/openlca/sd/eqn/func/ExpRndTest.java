@@ -1,6 +1,6 @@
 package org.openlca.sd.eqn.func;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -24,13 +24,13 @@ public class ExpRndTest {
 	public void testExpRndNoArgs() {
 		var func = new ExpRnd();
 		var res = func.apply(List.of());
-		assertTrue("Should return error for no arguments", res.hasError());
+		assertTrue("Should return error for no arguments", res.isError());
 	}
 
 	@Test
 	public void testExpRndNonNumericArg() {
 		var func = new ExpRnd();
 		var res = func.apply(List.of(Cell.of("not a number")));
-		assertTrue("Should return error for non-numeric argument", res.hasError());
+		assertTrue("Should return error for non-numeric argument", res.isError());
 	}
 }

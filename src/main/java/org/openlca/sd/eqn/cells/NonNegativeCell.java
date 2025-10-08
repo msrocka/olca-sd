@@ -3,9 +3,9 @@ package org.openlca.sd.eqn.cells;
 import java.util.List;
 import java.util.Objects;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Interpreter;
 import org.openlca.sd.eqn.func.NonNeg;
-import org.openlca.util.Res;
 
 public record NonNegativeCell(Cell value) implements Cell {
 
@@ -16,7 +16,7 @@ public record NonNegativeCell(Cell value) implements Cell {
 	@Override
 	public Res<Cell> eval(Interpreter interpreter) {
 		var res = value.eval(interpreter);
-		return res.hasError()
+		return res.isError()
 			? res
 			: new NonNeg().apply(List.of(res.value()));
 	}

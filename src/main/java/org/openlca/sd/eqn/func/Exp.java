@@ -2,9 +2,9 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.util.Res;
 
 public class Exp implements Func {
 
@@ -21,7 +21,7 @@ public class Exp implements Func {
 
 			if (arg.isNumCell()) {
 				double result = Math.exp(arg.asNum());
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			return arg.isTensorCell()

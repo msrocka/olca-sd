@@ -10,13 +10,15 @@ import org.openlca.sd.xmile.Xmile;
 public class SimulatorArrayExample {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/Resources-and-Population_arrayed.stmx"));
+		var xmile = Xmile
+			.readFrom(new File("examples/Resources-and-Population_arrayed.stmx"))
+			.orElseThrow();
 		var sim = Simulator.of(xmile).orElseThrow();
 
 		var stock = Id.of("Population");
 		var printer = new TensorPrinter();
 		sim.forEach(res -> {
-			if (res.hasError()) {
+			if (res.isError()) {
 				System.out.println("error: " + res.error());
 			} else {
 				var state = res.value();

@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import org.openlca.commons.Res;
+
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -33,20 +35,21 @@ public class Xmile {
 	@XmlElement(name = "dim", namespace = Xmile.NS)
 	List<XmiDim> dims;
 
-	public static Xmile readFrom(File file) {
+	public static Res<Xmile> readFrom(File file) {
 		try (var stream = new FileInputStream(file);
 				 var buffer = new BufferedInputStream(stream)) {
 			return readFrom(buffer);
 		} catch (Exception e) {
-			throw new RuntimeException("error reading XMILE file: " + file, e);
+			return Res.error("Error reading XMILE file: " + file, e);
 		}
 	}
 
-	public static Xmile readFrom(InputStream stream) {
+	public static Res<Xmile> readFrom(InputStream stream) {
 		try {
-			return JAXB.unmarshal(stream, Xmile.class);
+			var xmile = JAXB.unmarshal(stream, Xmile.class);
+			return Res.ok(xmile);
 		} catch (Exception e) {
-			throw new RuntimeException("error reading XMILE stream", e);
+			return Res.error("Error reading XMILE stream", e);
 		}
 	}
 

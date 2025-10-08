@@ -1,7 +1,7 @@
 package org.openlca.sd.eqn;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.xmile.Xmile;
-import org.openlca.util.Res;
 
 public class TimeSeq {
 
@@ -19,11 +19,11 @@ public class TimeSeq {
 		if (specs.stop() == null)
 			return Res.error("no end time provided");
 		if (specs.dt() == null || specs.dt().value() == null)
-			return Res.of(new TimeSeq(specs.start(), specs.stop()));
+			return Res.ok(new TimeSeq(specs.start(), specs.stop()));
 		var seq =  specs.dt().isReciprocal()
 			? new TimeSeq(specs.start(), specs.stop(), 1 / specs.dt().value())
 			: new TimeSeq(specs.start(), specs.stop(), specs.dt().value());
-		return Res.of(seq);
+		return Res.ok(seq);
 	}
 
 	public TimeSeq(double start, double end, double dt) {

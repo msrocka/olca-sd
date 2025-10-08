@@ -2,11 +2,11 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Dot implements Func {
 
@@ -95,7 +95,7 @@ public class Dot implements Func {
 				return Res.error("vector dot product requires numeric elements");
 			sum += ai.asNum() * bi.asNum();
 		}
-		return Res.of(Cell.of(sum));
+		return Res.ok(Cell.of(sum));
 	}
 
 	private Res<Cell> mv(Tensor m, Tensor v) {
@@ -106,11 +106,11 @@ public class Dot implements Func {
 			if (!row.isTensorCell())
 				return Res.error("matrix row is not a tensor at index " + i);
 			var dot = dot(row.asTensorCell().value(), v);
-			if (dot.hasError())
+			if (dot.isError())
 				return dot.wrapError("error in matrix-vector multiplication at row " + i);
 			result.set(i, dot.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 	private Res<Cell> mm(Tensor a, Tensor b) {
@@ -127,16 +127,16 @@ public class Dot implements Func {
 
 			for (int j = 0; j < shapeB[1]; j++) {
 				var colB = columnOf(b, j);
-				if (colB.hasError())
+				if (colB.isError())
 					return colB.wrapError("failed to get column " + j + " of matrix B");
 				var cij = dot(ai, colB.value());
-				if (cij.hasError())
+				if (cij.isError())
 					return cij.wrapError(
 						"failed to multiply row " + i + " with column " + j);
 				result.get(i).asTensorCell().value().set(j, cij.value());
 			}
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 	private Res<Tensor> columnOf(Tensor matrix, int j) {
@@ -149,6 +149,6 @@ public class Dot implements Func {
 			var element = row.asTensorCell().value().get(j);
 			col.set(i, element);
 		}
-		return Res.of(col);
+		return Res.ok(col);
 	}
 }

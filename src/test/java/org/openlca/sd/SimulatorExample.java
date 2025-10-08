@@ -9,13 +9,15 @@ import org.openlca.sd.xmile.Xmile;
 public class SimulatorExample {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/testing.stmx"));
+		var xmile = Xmile
+			.readFrom(new File("examples/testing.stmx"))
+			.orElseThrow();
 		var sim = Simulator.of(xmile).orElseThrow();
 
 		var vid = Id.of("reuse");
 		System.out.println("results of: " + vid);
 		for (var res : sim) {
-			if (res.hasError()) {
+			if (res.isError()) {
 				System.out.println("error: " + res.error());
 				break;
 			}

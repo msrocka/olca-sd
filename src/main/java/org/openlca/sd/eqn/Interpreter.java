@@ -9,13 +9,13 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.generated.EqnBaseListener;
 import org.openlca.sd.eqn.generated.EqnLexer;
 import org.openlca.sd.eqn.generated.EqnParser;
 import org.openlca.sd.eqn.generated.EqnParser.ArrayAccessContext;
 import org.openlca.sd.eqn.generated.EqnParser.VarContext;
-import org.openlca.util.Res;
 
 public class Interpreter {
 
@@ -88,7 +88,7 @@ public class Interpreter {
 			};
 
 			ParseTreeWalker.DEFAULT.walk(collector, tree);
-			return Res.of(List.copyOf(vars));
+			return Res.ok(List.copyOf(vars));
 		} catch (Exception e) {
 			return Res.error("failed to collect vars from expression", e);
 		}

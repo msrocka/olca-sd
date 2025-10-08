@@ -2,10 +2,10 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Eq implements Func {
 
@@ -27,18 +27,18 @@ public class Eq implements Func {
 			// Both are numbers
 			if (a.isNumCell() && b.isNumCell()) {
 				boolean result = a.asNum() == b.asNum();
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			// Both are booleans
 			if (a.isBoolCell() && b.isBoolCell()) {
 				boolean result = a.asBool() == b.asBool();
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			// Both are empty
 			if (a.isEmpty() && b.isEmpty()) {
-				return Res.of(Cell.of(true));
+				return Res.ok(Cell.of(true));
 			}
 
 			// Both are tensors - element-wise comparison
@@ -55,7 +55,7 @@ public class Eq implements Func {
 			}
 
 			// Different types are not equal
-			return Res.of(Cell.of(false));
+			return Res.ok(Cell.of(false));
 		});
 	}
 
@@ -67,11 +67,11 @@ public class Eq implements Func {
 		var shapeA = a.shape();
 		var shapeB = b.shape();
 		if (shapeA.length != shapeB.length) {
-			return Res.of(Cell.of(false));
+			return Res.ok(Cell.of(false));
 		}
 		for (int i = 0; i < shapeA.length; i++) {
 			if (shapeA[i] != shapeB[i]) {
-				return Res.of(Cell.of(false));
+				return Res.ok(Cell.of(false));
 			}
 		}
 
@@ -80,14 +80,14 @@ public class Eq implements Func {
 			var ai = a.get(i);
 			var bi = b.get(i);
 			var comparison = apply(List.of(ai, bi));
-			if (comparison.hasError()) {
+			if (comparison.isError()) {
 				return comparison.wrapError("error comparing tensor elements at index " + i);
 			}
 			if (!comparison.value().asBool()) {
-				return Res.of(Cell.of(false));
+				return Res.ok(Cell.of(false));
 			}
 		}
-		return Res.of(Cell.of(true));
+		return Res.ok(Cell.of(true));
 	}
 
 	private Res<Cell> compareNumberToTensor(double number, TensorCell tensorCell) {
@@ -98,13 +98,13 @@ public class Eq implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var comparison = apply(List.of(Cell.of(number), element));
-			if (comparison.hasError()) {
+			if (comparison.isError()) {
 				return comparison.wrapError("error comparing number to tensor element at index " + i);
 			}
 			if (!comparison.value().asBool()) {
-				return Res.of(Cell.of(false));
+				return Res.ok(Cell.of(false));
 			}
 		}
-		return Res.of(Cell.of(true));
+		return Res.ok(Cell.of(true));
 	}
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.LookupFunc.Type;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.EqnCell;
@@ -20,7 +21,6 @@ import org.openlca.sd.xmile.XmiFlow;
 import org.openlca.sd.xmile.XmiGf;
 import org.openlca.sd.xmile.XmiStock;
 import org.openlca.sd.xmile.Xmile;
-import org.openlca.util.Res;
 
 public class Vars {
 
@@ -69,7 +69,7 @@ public class Vars {
 				if (!(v instanceof XmiEvaluatable eva))
 					continue;
 				var cell = cellOf(eva);
-				if (cell.hasError())
+				if (cell.isError())
 					return cell.wrapError("failed to create cell for: " + eva.name());
 
 				switch (eva) {
@@ -91,7 +91,7 @@ public class Vars {
 					}
 				}
 			}
-			return Res.of(vars);
+			return Res.ok(vars);
 		}
 
 		private Res<Cell> cellOf(XmiEvaluatable v) {
@@ -99,13 +99,13 @@ public class Vars {
 				return Res.error("variable is null");
 
 			var eqnRes = cellOf(v.gf(), v.eqn());
-			if (eqnRes.hasError()) {
+			if (eqnRes.isError()) {
 				return eqnRes.wrapError("Failed to create cell for variable: "
 					+ v.name());
 			}
 
 			var tensRes = tensorOf(v);
-			if (tensRes.hasError()) {
+			if (tensRes.isError()) {
 				return tensRes.wrapError("Failed to create tensor for variable: "
 					+ v.name());
 			}
@@ -128,35 +128,35 @@ public class Vars {
 			}
 
 			return v.isNonNegative()
-				? Res.of(new NonNegativeCell(cell))
-				: Res.of(cell);
+				? Res.ok(new NonNegativeCell(cell))
+				: Res.ok(cell);
 		}
 
 		private Res<Optional<Cell>> cellOf(XmiGf xmiGf, String eqn) {
 			if (xmiGf != null) {
 				var gf = funcOf(xmiGf);
-				if (gf.hasError())
+				if (gf.isError())
 					return gf.castError();
 				var cell = Id.isNil(eqn)
 					? new LookupCell(gf.value())
 					: new LookupEqnCell(eqn, gf.value());
-				return Res.of(Optional.of(cell));
+				return Res.ok(Optional.of(cell));
 			}
 			return Id.isNil(eqn)
-				? Res.of(Optional.empty())
-				: Res.of(Optional.of(new EqnCell(eqn)));
+				? Res.ok(Optional.empty())
+				: Res.ok(Optional.of(new EqnCell(eqn)));
 		}
 
 		private Res<Optional<Tensor>> tensorOf(XmiEvaluatable x) {
 			if (x.dimensions().isEmpty())
-				return Res.of(Optional.empty());
+				return Res.ok(Optional.empty());
 			var dims = dimsOf(x);
-			if (dims.hasError())
+			if (dims.isError())
 				return dims.castError();
 
 			var tensor = Tensor.of(dims.value());
 			if (x.elements().isEmpty())
-				return Res.of(Optional.of(tensor));
+				return Res.ok(Optional.of(tensor));
 
 			for (var elem : x.elements()) {
 				var subs = Subscript.parseAllFrom(elem.subscript());
@@ -164,7 +164,7 @@ public class Vars {
 					return Res.error(
 						"array elements defined without subscripts in: " + x.name());
 				var cellRes = cellOf(elem.gf(), elem.eqn());
-				if (cellRes.hasError())
+				if (cellRes.isError())
 					return Res.error("Failed to parse element '"
 						+ elem.subscript() + "' in var " + x.name());
 
@@ -176,7 +176,7 @@ public class Vars {
 				}
 				tensor.set(subs, elemCell);
 			}
-			return Res.of(Optional.of(tensor));
+			return Res.ok(Optional.of(tensor));
 		}
 
 		private Res<List<Dimension>> dimsOf(XmiEvaluatable v) {
@@ -187,7 +187,7 @@ public class Vars {
 					return Res.error("unknown dimension: " + d.name());
 				dims.add(dim);
 			}
-			return Res.of(dims);
+			return Res.ok(dims);
 		}
 
 		private Res<LookupFunc> funcOf(XmiGf gf) {
@@ -205,12 +205,12 @@ public class Vars {
 			var ys = gf.ypts().parse();
 
 			if (gf.xpts() != null)
-				return Res.of(new LookupFunc(type, gf.xpts().parse(), ys));
+				return Res.ok(new LookupFunc(type, gf.xpts().parse(), ys));
 
 			if (gf.xscale() != null) {
 				var min = gf.xscale().min();
 				var max = gf.xscale().max();
-				return Res.of(new LookupFunc(type, min, max, ys));
+				return Res.ok(new LookupFunc(type, min, max, ys));
 			}
 
 			return Res.error("no x-values defined in lookup function");

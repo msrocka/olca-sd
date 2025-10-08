@@ -1,7 +1,7 @@
 package org.openlca.sd.eqn.cells;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Interpreter;
-import org.openlca.util.Res;
 
 public record EmptyCell() implements Cell {
 	private static final EmptyCell _instance = new EmptyCell();
@@ -12,7 +12,7 @@ public record EmptyCell() implements Cell {
 
 	@Override
 	public Res<Cell> eval(Interpreter interpreter) {
-		return Res.of(this);
+		return Res.ok(this);
 	}
 
 	@Override

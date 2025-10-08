@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Var.Aux;
 import org.openlca.sd.eqn.Var.Stock;
 import org.openlca.sd.eqn.cells.Cell;
@@ -13,7 +14,6 @@ import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.func.Mul;
 import org.openlca.sd.eqn.func.Sub;
 import org.openlca.sd.xmile.Xmile;
-import org.openlca.util.Res;
 
 public class Simulator implements Iterable<Res<SimulationState>> {
 
@@ -27,18 +27,18 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 
 	public static Res<Simulator> of(Xmile xmile) {
 		var time = TimeSeq.of(xmile);
-		if (time.hasError()) {
+		if (time.isError()) {
 			return time.wrapError("failed to parse time from simulation spec");
 		}
 		var vars = Vars.readFrom(xmile);
-		if (vars.hasError()) {
+		if (vars.isError()) {
 			return vars.wrapError("failed to parse simulation elements");
 		}
 		var order = EvaluationOrder.of(vars.value());
-		if (order.hasError()) {
+		if (order.isError()) {
 			return order.wrapError("failed to determine evaluation order");
 		}
-		return Res.of(new Simulator(time.value(), order.value()));
+		return Res.ok(new Simulator(time.value(), order.value()));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 
 			for (var v : vars) {
 				var res = v.def().eval(interpreter);
-				if (res.hasError()) {
+				if (res.isError()) {
 					return res.wrapError("Initialization of variable '"
 						+ v.name().label() + "' failed");
 				}
@@ -128,7 +128,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					evalVars.add(v);
 				}
 			}
-			return Res.of(new SimulationState(0, time.current(), state));
+			return Res.ok(new SimulationState(0, time.current(), state));
 		}
 
 		private Res<SimulationState> nextState() {
@@ -147,11 +147,11 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					}
 
 					var inFlowDelta = Mul.apply(inFlow.value(), dt);
-					if (inFlowDelta.hasError())
+					if (inFlowDelta.isError())
 						return Res.error("Failed to calculate: dt * " + inFlowId);
 
 					var nextVal = Add.apply(val, inFlowDelta.value());
-					if (nextVal.hasError()) {
+					if (nextVal.isError()) {
 						return nextVal.wrapError("Failed to add flow " + inFlowId
 							+ " to stock " + stock.name());
 					}
@@ -167,11 +167,11 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					}
 
 					var outFlowDelta = Mul.apply(outFlow.value(), dt);
-					if (outFlowDelta.hasError())
+					if (outFlowDelta.isError())
 						return Res.error("Failed to calculate: dt * " + outFlowId);
 
 					var nextVal = Sub.apply(val, outFlowDelta.value());
-					if (nextVal.hasError()) {
+					if (nextVal.isError()) {
 						return nextVal.wrapError("Failed to subtract out-flow " + outFlowId
 							+ " from stock " + stock.name());
 					}
@@ -184,14 +184,14 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 			// evaluate the variables
 			for (var v : evalVars) {
 				var res = v.def().eval(interpreter);
-				if (res.hasError())
+				if (res.isError())
 					return res.wrapError("Evaluation error for variable: " + v.name());
 				v.pushValue(res.value());
 			}
 
 			iteration++;
 			timeVar.pushValue(Cell.of(time.next()));
-			return Res.of(new SimulationState(iteration, time.current(), state));
+			return Res.ok(new SimulationState(iteration, time.current(), state));
 		}
 	}
 }

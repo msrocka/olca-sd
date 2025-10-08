@@ -3,10 +3,10 @@ package org.openlca.sd.eqn.func;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.ExponentialDistribution;
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.NumCell;
-import org.openlca.util.Res;
 
 public class ExpRnd implements Func {
 
@@ -25,6 +25,6 @@ public class ExpRnd implements Func {
 		if (!(arg instanceof NumCell(double mean)))
 			return Res.error("EXPRND expects numeric arguments but got: " + arg);
 		var value = new ExponentialDistribution(mean).sample();
-		return Res.of(Cell.of(value));
+		return Res.ok(Cell.of(value));
 	}
 }

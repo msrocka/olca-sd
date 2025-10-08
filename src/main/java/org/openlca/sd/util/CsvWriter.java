@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import org.openlca.commons.Res;
+import org.openlca.commons.Strings;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.SimulationState;
 import org.openlca.sd.eqn.Simulator;
@@ -22,8 +24,6 @@ import org.openlca.sd.eqn.cells.BoolCell;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.NumCell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
-import org.openlca.util.Strings;
 
 public class CsvWriter {
 
@@ -46,7 +46,7 @@ public class CsvWriter {
 				 var writer = new BufferedWriter(fw)) {
 			boolean first = true;
 			for (var res : sim) {
-				if (res.hasError())
+				if (res.isError())
 					return res.castError();
 				var state = res.value();
 
@@ -65,11 +65,11 @@ public class CsvWriter {
 				writer.write(state.iteration() + "," + state.time());
 				for (var v : valuesOf(state)) {
 					writer.write(',');
-					writer.write(v);
+					writer.write(v != null ? v : "");
 				}
 				writer.newLine();
 			}
-			return Res.VOID;
+			return Res.ok();
 		} catch (Exception e) {
 			return Res.error("Failed to write results to file: " + file, e);
 		}
@@ -78,7 +78,7 @@ public class CsvWriter {
 	private String[] initColumns(SimulationState state) {
 		var vars = new ArrayList<>(state.vars().values());
 		vars.sort((vi, vj)
-			-> Strings.compare(vi.name().value(), vj.name().value()));
+			-> Strings.compareIgnoreCase(vi.name().value(), vj.name().value()));
 		int col = 0;
 		var headers = new ArrayList<String>();
 		for (var v : vars) {

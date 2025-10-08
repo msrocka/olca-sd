@@ -2,9 +2,9 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
-import org.openlca.util.Res;
 
 public class Pow implements Func {
 
@@ -24,7 +24,7 @@ public class Pow implements Func {
 		return Fn.withTwoArgs(args, (a, b) -> {
 			if (a.isNumCell() && b.isNumCell()) {
 				double r = Math.pow(a.asNum(), b.asNum());
-				return Res.of(Cell.of(r));
+				return Res.ok(Cell.of(r));
 			}
 			return Res.error("pow is not defined for: " + a + "^" + b);
 		});

@@ -9,7 +9,9 @@ import org.openlca.sd.xmile.Xmile;
 public class FullExample {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
+		var xmile = Xmile
+			.readFrom(new File("examples/treasource-model.stmx"))
+			.orElseThrow();
 		var sim = Simulator.of(xmile).orElseThrow();
 
 		var prnt = new TensorPrinter();

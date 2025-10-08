@@ -10,7 +10,9 @@ import org.openlca.sd.xmile.svg.Svg;
 public class XmileViewTest {
 
 	public static void main(String[] args) throws Exception {
-		var xmile = Xmile.readFrom(new File("examples/environment.stmx"));
+		var xmile = Xmile
+			.readFrom(new File("examples/environment.stmx"))
+			.orElseThrow();
 		var svg = Svg.xmlOf(xmile).orElseThrow();
 		Files.writeString(Paths.get("target/model.svg"), svg);
 	}

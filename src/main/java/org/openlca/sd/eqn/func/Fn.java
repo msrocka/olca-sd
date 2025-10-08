@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 class Fn {
 
@@ -47,13 +47,13 @@ class Fn {
 		for (int i = 0; i < tensor.size(); i++) {
 			var elem = tensor.get(i);
 			var r = func.apply(List.of(elem));
-			if (r.hasError()) {
+			if (r.isError()) {
 				return r.wrapError(
 					"error computing " + func.name() + " at index " + i);
 			}
 			result.set(i, r.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 }

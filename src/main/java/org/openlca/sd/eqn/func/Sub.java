@@ -3,11 +3,11 @@ package org.openlca.sd.eqn.func;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Sub implements Func {
 
@@ -26,11 +26,11 @@ public class Sub implements Func {
 	public Res<Cell> apply(List<Cell> args) {
 		return Fn.withTwoArgs(args, (a, b) -> {
 			if (b.isEmpty())
-				return Res.of(a);
+				return Res.ok(a);
 
 			if (a.isNumCell() && b.isNumCell()) {
 				double result = a.asNum() - b.asNum();
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			if (a.isTensorCell() && b.isTensorCell())
@@ -64,11 +64,11 @@ public class Sub implements Func {
 			var ai = a.get(i);
 			var bi = b.get(i);
 			var di = apply(List.of(ai, bi));
-			if (di.hasError())
+			if (di.isError())
 				return di.wrapError("error subtracting tensor elements at index " + i);
 			diff.set(i, di.value());
 		}
-		return Res.of(Cell.of(diff));
+		return Res.ok(Cell.of(diff));
 	}
 
 	private Res<Cell> scalar(double scalar, TensorCell tensorCell) {
@@ -79,11 +79,11 @@ public class Sub implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var diff = apply(List.of(Cell.of(scalar), element));
-			if (diff.hasError())
+			if (diff.isError())
 				return diff.wrapError("error subtracting tensor element from scalar at index " + i);
 			result.set(i, diff.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 	private Res<Cell> scalar(TensorCell tensorCell, double scalar) {
@@ -94,11 +94,11 @@ public class Sub implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var diff = apply(List.of(element, Cell.of(scalar)));
-			if (diff.hasError())
+			if (diff.isError())
 				return diff.wrapError("error subtracting scalar from tensor element at index " + i);
 			result.set(i, diff.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 }

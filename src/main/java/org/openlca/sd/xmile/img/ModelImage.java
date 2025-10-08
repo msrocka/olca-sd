@@ -9,11 +9,11 @@ import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.xmile.Xmile;
 import org.openlca.sd.xmile.view.XmiView;
 import org.openlca.sd.xmile.view.XmiViewPoint;
-import org.openlca.util.Res;
 
 public class ModelImage {
 
@@ -130,7 +130,7 @@ public class ModelImage {
 		}
 
 		g.dispose();
-		return Res.of(image);
+		return Res.ok(image);
 	}
 
 

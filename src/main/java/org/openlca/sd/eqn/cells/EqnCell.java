@@ -2,8 +2,8 @@ package org.openlca.sd.eqn.cells;
 
 import java.util.Objects;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Interpreter;
-import org.openlca.util.Res;
 
 public record EqnCell(String value) implements Cell {
 

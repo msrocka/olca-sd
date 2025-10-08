@@ -9,7 +9,9 @@ import org.openlca.sd.xmile.Xmile;
 public class EvaluationOrderExample {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
+		var xmile = Xmile
+			.readFrom(new File("examples/treasource-model.stmx"))
+			.orElseThrow();
 		var vars = Vars.readFrom(xmile).orElseThrow();
 
 		var order = EvaluationOrder.of(vars).orElseThrow();

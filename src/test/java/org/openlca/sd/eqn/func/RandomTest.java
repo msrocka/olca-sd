@@ -36,30 +36,30 @@ public class RandomTest {
 	public void testRandomInsufficientArgs() {
 		var func = new Random();
 		var result = func.apply(List.of(Cell.of(1.0)));
-		Assert.assertTrue("Should return error for insufficient arguments", result.hasError());
+		Assert.assertTrue("Should return error for insufficient arguments", result.isError());
 	}
 
 	@Test
 	public void testRandomNoArgs() {
 		var func = new Random();
 		var result = func.apply(List.of());
-		Assert.assertTrue("Should return error for no arguments", result.hasError());
+		Assert.assertTrue("Should return error for no arguments", result.isError());
 	}
 
 	@Test
 	public void testRandomInvalidRange() {
 		var func = new Random();
 		var result = func.apply(List.of(Cell.of(10.0), Cell.of(1.0)));
-		Assert.assertTrue("Should return error when min >= max", result.hasError());
+		Assert.assertTrue("Should return error when min >= max", result.isError());
 	}
 
 	@Test
 	public void testRandomNonNumericArgs() {
 		var func = new Random();
 		var result = func.apply(List.of(Cell.of("not a number"), Cell.of(1.0)));
-		Assert.assertTrue("Should return error for non-numeric first argument", result.hasError());
+		Assert.assertTrue("Should return error for non-numeric first argument", result.isError());
 
 		result = func.apply(List.of(Cell.of(1.0), Cell.of("not a number")));
-		Assert.assertTrue("Should return error for non-numeric second argument", result.hasError());
+		Assert.assertTrue("Should return error for non-numeric second argument", result.isError());
 	}
 }

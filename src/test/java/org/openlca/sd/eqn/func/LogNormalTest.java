@@ -23,23 +23,23 @@ public class LogNormalTest {
 	public void testLogNormalInsufficientArgs() {
 		var func = new LogNormal();
 		var result = func.apply(List.of(Cell.of(1.0)));
-		Assert.assertTrue("Should return error for insufficient arguments", result.hasError());
+		Assert.assertTrue("Should return error for insufficient arguments", result.isError());
 	}
 
 	@Test
 	public void testLogNormalNoArgs() {
 		var func = new LogNormal();
 		var result = func.apply(List.of());
-		Assert.assertTrue("Should return error for no arguments", result.hasError());
+		Assert.assertTrue("Should return error for no arguments", result.isError());
 	}
 
 	@Test
 	public void testLogNormalNonNumericArgs() {
 		var func = new LogNormal();
 		var result = func.apply(List.of(Cell.of("not a number"), Cell.of(1.0)));
-		Assert.assertTrue("Should return error for non-numeric first argument", result.hasError());
+		Assert.assertTrue("Should return error for non-numeric first argument", result.isError());
 
 		result = func.apply(List.of(Cell.of(1.0), Cell.of("not a number")));
-		Assert.assertTrue("Should return error for non-numeric second argument", result.hasError());
+		Assert.assertTrue("Should return error for non-numeric second argument", result.isError());
 	}
 }

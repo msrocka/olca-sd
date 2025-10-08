@@ -2,10 +2,10 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Max implements Func {
 
@@ -27,7 +27,7 @@ public class Max implements Func {
 			if (first == null)
 				return Res.error("MAX function argument cannot be null");
 			if (first.isNumCell())
-				return Res.of(first);
+				return Res.ok(first);
 			if (first.isTensorCell())
 				return maxOf(first.asTensorCell());
 			return Res.error("MAX is not defined for cell type: " + first);
@@ -42,7 +42,7 @@ public class Max implements Func {
 					+ "all arguments to be numbers, got: " + arg);
 			max = Math.max(max, arg.asNum());
 		}
-		return Res.of(Cell.of(max));
+		return Res.ok(Cell.of(max));
 	}
 
 	private Res<Cell> maxOf(TensorCell tensorCell) {
@@ -51,13 +51,13 @@ public class Max implements Func {
 
 		for (int i = 0; i < tensor.size(); i++) {
 			var r = apply(List.of(tensor.get(i)));
-			if (r.hasError())
+			if (r.isError())
 				return r.wrapError("failed to get max at row: " + i);
 			var cell = r.value();
 			if (!cell.isNumCell())
 				return r.wrapError("max at row is not numeric: " + i);
 			max = Math.max(max, cell.asNum());
 		}
-		return Res.of(Cell.of(max));
+		return Res.ok(Cell.of(max));
 	}
 }

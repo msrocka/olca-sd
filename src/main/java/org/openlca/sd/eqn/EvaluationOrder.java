@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.cells.BoolCell;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.EmptyCell;
@@ -18,7 +19,6 @@ import org.openlca.sd.eqn.cells.NonNegativeCell;
 import org.openlca.sd.eqn.cells.NumCell;
 import org.openlca.sd.eqn.cells.TensorCell;
 import org.openlca.sd.eqn.cells.TensorEqnCell;
-import org.openlca.util.Res;
 
 public class EvaluationOrder {
 
@@ -43,14 +43,14 @@ public class EvaluationOrder {
 
 			case EqnCell(String eqn) -> {
 				var vars = Interpreter.varsOf(eqn);
-				if (!vars.hasError()) {
+				if (!vars.isError()) {
 					ids.addAll(vars.value());
 				}
 			}
 
 			case LookupEqnCell(String eqn, LookupFunc ignored) -> {
 				var vars = Interpreter.varsOf(eqn);
-				if (!vars.hasError()) {
+				if (!vars.isError()) {
 					ids.addAll(vars.value());
 				}
 			}
@@ -132,7 +132,7 @@ public class EvaluationOrder {
 			for (var id : ordered) {
 				sorted.add(vars.get(id));
 			}
-			return Res.of(sorted);
+			return Res.ok(sorted);
 		}
 	}
 }

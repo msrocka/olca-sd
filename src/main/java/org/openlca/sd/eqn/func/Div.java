@@ -3,11 +3,11 @@ package org.openlca.sd.eqn.func;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.Tensor;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Div implements Func {
 
@@ -33,7 +33,7 @@ public class Div implements Func {
 					return Res.error("division by zero");
 				}
 				double result = a.asNum() / divisor;
-				return Res.of(Cell.of(result));
+				return Res.ok(Cell.of(result));
 			}
 
 			// division: tensor ÷ number
@@ -66,12 +66,12 @@ public class Div implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var di = apply(List.of(element, Cell.of(divisor)));
-			if (di.hasError()) {
+			if (di.isError()) {
 				return di.wrapError("error in scalar division at index " + i);
 			}
 			result.set(i, di.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 	private Res<Cell> scalar(double dividend, TensorCell tensorCell) {
@@ -81,12 +81,12 @@ public class Div implements Func {
 		for (int i = 0; i < shape[0]; i++) {
 			var element = tensor.get(i);
 			var di = apply(List.of(Cell.of(dividend), element));
-			if (di.hasError()) {
+			if (di.isError()) {
 				return di.wrapError("error in scalar division at index " + i);
 			}
 			result.set(i, di.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 	private Res<Cell> elemWise(TensorCell cellA, TensorCell cellB) {
@@ -105,13 +105,13 @@ public class Div implements Func {
 			var ai = a.get(i);
 			var bi = b.get(i);
 			var ci = apply(List.of(ai, bi));
-			if (ci.hasError()) {
+			if (ci.isError()) {
 				return ci.wrapError(
 					"error in element-wise division at index " + i);
 			}
 			result.set(i, ci.value());
 		}
-		return Res.of(Cell.of(result));
+		return Res.ok(Cell.of(result));
 	}
 
 }

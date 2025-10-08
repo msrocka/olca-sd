@@ -3,10 +3,10 @@ package org.openlca.sd.eqn.func;
 import java.util.List;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.NumCell;
-import org.openlca.util.Res;
 
 public class Normal implements Func {
 
@@ -26,6 +26,6 @@ public class Normal implements Func {
 		if (!(args.get(1) instanceof NumCell(double sd)))
 			return Res.error("second argument is not a number");
 		var value = new NormalDistribution(mean, sd).sample();
-		return Res.of(Cell.of(value));
+		return Res.ok(Cell.of(value));
 	}
 }

@@ -2,9 +2,9 @@ package org.openlca.sd.eqn.cells;
 
 import java.util.Objects;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Interpreter;
 import org.openlca.sd.eqn.LookupFunc;
-import org.openlca.util.Res;
 
 /// A cell that just contains a lookup function. Such a cell needs an outer
 /// context that provides the input value of the lookup function. For example,
@@ -18,7 +18,7 @@ public record LookupCell(LookupFunc func) implements Cell {
 
 	@Override
 	public Res<Cell> eval(Interpreter interpreter) {
-		return Res.of(this);
+		return Res.ok(this);
 	}
 
 	@Override

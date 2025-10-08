@@ -9,8 +9,12 @@ import org.openlca.sd.xmile.Xmile;
 public class VarsGraph {
 
 	public static void main(String[] args) {
-		var xmile = Xmile.readFrom(new File("examples/treasource-model.stmx"));
-		var vars = Vars.readFrom(xmile).orElseThrow();
+		var xmile = Xmile
+			.readFrom(new File("examples/treasource-model.stmx"))
+			.orElseThrow();
+		var vars = Vars
+			.readFrom(xmile)
+			.orElseThrow();
 
 		System.out.println("digraph g {");
 		for (var v : vars) {

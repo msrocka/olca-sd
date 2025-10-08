@@ -2,10 +2,10 @@ package org.openlca.sd.eqn.func;
 
 import java.util.List;
 
+import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.TensorCell;
-import org.openlca.util.Res;
 
 public class Min implements Func {
 
@@ -27,7 +27,7 @@ public class Min implements Func {
 			if (first == null)
 				return Res.error("MIN function argument cannot be null");
 			if (first.isNumCell())
-				return Res.of(first);
+				return Res.ok(first);
 			if (first.isTensorCell())
 				return minOf(first.asTensorCell());
 			return Res.error("MIN is not defined for cell type: " +	first);
@@ -42,7 +42,7 @@ public class Min implements Func {
 					+ "all arguments to be numbers, got: " + arg);
 			min = Math.min(min, arg.asNum());
 		}
-		return Res.of(Cell.of(min));
+		return Res.ok(Cell.of(min));
 	}
 
 	private Res<Cell> minOf(TensorCell tensorCell) {
@@ -50,13 +50,13 @@ public class Min implements Func {
 		double min = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < tensor.size(); i++) {
 			var r = apply(List.of(tensor.get(i)));
-			if (r.hasError())
+			if (r.isError())
 				return r.wrapError("failed to get min at row: " + i);
 			var cell = r.value();
 			if (!cell.isNumCell())
 				return r.wrapError("min at row is not numeric: " + i);
 			min = Math.min(min, cell.asNum());
 		}
-		return Res.of(Cell.of(min));
+		return Res.ok(Cell.of(min));
 	}
 }
