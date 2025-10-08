@@ -50,13 +50,13 @@ public class CsvWriter {
 					return res.castError();
 				var state = res.value();
 
-
 				if (first) {
 					var headers = initColumns(state);
-					writer.write("Iteration,Time");
+					writer.write("\"Iteration\",\"Time\"");
 					for (var h : headers) {
-						writer.write(',');
+						writer.write(",\"");
 						writer.write(h);
+						writer.write("\"");
 					}
 					writer.newLine();
 					first = false;
@@ -112,7 +112,6 @@ public class CsvWriter {
 			xs[c] = strOf(cell);
 		};
 
-
 		for (var v : state.vars().values()) {
 			var val = v.value();
 			if (val instanceof TensorCell(Tensor t)) {
@@ -146,6 +145,7 @@ public class CsvWriter {
 				for (var elem : dim.elements()) {
 					addresses.add(List.of(elem));
 				}
+				continue;
 			}
 
 			var next = new ArrayList<List<Id>>();
