@@ -10,8 +10,10 @@ import org.openlca.commons.Res;
 import org.openlca.sd.eqn.Var.Aux;
 import org.openlca.sd.eqn.Var.Stock;
 import org.openlca.sd.eqn.cells.Cell;
+import org.openlca.sd.eqn.cells.NonNegativeCell;
 import org.openlca.sd.eqn.func.Add;
 import org.openlca.sd.eqn.func.Mul;
+import org.openlca.sd.eqn.func.NonNeg;
 import org.openlca.sd.eqn.func.Sub;
 import org.openlca.sd.xmile.Xmile;
 
@@ -178,6 +180,14 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					val = nextVal.value();
 				}
 
+				if (stock.def() instanceof NonNegativeCell) {
+					var nonNeg = new NonNeg().apply(List.of(val));
+					if (nonNeg.isError()) {
+						return nonNeg.wrapError(
+							"Failed to apply NonNeg on stock " + stock.name());
+					}
+					val = nonNeg.value();
+				}
 				stock.pushValue(val);
 			}
 

@@ -9,9 +9,9 @@ import org.openlca.sd.xmile.Xmile;
 public class CsvWriterExample {
 
 	public static void main(String[] args) {
-		var file = new File("examples/res-pop-arrays-c.csv");
+		var file = new File("examples/res-pop-c.csv");
 		var xmile = Xmile
-			.readFrom(new File("examples/res-pop-arrays.stmx"))
+			.readFrom(new File("examples/res-pop.stmx"))
 			.orElseThrow();
 		var sim = Simulator.of(xmile).orElseThrow();
 		CsvWriter.of(sim, file).run().orElseThrow();
