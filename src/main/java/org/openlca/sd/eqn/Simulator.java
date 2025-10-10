@@ -84,7 +84,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 			ctx.bind("STOPTIME", time.end());
 			// TODO: bind top-level lookup functions
 
-			timeVar = new Aux(Id.of("TIME"), Cell.of(time.start()));
+			timeVar = new Aux(Id.of("TIME"), Cell.of(time.start()), time.unit());
 			dt = Cell.of(time.dt());
 			ctx.bind(timeVar);
 			for (var v : vars) {
@@ -109,8 +109,8 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 				throw new IllegalStateException("simulation finished");
 			}
 			return !isInitialized
-				? initialize()
-				: nextState();
+					? initialize()
+					: nextState();
 		}
 
 		private Res<SimulationState> initialize() {
@@ -121,7 +121,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 				var res = v.def().eval(interpreter);
 				if (res.isError()) {
 					return res.wrapError("Initialization of variable '"
-						+ v.name().label() + "' failed");
+							+ v.name().label() + "' failed");
 				}
 				v.pushValue(res.value());
 				if (v instanceof Stock stock) {
@@ -145,7 +145,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					var inFlow = ctx.getVar(inFlowId).orElse(null);
 					if (inFlow == null) {
 						return Res.error("Unknown in-flow '" + inFlowId
-							+ "' of stock: " + stock.name());
+								+ "' of stock: " + stock.name());
 					}
 
 					var inFlowDelta = Mul.apply(inFlow.value(), dt);
@@ -155,7 +155,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					var nextVal = Add.apply(val, inFlowDelta.value());
 					if (nextVal.isError()) {
 						return nextVal.wrapError("Failed to add flow " + inFlowId
-							+ " to stock " + stock.name());
+								+ " to stock " + stock.name());
 					}
 					val = nextVal.value();
 				}
@@ -165,7 +165,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					var outFlow = ctx.getVar(outFlowId).orElse(null);
 					if (outFlow == null) {
 						return Res.error("Unknown out-flow '" + outFlowId
-							+ "' of stock: " + stock.name());
+								+ "' of stock: " + stock.name());
 					}
 
 					var outFlowDelta = Mul.apply(outFlow.value(), dt);
@@ -175,7 +175,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					var nextVal = Sub.apply(val, outFlowDelta.value());
 					if (nextVal.isError()) {
 						return nextVal.wrapError("Failed to subtract out-flow " + outFlowId
-							+ " from stock " + stock.name());
+								+ " from stock " + stock.name());
 					}
 					val = nextVal.value();
 				}
@@ -184,7 +184,7 @@ public class Simulator implements Iterable<Res<SimulationState>> {
 					var nonNeg = new NonNeg().apply(List.of(val));
 					if (nonNeg.isError()) {
 						return nonNeg.wrapError(
-							"Failed to apply NonNeg on stock " + stock.name());
+								"Failed to apply NonNeg on stock " + stock.name());
 					}
 					val = nonNeg.value();
 				}

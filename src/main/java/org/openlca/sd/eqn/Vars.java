@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import org.openlca.commons.Res;
 import org.openlca.sd.eqn.LookupFunc.Type;
+import org.openlca.sd.eqn.Var.Aux;
+import org.openlca.sd.eqn.Var.Rate;
+import org.openlca.sd.eqn.Var.Stock;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.EqnCell;
 import org.openlca.sd.eqn.cells.LookupCell;
@@ -74,17 +77,18 @@ public class Vars {
 
 				switch (eva) {
 					case XmiAux ignored -> {
-						var aux = new Var.Aux(Id.of(eva.name()), cell.value());
+						var aux = new Aux(Id.of(eva.name()), cell.value(), eva.units());
 						vars.add(aux);
 					}
 					case XmiFlow ignored -> {
-						var flow = new Var.Rate(Id.of(eva.name()), cell.value());
+						var flow = new Rate(Id.of(eva.name()), cell.value(), eva.units());
 						vars.add(flow);
 					}
 					case XmiStock s -> {
-						var stock = new Var.Stock(
+						var stock = new Stock(
 							Id.of(eva.name()),
 							cell.value(),
+							eva.units(),
 							Id.allOf(s.inflows()),
 							Id.allOf(s.outflows()));
 						vars.add(stock);

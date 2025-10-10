@@ -84,7 +84,7 @@ public class EvalContext {
 	}
 
 	public EvalContext bind(String name, double value) {
-		var v = new Var.Aux(Id.of(name), Cell.of(value));
+		var v = new Var.Aux(Id.of(name), Cell.of(value), "-");
 		return bind(v);
 	}
 

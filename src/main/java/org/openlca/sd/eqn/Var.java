@@ -12,6 +12,8 @@ public sealed interface Var {
 
 	Cell def();
 
+	String unit();
+
 	List<Cell> values();
 
 	/// Creates a fresh copy of the variable. This will not copy
@@ -24,11 +26,12 @@ public sealed interface Var {
 
 	default Cell value() {
 		return values().isEmpty()
-			? def()
-			: values().getLast();
+				? def()
+				: values().getLast();
 	}
 
-	record Aux(Id name, Cell def, List<Cell> values) implements Var {
+	record Aux(
+			Id name, Cell def, String unit, List<Cell> values) implements Var {
 
 		public Aux {
 			Objects.requireNonNull(name);
@@ -36,17 +39,18 @@ public sealed interface Var {
 			Objects.requireNonNull(values);
 		}
 
-		public Aux(Id name, Cell cell) {
-			this(name, cell, new ArrayList<>());
+		public Aux(Id name, Cell def, String unit) {
+			this(name, def, unit, new ArrayList<>());
 		}
 
 		@Override
 		public Aux freshCopy() {
-			return new Aux(name, def);
+			return new Aux(name, def, unit);
 		}
 	}
 
-	record Rate(Id name, Cell def, List<Cell> values) implements Var {
+	record Rate(
+			Id name, Cell def, String unit, List<Cell> values) implements Var {
 
 		public Rate {
 			Objects.requireNonNull(name);
@@ -54,19 +58,23 @@ public sealed interface Var {
 			Objects.requireNonNull(values);
 		}
 
-		public Rate(Id name, Cell cell) {
-			this(name, cell, new ArrayList<>());
+		public Rate(Id name, Cell def, String unit) {
+			this(name, def, unit, new ArrayList<>());
 		}
 
 		@Override
 		public Rate freshCopy() {
-			return new Rate(name, def);
+			return new Rate(name, def, unit);
 		}
 	}
 
 	record Stock(
-		Id name, Cell def, List<Id> inFlows, List<Id> outFlows, List<Cell> values
-	) implements Var {
+			Id name,
+			Cell def,
+			String unit,
+			List<Id> inFlows,
+			List<Id> outFlows,
+			List<Cell> values) implements Var {
 
 		public Stock {
 			Objects.requireNonNull(name);
@@ -76,14 +84,15 @@ public sealed interface Var {
 			Objects.requireNonNull(values);
 		}
 
-		public Stock(Id name, Cell cell, List<Id> inFlows, List<Id> outFlows) {
-			this(name, cell, inFlows, outFlows, new ArrayList<>());
+		public Stock(
+				Id name, Cell def, String unit, List<Id> inFlows, List<Id> outFlows) {
+			this(name, def, unit, inFlows, outFlows, new ArrayList<>());
 		}
 
 		@Override
 		public Var freshCopy() {
 			return new Stock(
-				name, def, new ArrayList<>(inFlows), new ArrayList<>(outFlows));
+					name, def, unit, new ArrayList<>(inFlows), new ArrayList<>(outFlows));
 		}
 	}
 }
