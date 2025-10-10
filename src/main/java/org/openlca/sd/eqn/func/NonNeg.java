@@ -11,6 +11,10 @@ public class NonNeg implements Func {
 
 	private final Id name = Id.of("NonNeg");
 
+	public static Res<Cell> apply(Cell cell) {
+		return new NonNeg().apply(List.of(cell));
+	}
+	
 	@Override
 	public Id name() {
 		return name;

@@ -197,7 +197,8 @@ public class Vars {
 			var type = switch (gf.type()) {
 				case CONTINUOUS -> Type.CONTINUOUS;
 				case DISCRETE -> Type.DISCRETE;
-				case null, default -> Type.EXTRAPOLATE;
+				case EXTRAPOLATE -> Type.EXTRAPOLATE;
+				case null -> Type.CONTINUOUS;
 			};
 
 			if (gf.ypts() == null)

@@ -24,20 +24,54 @@ public record TensorEqnCell(Cell eqn, Tensor tensor) implements Cell {
 		var val = res.value();
 
 		if (val instanceof TensorCell(Tensor t))
-			return castTensor(t);
+			return mergeTensors(t, tensor);
 
 		if (!(val instanceof NumCell(double num)))
 			return Res.error(
-				"Equation does not evaluate to a tensor or number: " + eqn);
+					"Equation does not evaluate to a tensor or number: " + eqn);
 
 		return apply(num, tensor);
 	}
 
-	private Res<Cell> castTensor(Tensor result) {
-		return Tensors.haveSameDimensions(tensor, result)
-			? Res.ok(new TensorCell(result))
-			: Res.error("Equation result and tensor definition have " +
-			"different dimensions; cast not supported");
+	private Res<Cell> mergeTensors(Tensor from, Tensor into) {
+		if (!Tensors.haveSameDimensions(from, into))
+			return Res.error("Equation result and tensor definition have " +
+					"different dimensions; cast not supported");
+
+		var result = Tensor.of(into.dimensions());
+		for (int i = 0; i < from.size(); i++) {
+			var fromCell = from.get(i);
+			var intoCell = into.get(i);
+
+			Res<Cell> resultCell = switch (fromCell) {
+
+				case TensorCell(Tensor fi) -> switch (intoCell) {
+					case TensorCell(Tensor ii) -> mergeTensors(fi, ii);
+					case TensorEqnCell(Cell eqn, Tensor ii) -> mergeTensors(fi, ii);
+					case null, default -> null;
+				};
+
+				case NumCell(double num) -> switch (intoCell) {
+					case LookupCell(LookupFunc fn) -> Res.ok(Cell.of(fn.get(num)));
+					case LookupEqnCell(String eqn, LookupFunc fn) -> Res.ok(
+							Cell.of(fn.get(num)));
+					case null, default -> Res.ok(fromCell);
+				};
+
+				case null, default -> null;
+			};
+
+			if (resultCell == null) {
+				result.set(i, fromCell);
+				continue;
+			}
+
+			if (resultCell.isError())
+				return resultCell.wrapError("Could not merge tensor row: " + i);
+			result.set(i, resultCell.value());
+		}
+
+		return Res.ok(new TensorCell(result));
 	}
 
 	private Res<Cell> apply(double value, Tensor tensor) {
@@ -68,9 +102,9 @@ public record TensorEqnCell(Cell eqn, Tensor tensor) implements Cell {
 	@Override
 	public String toString() {
 		var dims = tensor.dimensions()
-			.stream()
-			.map(d -> d.name().label())
-			.collect(Collectors.joining(" × "));
+				.stream()
+				.map(d -> d.name().label())
+				.collect(Collectors.joining(" × "));
 		return "tensorEqn{" + dims + ",'" + eqn + "'}";
 	}
 
