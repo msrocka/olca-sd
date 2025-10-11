@@ -45,16 +45,36 @@ public sealed interface Subscript {
 	}
 
 	record Index(int value) implements Subscript {
+
+		@Override
+		public final String toString() {
+			return Integer.toString(value);
+		}
 	}
 
 	record Identifier(Id value) implements Subscript {
+
+		@Override
+		public final String toString() {
+			return value != null ? value.value() : "?";
+		}
 	}
 
 	record Wildcard() implements Subscript {
 		private static final Wildcard instance = new Wildcard();
+
+		@Override
+		public final String toString() {
+			return "*";
+		}
 	}
 
 	record Empty() implements Subscript {
 		private static final Empty instance = new Empty();
+
+		@Override
+		public final String toString() {
+			return "";
+		}
 	}
 }

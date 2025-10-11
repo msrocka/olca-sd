@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import org.openlca.commons.Res;
 import org.openlca.commons.Strings;
-import org.openlca.sd.eqn.Id;
 import org.openlca.sd.eqn.SimulationState;
 import org.openlca.sd.eqn.Simulator;
 import org.openlca.sd.eqn.Subscript;
@@ -43,7 +42,7 @@ public class CsvWriter {
 
 	public Res<Void> run() {
 		try (var fw = new FileWriter(file, StandardCharsets.UTF_8);
-				 var writer = new BufferedWriter(fw)) {
+				var writer = new BufferedWriter(fw)) {
 			boolean first = true;
 			for (var res : sim) {
 				if (res.isError())
@@ -77,14 +76,14 @@ public class CsvWriter {
 
 	private String[] initColumns(SimulationState state) {
 		var vars = new ArrayList<>(state.vars().values());
-		vars.sort((vi, vj)
-			-> Strings.compareIgnoreCase(vi.name().value(), vj.name().value()));
+		vars.sort((vi, vj) -> Strings.compareIgnoreCase(
+				vi.name().value(), vj.name().value()));
 		int col = 0;
 		var headers = new ArrayList<String>();
 		for (var v : vars) {
 			var val = v.value();
 			if (val instanceof TensorCell(Tensor t)) {
-				var ax = addressesOf(t);
+				var ax = Tensors.addressesOf(t);
 				for (var a : ax) {
 					var key = keyOf(v, a);
 					headers.add(key);
@@ -115,12 +114,8 @@ public class CsvWriter {
 		for (var v : state.vars().values()) {
 			var val = v.value();
 			if (val instanceof TensorCell(Tensor t)) {
-				var ax = addressesOf(t);
-				for (var a : ax) {
-					var subs = a.stream()
-						.map(Subscript::of)
-						.toList();
-					push.accept(keyOf(v, a), t.get(subs));
+				for (var address : Tensors.addressesOf(t)) {
+					push.accept(keyOf(v, address), t.get(address));
 				}
 				continue;
 			}
@@ -138,33 +133,10 @@ public class CsvWriter {
 		};
 	}
 
-	private List<List<Id>> addressesOf(Tensor t) {
-		var addresses = new ArrayList<List<Id>>();
-		for (var dim : t.dimensions()) {
-			if (addresses.isEmpty()) {
-				for (var elem : dim.elements()) {
-					addresses.add(List.of(elem));
-				}
-				continue;
-			}
-
-			var next = new ArrayList<List<Id>>();
-			for (var elem : dim.elements()) {
-				for (var a : addresses) {
-					var ax = new ArrayList<>(a);
-					ax.add(elem);
-					next.add(ax);
-				}
-			}
-			addresses = next;
-		}
-		return addresses;
-	}
-
-	private String keyOf(Var v, List<Id> subscripts) {
+	private String keyOf(Var v, List<Subscript> subscripts) {
 		var idx = subscripts.stream()
-			.map(Id::value)
-			.collect(Collectors.joining(", "));
+				.map(Subscript::toString)
+				.collect(Collectors.joining(", "));
 		return v.name().value() + "[" + idx + "]";
 	}
 
