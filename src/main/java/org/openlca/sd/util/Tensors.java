@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
+import org.openlca.sd.eqn.Var;
 
 public class Tensors {
 
@@ -24,6 +25,18 @@ public class Tensors {
 				return false;
 		}
 		return true;
+	}
+
+	/// Returns the address key for a subscript sequence on a variable. For example,
+	/// a variable `a` with the subscripts `b, c` gives a subscript key `a[b, c]`.
+	public static String addressKeyOf(Var v, List<Subscript> subscripts) {
+		var pref = v != null ? v.name().value() : "";
+		if (subscripts == null || subscripts.isEmpty())
+			return pref;
+		var subs = subscripts.stream()
+			.map(Subscript::toString)
+			.toList();
+		return pref + "[" + String.join(", ", subs) + "]";
 	}
 
 	/// Returns the subscript addresses of all possible elements of this tensor.

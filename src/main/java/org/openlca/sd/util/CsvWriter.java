@@ -6,19 +6,15 @@ import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 import org.openlca.commons.Res;
 import org.openlca.commons.Strings;
 import org.openlca.sd.eqn.SimulationState;
 import org.openlca.sd.eqn.Simulator;
-import org.openlca.sd.eqn.Subscript;
 import org.openlca.sd.eqn.Tensor;
-import org.openlca.sd.eqn.Var;
 import org.openlca.sd.eqn.cells.BoolCell;
 import org.openlca.sd.eqn.cells.Cell;
 import org.openlca.sd.eqn.cells.NumCell;
@@ -85,7 +81,7 @@ public class CsvWriter {
 			if (val instanceof TensorCell(Tensor t)) {
 				var ax = Tensors.addressesOf(t);
 				for (var a : ax) {
-					var key = keyOf(v, a);
+					var key = Tensors.addressKeyOf(v, a);
 					headers.add(key);
 					columns.put(key, col++);
 				}
@@ -115,7 +111,8 @@ public class CsvWriter {
 			var val = v.value();
 			if (val instanceof TensorCell(Tensor t)) {
 				for (var address : Tensors.addressesOf(t)) {
-					push.accept(keyOf(v, address), t.get(address));
+					var key = Tensors.addressKeyOf(v, address);
+					push.accept(key, t.get(address));
 				}
 				continue;
 			}
@@ -132,12 +129,4 @@ public class CsvWriter {
 			case null, default -> "";
 		};
 	}
-
-	private String keyOf(Var v, List<Subscript> subscripts) {
-		var idx = subscripts.stream()
-				.map(Subscript::toString)
-				.collect(Collectors.joining(", "));
-		return v.name().value() + "[" + idx + "]";
-	}
-
 }
