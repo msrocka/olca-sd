@@ -11,10 +11,10 @@ public class ModelImageExample {
 
 	public static void main(String[] args) throws Exception {
 		var xmile = Xmile
-			.readFrom(new File("examples/COVID-19-Model.stmx"))
+			.readFrom(new File("examples/treasource-model.stmx"))
 			.orElseThrow();
 		var image = ModelImage.createFrom(xmile).orElseThrow();
-		ImageIO.write(image, "png", new File("target/covid.png"));
+		ImageIO.write(image, "png", new File("target/treasource-model.png"));
 	}
 
 }

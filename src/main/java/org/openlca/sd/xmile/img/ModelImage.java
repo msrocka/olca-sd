@@ -56,7 +56,7 @@ public class ModelImage {
 
 	public Res<BufferedImage> render() {
 
-		var font = new Font("Arial", Font.PLAIN, 8);
+		var font = new Font("Arial", Font.PLAIN, 12);
 		g.setFont(font);
 
 		for (var f : view.flows()) {

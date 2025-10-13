@@ -71,4 +71,11 @@ public class TimeSeq {
 	public double current() {
 		return current;
 	}
+
+	public int iterationCount() {
+		if (dt == 0)
+			return 0;
+		double count = 1 + (end - start) / dt;
+		return (int) count;
+	}
 }
